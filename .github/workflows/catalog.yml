@@ -31,5 +31,40 @@ jobs:
           git config user.name "BlenkBase Catalog Bot"
           git config user.email "actions@users.noreply.github.com"
           git add feed.json
+          git commit -m "Katalog-Feed automatisch aktualisieren [skip ci]"
+          git push
+name: Katalog-Feed aktualisieren
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "*.json"
+      - "build-catalog-feed.mjs"
+      - ".github/workflows/catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  feed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v4
+
+      - name: Feed und Prüfsummen erzeugen
+        run: node build-catalog-feed.mjs --source . --output feed.json
+
+      - name: Geänderten Feed veröffentlichen
+        run: |
+          if git diff --quiet -- feed.json; then
+            echo "Der Feed ist bereits aktuell."
+            exit 0
+          fi
+          git config user.name "BlenkBase Catalog Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add feed.json
           git commit -m "Katalog-Feed automatisch aktualisieren"
           git push

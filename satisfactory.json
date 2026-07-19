@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "satisfactory", "displayName": "Satisfactory Dedicated Server",
+  "summary": "Automatisierungs- und Fabrikbau-Server.", "maturity": "stable", "tags": ["factory", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "backup"], "artwork": { "storeAppId": 526870 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "none", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1690800, "anonymous": true },
+  "process": { "executable": "FactoryServer.exe", "workingDirectory": ".", "arguments": ["-log", "-unattended", "-Port={{port.game}}", "-ReliablePort={{port.reliable}}", "-RootGameSavePath={{instance.root}}/saves"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 7777 }, { "key": "api", "protocol": "tcp", "preferred": 7777 }, { "key": "reliable", "protocol": "tcp", "preferred": 8888 }],
+  "configurationFiles": [], "persistentPaths": ["saves"], "health": { "processRequired": true, "portKeys": ["game", "api"] }
+}

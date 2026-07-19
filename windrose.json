@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "id": "windrose",
+  "displayName": "Windrose",
+  "summary": "Windrose Dedicated Server.", "maturity": "stable", "tags": ["survival", "coop"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"], "artwork": { "storeAppId": 3041230 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "windrose", "configuration": "windrose", "health": "process-only", "population": "windrose-log", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 4129620, "anonymous": true },
+  "process": {
+    "executable": "WindroseServer.exe",
+    "workingDirectory": ".",
+    "arguments": ["-log"],
+    "consoleLogFiles": ["R5/Saved/Logs/R5.log"]
+  },
+  "ports": [],
+  "configurationFiles": [{
+    "path": "R5/ServerDescription.json",
+    "label": "Servereinstellungen",
+    "format": "json",
+    "fields": [
+      { "key": "ServerName", "jsonPath": "ServerDescription_Persistent.ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "BlenkBase Windrose", "description": "Name des Servers. Standard: BlenkBase Windrose." },
+      { "key": "InviteCode", "jsonPath": "ServerDescription_Persistent.InviteCode", "label": "Einladungscode", "group": "Zugriff", "valueType": "string", "defaultValue": "", "description": "Mindestens sechs Zeichen; Groß-/Kleinschreibung beachten. Leer lassen, damit Windrose einen Code erzeugt." },
+      { "key": "IsPasswordProtected", "jsonPath": "ServerDescription_Persistent.IsPasswordProtected", "label": "Passwortschutz", "group": "Zugriff", "valueType": "boolean", "defaultValue": "false", "description": "Muss auf Ja stehen, wenn ein Passwort gesetzt ist. Standard: Nein." },
+      { "key": "Password", "jsonPath": "ServerDescription_Persistent.Password", "label": "Serverpasswort", "group": "Zugriff", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Passwort. Standard: leer." },
+      { "key": "WorldIslandId", "jsonPath": "ServerDescription_Persistent.WorldIslandId", "label": "Welt-ID", "group": "Welt", "valueType": "string", "defaultValue": "", "description": "ID der zu ladenden Welt. Leer lassen, damit beim ersten Start eine Welt erzeugt wird." },
+      { "key": "MaxPlayerCount", "jsonPath": "ServerDescription_Persistent.MaxPlayerCount", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "4", "minimum": 1, "maximum": 10, "description": "Maximale Spielerzahl. Standard: 4." },
+      { "key": "UserSelectedRegion", "jsonPath": "ServerDescription_Persistent.UserSelectedRegion", "label": "Region", "group": "Netzwerk", "valueType": "string", "defaultValue": "", "choices": [{ "value": "", "label": "Automatisch" }, { "value": "EU", "label": "Europa/Nordamerika" }, { "value": "CIS", "label": "CIS" }, { "value": "SEA", "label": "Südostasien" }], "description": "Connection-Service-Region. Standard: automatisch; für Deutschland kann EU fest gewählt werden." },
+      { "key": "UseDirectConnection", "jsonPath": "ServerDescription_Persistent.UseDirectConnection", "label": "Direktverbindung", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "false", "description": "Direkte TCP/UDP-Verbindung statt ICE/P2P. Standard: Nein." },
+      { "key": "DirectConnectionServerPort", "jsonPath": "ServerDescription_Persistent.DirectConnectionServerPort", "label": "Direktverbindungs-Port", "group": "Netzwerk", "valueType": "integer", "defaultValue": "7777", "minimum": 1, "maximum": 65535, "description": "Nur bei Direktverbindung; muss als TCP und UDP verfügbar sein. Standard: 7777." },
+      { "key": "DirectConnectionProxyAddress", "jsonPath": "ServerDescription_Persistent.DirectConnectionProxyAddress", "label": "Bind-Adresse", "group": "Netzwerk", "valueType": "string", "defaultValue": "0.0.0.0", "description": "Netzwerkschnittstelle für Direktverbindungen. Standard: 0.0.0.0." },
+      { "key": "AutoLoadLatestBackupIfHasBroken", "jsonPath": "ServerDescription_Persistent.AutoLoadLatestBackupIfHasBroken", "label": "Defekten Spielstand automatisch retten", "group": "Speichern", "valueType": "boolean", "defaultValue": "true", "description": "Lädt bei einem beschädigten Spielstand das neueste Backup. Standard: Ja." },
+      { "key": "CanLaunchMultipleServerInstances", "jsonPath": "ServerDescription_Persistent.CanLaunchMultipleServerInstances", "label": "Mehrfachstart erlauben", "group": "System", "valueType": "boolean", "defaultValue": "false", "description": "Sollte zum Schutz vor Datenverlust deaktiviert bleiben. Standard: Nein." }
+    ]
+  }],
+  "persistentPaths": ["R5/Saved/SaveProfiles/Default"],
+  "health": { "processRequired": true, "portKeys": [] }
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "id": "minecraft-java",
+  "displayName": "Minecraft: Java Edition",
+  "summary": "Minecraft Java mit Vanilla- und Forge-Auswahl.", "maturity": "stable", "tags": ["sandbox", "mods"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query", "mods"], "artwork": {},
+  "adapters": { "installation": "minecraft-java", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "minecraft-status", "backup": "persistent-paths", "mods": "minecraft" },
+  "installer": { "kind": "minecraft-java" },
+  "process": {
+    "executable": "runtime/bin/java.exe",
+    "workingDirectory": ".",
+    "arguments": ["-Xms2G", "-Xmx8G", "-jar", "server.jar", "nogui"],
+    "consoleLogFiles": ["logs/latest.log"],
+    "stopCommand": "stop",
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [{ "key": "game", "protocol": "tcp", "preferred": 25565 }],
+  "configurationFiles": [
+    {
+      "path": "eula.txt",
+      "label": "Minecraft-EULA",
+      "format": "properties",
+      "fields": [{ "key": "eula", "label": "Minecraft-EULA akzeptieren", "group": "Lizenz", "valueType": "boolean", "defaultValue": "false", "description": "Nur auf Ja setzen, wenn du die Minecraft-EULA gelesen und akzeptiert hast. Standard: Nein." }]
+    },
+    {
+      "path": "server.properties",
+      "label": "Servereinstellungen",
+      "format": "properties",
+      "fields": [
+        { "key": "motd", "label": "Serverbeschreibung", "group": "Allgemein", "valueType": "string", "defaultValue": "Ein BlenkBase Minecraft Server", "description": "Text in der Serverliste. Standard: Ein BlenkBase Minecraft Server." },
+        { "key": "server-port", "label": "Game-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "TCP-Port des Servers. Standard: 25565." },
+        { "key": "max-players", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "20", "minimum": 1, "maximum": 1000, "description": "Maximale Spielerzahl. Standard: 20." },
+        { "key": "online-mode", "label": "Online-Authentifizierung", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Prüft Spielerkonten bei Microsoft/Mojang. Standard und Empfehlung: Ja." },
+        { "key": "white-list", "label": "Whitelist", "group": "Zugriff", "valueType": "boolean", "defaultValue": "false", "description": "Nur freigegebene Spieler dürfen beitreten. Standard: Nein." },
+        { "key": "difficulty", "label": "Schwierigkeit", "group": "Welt", "valueType": "string", "defaultValue": "easy", "choices": [{ "value": "peaceful", "label": "Friedlich" }, { "value": "easy", "label": "Leicht" }, { "value": "normal", "label": "Normal" }, { "value": "hard", "label": "Schwer" }], "description": "Schwierigkeitsgrad. Standard: Leicht." },
+        { "key": "gamemode", "label": "Spielmodus", "group": "Welt", "valueType": "string", "defaultValue": "survival", "choices": [{ "value": "survival", "label": "Überleben" }, { "value": "creative", "label": "Kreativ" }, { "value": "adventure", "label": "Abenteuer" }, { "value": "spectator", "label": "Zuschauer" }], "description": "Standard-Spielmodus. Standard: Überleben." },
+        { "key": "pvp", "label": "PvP", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Schaden zwischen Spielern. Standard: Ja." },
+        { "key": "view-distance", "label": "Sichtweite", "group": "Leistung", "valueType": "integer", "defaultValue": "10", "minimum": 2, "maximum": 32, "description": "Serverseitige Sichtweite in Chunks. Standard: 10." },
+        { "key": "simulation-distance", "label": "Simulationsweite", "group": "Leistung", "valueType": "integer", "defaultValue": "10", "minimum": 2, "maximum": 32, "description": "Aktiv simulierte Entfernung in Chunks. Standard: 10." }
+      ]
+    }
+  ],
+  "persistentPaths": ["world", "world_nether", "world_the_end"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

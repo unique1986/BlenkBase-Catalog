@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "project-zomboid", "displayName": "Project Zomboid Dedicated Server",
+  "summary": "Persistenter Zombie-Survival-Server.", "maturity": "experimental", "tags": ["survival", "zombies"],
+  "capabilities": ["install", "update", "start", "stop", "backup"], "artwork": { "storeAppId": 108600 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 380870, "anonymous": true },
+  "process": { "executable": "StartServer64.bat", "workingDirectory": ".", "arguments": ["-cachedir={{instance.root}}/data", "-servername", "BlenkBase", "-port", "{{port.game}}"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 16261 }, { "key": "steam", "protocol": "udp", "preferred": 8766 }],
+  "configurationFiles": [], "persistentPaths": ["data"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

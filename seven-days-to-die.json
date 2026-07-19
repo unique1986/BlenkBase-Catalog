@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "seven-days-to-die", "displayName": "7 Days to Die",
+  "summary": "Zombie-Survival-Dedicated-Server.", "maturity": "beta", "tags": ["survival", "zombies"],
+  "capabilities": ["install", "update", "start", "stop", "backup"], "artwork": { "storeAppId": 251570 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 294420, "anonymous": true },
+  "process": { "executable": "7DaysToDieServer.exe", "workingDirectory": ".", "arguments": ["-quit", "-batchmode", "-nographics", "-dedicated", "-configfile=serverconfig.xml", "-UserDataFolder={{instance.root}}/UserData"] },
+  "ports": [{ "key": "game", "protocol": "tcp", "preferred": 26900 }, { "key": "gameUdp", "protocol": "udp", "preferred": 26900 }, { "key": "query", "protocol": "udp", "preferred": 26901 }],
+  "configurationFiles": [], "persistentPaths": ["UserData"], "health": { "processRequired": true, "portKeys": ["game", "gameUdp"] }
+}

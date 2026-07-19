@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 2,
+  "id": "enshrouded",
+  "displayName": "Enshrouded",
+  "summary": "Enshrouded Dedicated Server mit JSON-Konfiguration.", "maturity": "stable", "tags": ["survival", "coop"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"], "artwork": { "storeAppId": 1203620 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 2278520, "anonymous": true },
+  "process": {
+    "executable": "enshrouded_server.exe",
+    "workingDirectory": ".",
+    "arguments": [],
+    "consoleLogFiles": ["logs/enshrouded_server.log"],
+    "stopCommand": "shutdown",
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "query", "protocol": "udp", "preferred": 15637 }
+  ],
+  "configurationFiles": [{
+    "path": "enshrouded_server.json",
+    "label": "Servereinstellungen",
+    "format": "json",
+    "fields": [
+      { "key": "name", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "BlenkBase Enshrouded", "description": "Name im Serverbrowser. Standard: BlenkBase Enshrouded." },
+      { "key": "password", "label": "Serverpasswort", "group": "Zugriff", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Passwort. Standard: kein Passwort." },
+      { "key": "saveDirectory", "label": "Spielstandordner", "group": "Speichern", "valueType": "string", "defaultValue": "./savegame", "description": "Relativer Ordner der Spielstände. Standard: ./savegame." },
+      { "key": "logDirectory", "label": "Protokollordner", "group": "System", "valueType": "string", "defaultValue": "./logs", "description": "Relativer Ordner der Logs. Standard: ./logs." },
+      { "key": "ip", "label": "Bind-Adresse", "group": "Netzwerk", "valueType": "string", "defaultValue": "0.0.0.0", "description": "Netzwerkadresse, auf der der Server lauscht. Standard: 0.0.0.0." },
+      { "key": "queryPort", "label": "Query-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "query", "minimum": 1, "maximum": 65535, "description": "UDP-Port für Serverabfragen. Standard: 15637." },
+      { "key": "slotCount", "label": "Spielerplätze", "group": "Allgemein", "valueType": "integer", "defaultValue": "16", "minimum": 1, "maximum": 16, "description": "Maximale Anzahl Spieler. Standard: 16." }
+    ]
+  }],
+  "persistentPaths": ["savegame"],
+  "health": { "processRequired": true, "portKeys": ["query"] }
+}

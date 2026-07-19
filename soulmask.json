@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "soulmask", "displayName": "Soulmask Dedicated Server",
+  "summary": "Soulmask-Survival-Server; Definition noch in Erprobung.", "maturity": "experimental", "tags": ["survival", "open-world"],
+  "capabilities": ["install", "update", "start", "stop", "backup"], "artwork": { "storeAppId": 2646460 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 3017310, "anonymous": true },
+  "process": { "executable": "WS/Binaries/Win64/WSServer-Win64-Shipping.exe", "workingDirectory": "WS/Binaries/Win64", "arguments": ["Level01_Main", "-server", "-log", "-Port={{port.game}}", "-QueryPort={{port.query}}"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 8777 }, { "key": "query", "protocol": "udp", "preferred": 27015 }],
+  "configurationFiles": [], "persistentPaths": ["WS/Saved"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

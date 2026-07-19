@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 2, "id": "valheim", "displayName": "Valheim Dedicated Server",
+  "summary": "Kooperativer Viking-Survival-Server.", "maturity": "stable", "tags": ["survival", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "backup", "player-query"],
+  "artwork": { "storeAppId": 892970 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 896660, "anonymous": true },
+  "process": { "executable": "valheim_server.exe", "workingDirectory": ".", "arguments": ["-nographics", "-batchmode", "-name", "BlenkBase Valheim", "-port", "{{port.game}}", "-world", "BlenkBase", "-password", "BlenkBase", "-savedir", "{{instance.root}}/data", "-public", "1"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 2456 }, { "key": "query", "protocol": "udp", "preferred": 2457, "offsetFrom": "game", "offset": 1 }],
+  "configurationFiles": [], "persistentPaths": ["data"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

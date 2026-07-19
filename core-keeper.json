@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "core-keeper", "displayName": "Core Keeper Dedicated Server",
+  "summary": "Kooperativer Core-Keeper-Dedicated-Server.", "maturity": "experimental", "tags": ["survival", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "backup"], "artwork": { "storeAppId": 1621690 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "none", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1963720, "anonymous": true },
+  "process": { "executable": "CoreKeeperServer.exe", "workingDirectory": ".", "arguments": ["-batchmode", "-logfile", "CoreKeeperServer.log", "-datapath", "{{instance.root}}/data", "-world", "0", "-worldname", "BlenkBase", "-port", "{{port.game}}"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 27015 }],
+  "configurationFiles": [], "persistentPaths": ["data"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

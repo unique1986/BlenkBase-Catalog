@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "ark-survival-evolved", "displayName": "ARK: Survival Evolved",
+  "summary": "Klassischer ARK-Dedicated-Server.", "maturity": "beta", "tags": ["survival", "dinosaurs"],
+  "capabilities": ["install", "update", "start", "stop", "backup", "player-query", "mods"], "artwork": { "storeAppId": 346110 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "rcon-source", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 376030, "anonymous": true },
+  "process": { "executable": "ShooterGame/Binaries/Win64/ShooterGameServer.exe", "workingDirectory": "ShooterGame/Binaries/Win64", "arguments": ["TheIsland?listen?SessionName=BlenkBase ASE?Port={{port.game}}?QueryPort={{port.query}}", "-server", "-log"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 7777 }, { "key": "peer", "protocol": "udp", "preferred": 7778, "offsetFrom": "game", "offset": 1 }, { "key": "query", "protocol": "udp", "preferred": 27015 }, { "key": "rcon", "protocol": "tcp", "preferred": 27020 }],
+  "configurationFiles": [], "persistentPaths": ["ShooterGame/Saved/SavedArks"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

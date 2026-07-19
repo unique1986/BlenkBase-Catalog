@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 2,
+  "id": "farming-simulator-22",
+  "displayName": "Landwirtschafts-Simulator 22",
+  "summary": "LS22 Dedicated Server mit ModHub und Mod-Verwaltung.", "maturity": "stable", "tags": ["simulation", "mods"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query", "mods"], "artwork": { "storeAppId": 1248130 },
+  "adapters": { "installation": "steam-desktop", "lifecycle": "farming-simulator", "configuration": "farming-simulator", "health": "process-and-ports", "population": "farming-log", "backup": "persistent-paths", "mods": "farming-modhub" },
+  "installer": { "kind": "steam-desktop", "appId": 1248130, "anonymous": false },
+  "process": {
+    "executable": "x64/FarmingSimulator2022Game.exe",
+    "workingDirectory": "x64",
+    "arguments": ["-server", "-name", "FarmingSimulator2022", "-profile", "{{instance.profile}}"],
+    "consoleLogFiles": ["profile/log.txt"],
+    "stopCommand": "quit",
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 10823 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "profile/dedicated_server/dedicatedServerConfig.xml",
+      "label": "Spielserver",
+      "format": "xml",
+      "fields": [
+        {
+          "key": "ServerName",
+          "label": "Servername",
+          "group": "Allgemein",
+          "valueType": "string",
+          "xmlPath": "gameserver/settings/game_name",
+          "defaultValue": "BlenkBase LS22 Server",
+          "description": "Öffentlicher Name im Multiplayer-Browser. Standard: BlenkBase LS22 Server."
+        },
+        {
+          "key": "AdminPassword",
+          "label": "Server-Admin-Kennwort",
+          "group": "Sicherheit",
+          "valueType": "string",
+          "secret": true,
+          "xmlPath": "gameserver/settings/admin_password",
+          "defaultValue": "BlenkBase-ChangeMe",
+          "description": "Kennwort für Administratorrechte im Spiel. Vor der öffentlichen Freigabe unbedingt ändern."
+        },
+        {
+          "key": "GamePassword",
+          "label": "Spielerkennwort",
+          "group": "Sicherheit",
+          "valueType": "string",
+          "secret": true,
+          "xmlPath": "gameserver/settings/game_password",
+          "defaultValue": "",
+          "description": "Optionales Kennwort für beitretende Spieler. Standard: kein Kennwort."
+        },
+        {
+          "key": "SavegameIndex",
+          "label": "Spielstand-Slot",
+          "group": "Spielstand",
+          "valueType": "integer",
+          "xmlPath": "gameserver/settings/savegame_index",
+          "defaultValue": "1",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Verwendet profile/savegame1 bis profile/savegame20. Standard: 1."
+        },
+        {
+          "key": "MaxPlayers",
+          "label": "Maximale Spieler",
+          "group": "Allgemein",
+          "valueType": "integer",
+          "xmlPath": "gameserver/settings/max_player",
+          "defaultValue": "8",
+          "minimum": 2,
+          "maximum": 16,
+          "description": "Maximal gleichzeitig verbundene Spieler. Zulässig: 2 bis 16. Standard in BlenkBase: 8."
+        },
+        {
+          "key": "GamePort",
+          "label": "Spielport",
+          "group": "Netzwerk",
+          "valueType": "integer",
+          "xmlPath": "gameserver/settings/port",
+          "portKey": "game",
+          "minimum": 1,
+          "maximum": 65533,
+          "description": "Erster UDP-Spielport. Die zwei direkt folgenden UDP-Ports werden ebenfalls reserviert. GIANTS-Standard: 10823."
+        },
+        {
+          "key": "Language",
+          "label": "Serversprache",
+          "group": "Allgemein",
+          "valueType": "string",
+          "xmlPath": "gameserver/settings/language",
+          "defaultValue": "de",
+          "choices": [
+            { "value": "de", "label": "Deutsch" },
+            { "value": "en", "label": "Englisch" },
+            { "value": "fr", "label": "Französisch" },
+            { "value": "es", "label": "Spanisch" },
+            { "value": "it", "label": "Italienisch" },
+            { "value": "nl", "label": "Niederländisch" },
+            { "value": "pl", "label": "Polnisch" }
+          ],
+          "description": "Sprache des Servers. Standard: Deutsch."
+        },
+        {
+          "key": "AutoSaveInterval",
+          "label": "Autosave-Intervall",
+          "group": "Spielstand",
+          "valueType": "number",
+          "xmlPath": "gameserver/settings/auto_save_interval",
+          "defaultValue": "900",
+          "minimum": 30,
+          "maximum": 7200,
+          "description": "Abstand automatischer Spielstand-Sicherungen in Sekunden. BlenkBase-Standard: 900 Sekunden (15 Minuten)."
+        },
+        {
+          "key": "StatsInterval",
+          "label": "Statistik-Intervall",
+          "group": "Erweitert",
+          "valueType": "number",
+          "xmlPath": "gameserver/settings/stats_interval",
+          "defaultValue": "360",
+          "minimum": 30,
+          "maximum": 7200,
+          "description": "Intervall der Serverstatistik-Aktualisierung in Sekunden. Standard: 360."
+        },
+        {
+          "key": "UseUpnp",
+          "label": "UPnP verwenden",
+          "group": "Netzwerk",
+          "valueType": "boolean",
+          "xmlPath": "gameserver/settings/use_upnp",
+          "defaultValue": "false",
+          "description": "Automatische Routerfreigabe über UPnP. Auf einem Rootserver normalerweise Nein. Standard: Nein."
+        },
+        {
+          "key": "CrossplayAllowed",
+          "label": "Crossplay erlauben",
+          "group": "Allgemein",
+          "valueType": "boolean",
+          "xmlPath": "gameserver/settings/crossplay_allowed",
+          "defaultValue": "true",
+          "description": "Erlaubt unterstützte Plattformen außerhalb von Steam. Standard: Ja."
+        },
+        {
+          "key": "Difficulty",
+          "label": "Karrieremodus",
+          "group": "Spielstand",
+          "valueType": "integer",
+          "xmlPath": "gameserver/settings/difficulty",
+          "defaultValue": "2",
+          "choices": [
+            { "value": "1", "label": "Neuer Farmer" },
+            { "value": "2", "label": "Farm-Manager" },
+            { "value": "3", "label": "Von null beginnen" }
+          ],
+          "description": "Startmodus für einen neu angelegten Spielstand. Standard in BlenkBase: Farm-Manager."
+        },
+        {
+          "key": "MapId",
+          "label": "Karte",
+          "group": "Spielstand",
+          "valueType": "string",
+          "xmlPath": "gameserver/settings/mapID",
+          "defaultValue": "MapUS",
+          "choices": [
+            { "value": "MapUS", "label": "Elmcreek" },
+            { "value": "MapFR", "label": "Haut-Beyleron" },
+            { "value": "MapAlpine", "label": "Erlengrat" }
+          ],
+          "description": "Basiskarte oder eine installierte und aktivierte Mod-Karte für einen neuen Spielstand. Standard in BlenkBase: Elmcreek."
+        }
+      ]
+    }
+  ],
+  "persistentPaths": [
+    "profile/savegame1", "profile/savegame2", "profile/savegame3", "profile/savegame4", "profile/savegame5",
+    "profile/savegame6", "profile/savegame7", "profile/savegame8", "profile/savegame9", "profile/savegame10",
+    "profile/savegame11", "profile/savegame12", "profile/savegame13", "profile/savegame14", "profile/savegame15",
+    "profile/savegame16", "profile/savegame17", "profile/savegame18", "profile/savegame19", "profile/savegame20"
+  ],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

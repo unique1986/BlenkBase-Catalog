@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "name": "Offizieller BlenkBase-Katalog",
+  "generatedAtUtc": "2026-07-19T11:34:48.063Z",
+  "definitions": [
+    {
+      "id": "ark-survival-ascended",
+      "displayName": "ARK: Survival Ascended",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "ark-survival-ascended.json",
+      "sha256": "4dd1b0a696d95e5fe0dcaac14d81ff7f0b3a9095fb0483f8fc6c61bd7e047140",
+      "notes": "ARK: Survival Ascended mit Karten-, RCON- und Serverkonfiguration."
+    },
+    {
+      "id": "ark-survival-evolved",
+      "displayName": "ARK: Survival Evolved",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "ark-survival-evolved.json",
+      "sha256": "df8626e3f7edff47e0d829aa3ef8d4b1e8453610c678107dd04117ba090f241f",
+      "notes": "Klassischer ARK-Dedicated-Server."
+    },
+    {
+      "id": "conan-exiles",
+      "displayName": "Conan Exiles Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "conan-exiles.json",
+      "sha256": "51511a244a658b38efd357cd8ce7097ba68da710ac2aed68a0f275f47bc6bf32",
+      "notes": "Conan-Exiles-Survival-Server."
+    },
+    {
+      "id": "core-keeper",
+      "displayName": "Core Keeper Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "core-keeper.json",
+      "sha256": "7df49b91b5499d8923e09cc8b42d8b3cc81cfd48dabe0def8a5eecc59bd90b30",
+      "notes": "Kooperativer Core-Keeper-Dedicated-Server."
+    },
+    {
+      "id": "dayz",
+      "displayName": "DayZ Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "dayz.json",
+      "sha256": "7fec06cf1a9ea2136d9e7b8c91b2632d5c9fd25a214288a884cd67d0d93c9ac9",
+      "notes": "DayZ-Survival-Dedicated-Server."
+    },
+    {
+      "id": "enshrouded",
+      "displayName": "Enshrouded",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "enshrouded.json",
+      "sha256": "101cc15661c538c0cb0889ff33656faa1f0d295cf5be33a2e6d320f9b17676b8",
+      "notes": "Enshrouded Dedicated Server mit JSON-Konfiguration."
+    },
+    {
+      "id": "farming-simulator-22",
+      "displayName": "Landwirtschafts-Simulator 22",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "farming-simulator-22.json",
+      "sha256": "1dfd2e3b0e7c7d3bb4ce01bd4af98ca24d2f1191ea1c4d96467029766efdd087",
+      "notes": "LS22 Dedicated Server mit ModHub und Mod-Verwaltung."
+    },
+    {
+      "id": "farming-simulator-25",
+      "displayName": "Landwirtschafts-Simulator 25",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "farming-simulator-25.json",
+      "sha256": "9f0422f6b9e44d172a04458df2019d5020802600f47041f8f9ecd23b7825c0c9",
+      "notes": "LS25 Dedicated Server mit ModHub und Mod-Verwaltung."
+    },
+    {
+      "id": "minecraft-java",
+      "displayName": "Minecraft: Java Edition",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "minecraft-java.json",
+      "sha256": "f4103fd45d18fdd7a26e41814e733038f204b4316f25fe9a05a335fba2fac7d1",
+      "notes": "Minecraft Java mit Vanilla- und Forge-Auswahl."
+    },
+    {
+      "id": "palworld",
+      "displayName": "Palworld",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "palworld.json",
+      "sha256": "6cfec8c31a561add0e788916325c8d4706dab8beb2354cf83bb5049824c1c46e",
+      "notes": "Palworld Dedicated Server mit deutscher Vollkonfiguration."
+    },
+    {
+      "id": "project-zomboid",
+      "displayName": "Project Zomboid Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "project-zomboid.json",
+      "sha256": "d5d6b61b4ae84fe46b3995a210aa3813b09ef9fa66285489400ad6f37860dcef",
+      "notes": "Persistenter Zombie-Survival-Server."
+    },
+    {
+      "id": "rust",
+      "displayName": "Rust Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "rust.json",
+      "sha256": "b9c1d88d62d09164f4a86e981ee510df2d554bc56489f253bff2331410591983",
+      "notes": "Rust-Survival-Server mit RCON- und Workshop-Grundlage."
+    },
+    {
+      "id": "satisfactory",
+      "displayName": "Satisfactory Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "satisfactory.json",
+      "sha256": "db094544be550cbf1d635c668960c48738f913a51b17d3e89c0273e01bf1ade3",
+      "notes": "Automatisierungs- und Fabrikbau-Server."
+    },
+    {
+      "id": "seven-days-to-die",
+      "displayName": "7 Days to Die",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "seven-days-to-die.json",
+      "sha256": "2b7f590a4652e6ddf0b35577189f24b60d46c8710d48549f0d54fad1a4484caf",
+      "notes": "Zombie-Survival-Dedicated-Server."
+    },
+    {
+      "id": "sons-of-the-forest",
+      "displayName": "Sons Of The Forest Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "sons-of-the-forest.json",
+      "sha256": "2602f1b4d05968e3c000fc9f1d52e50d3b8bb1d2619cd350832c3866c48b8a6a",
+      "notes": "Sons-of-the-Forest-Koop-Server."
+    },
+    {
+      "id": "soulmask",
+      "displayName": "Soulmask Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "soulmask.json",
+      "sha256": "60d36b58c944edaa12e4d5248e5093f9fea00937433fa1e4338685b1657c99c6",
+      "notes": "Soulmask-Survival-Server; Definition noch in Erprobung."
+    },
+    {
+      "id": "teamspeak-6",
+      "displayName": "TeamSpeak 6 Server",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "teamspeak-6.json",
+      "sha256": "9ded6673a6dbd233a256311d1e3fe125b89c80e1e7db3b3b1f81b810ca7887d1",
+      "notes": "TeamSpeak 6 mit Blenk Voice, Bots und Viewer."
+    },
+    {
+      "id": "v-rising",
+      "displayName": "V Rising Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "v-rising.json",
+      "sha256": "49cbd7e397840634d5ae098e49ea3f7f34fa61c3be4a4c85338b6a853019c89d",
+      "notes": "Vampir-Survival-Dedicated-Server."
+    },
+    {
+      "id": "valheim",
+      "displayName": "Valheim Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "valheim.json",
+      "sha256": "b44472426950981b4d359f1712301e2ac34970031e6a433443cbaaa8b9759265",
+      "notes": "Kooperativer Viking-Survival-Server."
+    },
+    {
+      "id": "windrose",
+      "displayName": "Windrose",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "windrose.json",
+      "sha256": "a105684fa90582c2e10d570ec6f180b950ab5203ab67154b57adcf94a919769e",
+      "notes": "Windrose Dedicated Server."
+    }
+  ]
+}

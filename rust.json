@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "rust", "displayName": "Rust Dedicated Server",
+  "summary": "Rust-Survival-Server mit RCON- und Workshop-Grundlage.", "maturity": "beta", "tags": ["survival", "pvp"],
+  "capabilities": ["install", "update", "start", "stop", "backup", "player-query"], "artwork": { "storeAppId": 252490 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "rcon-source", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 258550, "anonymous": true },
+  "process": { "executable": "RustDedicated.exe", "workingDirectory": ".", "arguments": ["-batchmode", "+server.identity", "blenkbase", "+server.hostname", "BlenkBase Rust", "+server.port", "{{port.game}}", "+server.queryport", "{{port.query}}", "+rcon.port", "{{port.rcon}}", "+server.maxplayers", "50", "+server.level", "Procedural Map"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 28015 }, { "key": "query", "protocol": "udp", "preferred": 28016 }, { "key": "rcon", "protocol": "tcp", "preferred": 28016 }],
+  "configurationFiles": [], "persistentPaths": ["server/blenkbase"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

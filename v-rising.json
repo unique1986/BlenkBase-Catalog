@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 2, "id": "v-rising", "displayName": "V Rising Dedicated Server",
+  "summary": "Vampir-Survival-Dedicated-Server.", "maturity": "stable", "tags": ["survival", "pvp", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"], "artwork": { "storeAppId": 1604030 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1829350, "anonymous": true },
+  "process": { "executable": "VRisingServer.exe", "workingDirectory": ".", "arguments": ["-persistentDataPath", "{{instance.root}}/save-data", "-serverName", "BlenkBase V Rising", "-gamePort", "{{port.game}}", "-queryPort", "{{port.query}}"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 9876 }, { "key": "query", "protocol": "udp", "preferred": 9877 }],
+  "configurationFiles": [{ "path": "save-data/Settings/ServerHostSettings.json", "label": "Servereinstellungen", "format": "json", "fields": [{ "key": "Name", "label": "Servername", "group": "Allgemein", "valueType": "string", "jsonPath": "Name", "defaultValue": "BlenkBase V Rising", "description": "Öffentlicher Servername. Standard: BlenkBase V Rising." }, { "key": "MaxConnectedUsers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "jsonPath": "MaxConnectedUsers", "defaultValue": "40", "minimum": 1, "maximum": 100, "description": "Maximale Spielerzahl. Standard: 40." }] }],
+  "persistentPaths": ["save-data"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

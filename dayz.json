@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "dayz", "displayName": "DayZ Dedicated Server",
+  "summary": "DayZ-Survival-Dedicated-Server.", "maturity": "experimental", "tags": ["survival", "zombies"],
+  "capabilities": ["install", "update", "start", "stop", "backup", "mods"], "artwork": { "storeAppId": 221100 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 223350, "anonymous": false },
+  "process": { "executable": "DayZServer_x64.exe", "workingDirectory": ".", "arguments": ["-config=serverDZ.cfg", "-port={{port.game}}", "-profiles={{instance.root}}/profiles", "-dologs", "-adminlog", "-netlog", "-freezecheck"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 2302 }, { "key": "query", "protocol": "udp", "preferred": 27016 }],
+  "configurationFiles": [], "persistentPaths": ["mpmissions", "profiles"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

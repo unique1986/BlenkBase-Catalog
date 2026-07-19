@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 2, "id": "conan-exiles", "displayName": "Conan Exiles Dedicated Server",
+  "summary": "Conan-Exiles-Survival-Server.", "maturity": "beta", "tags": ["survival", "open-world"],
+  "capabilities": ["install", "update", "start", "stop", "backup", "player-query"], "artwork": { "storeAppId": 440900 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "rcon-source", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 443030, "anonymous": true },
+  "process": { "executable": "ConanSandboxServer.exe", "workingDirectory": ".", "arguments": ["-log", "-Port={{port.game}}", "-QueryPort={{port.query}}", "-RconPort={{port.rcon}}"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 7777 }, { "key": "peer", "protocol": "udp", "preferred": 7778, "offsetFrom": "game", "offset": 1 }, { "key": "query", "protocol": "udp", "preferred": 27015 }, { "key": "rcon", "protocol": "tcp", "preferred": 25575 }],
+  "configurationFiles": [], "persistentPaths": ["ConanSandbox/Saved"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 2, "id": "sons-of-the-forest", "displayName": "Sons Of The Forest Dedicated Server",
+  "summary": "Sons-of-the-Forest-Koop-Server.", "maturity": "experimental", "tags": ["survival", "coop", "horror"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"], "artwork": { "storeAppId": 1326470 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 2465200, "anonymous": true },
+  "process": { "executable": "SonsOfTheForestDS.exe", "workingDirectory": ".", "arguments": ["-userdatapath", "{{instance.root}}/data", "-dedicatedserver.ConfigFile", "{{instance.root}}/data/dedicatedserver.cfg"] },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 8766 }, { "key": "query", "protocol": "udp", "preferred": 27016 }, { "key": "blob", "protocol": "udp", "preferred": 9700 }],
+  "configurationFiles": [{ "path": "data/dedicatedserver.cfg", "label": "Servereinstellungen", "format": "json", "fields": [{ "key": "Name", "label": "Servername", "group": "Allgemein", "valueType": "string", "jsonPath": "Name", "defaultValue": "BlenkBase Sons Of The Forest", "description": "Öffentlicher Servername." }, { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "jsonPath": "MaxPlayers", "defaultValue": "8", "minimum": 1, "maximum": 8, "description": "Maximale Spielerzahl. Standard: 8." }] }],
+  "persistentPaths": ["data"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

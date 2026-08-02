@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 3,
+  "id": "pixark",
+  "displayName": "PixARK Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://store.steampowered.com/app/593600/PixARK/" },
+  "summary": "PixARK-Server mit Welt, Seed, Slots, Kennwörtern, RCON, Steam-Query und Workshop-Unterstützung.",
+  "maturity": "experimental",
+  "tags": ["survival", "sandbox", "workshop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query", "mods"],
+  "artwork": { "storeAppId": 593600 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 824360, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "ShooterGame/Binaries/Win64/PixARKServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["CubeWorld_Light?listen?DelayRegisterServer=True?bRawSockets=True?SessionName={{setting.ServerName}}?AltSaveDirectoryName={{setting.SaveName}}?ServerPassword={{setting.ServerPassword}}?ServerAdminPassword={{setting.AdminPassword}}?MaxPlayers={{setting.MaxPlayers}}?RCONEnabled={{setting.RconEnabled}}?RCONPort={{port.rcon}}", "-Seed={{setting.Seed}}", "-OreSeed={{setting.OreSeed}}", "-ConfigsUseAltDir", "-server", "-gameplaylogging", "-log", "-CULTUREFORCOOKING=en", "-QueryPort={{port.query}}", "-Port={{port.game}}", "-CubePort={{port.cube}}", "-cubeworld={{setting.WorldName}}", "-nosteamclient", "-NoHangDetection"],
+    "consoleLogFiles": ["ShooterGame/Saved/Logs/*.log"],
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7003 },
+    { "key": "query", "protocol": "udp", "preferred": 27019 },
+    { "key": "cube", "protocol": "udp", "preferred": 27020 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 27060 }
+  ],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json",
+    "label": "Serverstart",
+    "format": "json",
+    "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base PixARK", "description": "Name im Serverbrowser. Standard: blnk - Base PixARK." },
+      { "key": "WorldName", "label": "Weltname", "group": "Welt", "valueType": "string", "defaultValue": "BlenkBase", "description": "Kennung der Cube-Welt. Standard: BlenkBase." },
+      { "key": "SaveName", "label": "Spielstandordner", "group": "Spielstand", "valueType": "string", "defaultValue": "BlenkBase", "description": "Alternativer Save-Ordner innerhalb der Instanz. Standard: BlenkBase." },
+      { "key": "Seed", "label": "Welt-Seed", "group": "Welt", "valueType": "integer", "defaultValue": "12345", "description": "Seed der Landschaftsgenerierung. Standard: 12345." },
+      { "key": "OreSeed", "label": "Erz-Seed", "group": "Welt", "valueType": "integer", "defaultValue": "1234", "description": "Seed der Erzverteilung. Standard: 1234." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 10." },
+      { "key": "ServerPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "AdminPassword", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-PixARK", "description": "Kennwort für Administration und RCON. Vor öffentlichem Betrieb ändern." },
+      { "key": "RconEnabled", "label": "RCON aktivieren", "group": "RCON", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert die entfernte Serverkonsole. Standard: Ja." }
+    ]
+  }],
+  "persistentPaths": ["ShooterGame/Saved", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 3,
+  "id": "the-isle",
+  "displayName": "The Isle Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://store.steampowered.com/app/376210/The_Isle/" },
+  "summary": "The-Isle-Evrima-Server mit Gateway, Slots, Wetter, Queue, Kennwort und RCON.",
+  "maturity": "experimental",
+  "tags": ["survival", "dinosaurs", "pvp"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 376210 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 412680, "anonymous": true, "branch": "evrima" },
+  "process": {
+    "executable": "TheIsleServer.exe",
+    "workingDirectory": ".",
+    "arguments": ["-Port={{port.game}}", "-QueryPort={{port.query}}", "-log"],
+    "consoleLogFiles": ["TheIsle/Saved/Logs/*.log"],
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7777 },
+    { "key": "query", "protocol": "udp", "preferred": 27015 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 8888 },
+    { "key": "queue", "protocol": "tcp", "preferred": 10000 }
+  ],
+  "configurationFiles": [{
+    "path": "TheIsle/Saved/Config/WindowsServer/Game.ini",
+    "label": "Server und Welt",
+    "format": "ini",
+    "section": "/Script/TheIsle.TIGameSession",
+    "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base The Isle", "description": "Öffentlicher Servername. Standard: blnk - Base The Isle." },
+      { "key": "MaxPlayerCount", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "100", "minimum": 1, "maximum": 200, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 100." },
+      { "key": "MapName", "label": "Karte", "group": "Welt", "valueType": "string", "defaultValue": "Gateway", "choices": [{ "value": "Gateway", "label": "Gateway" }], "description": "Aktuelle Evrima-Karte. Standard: Gateway." },
+      { "key": "bServerDynamicWeather", "label": "Dynamisches Wetter", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert dynamische Wetterwechsel. Standard: Ja." },
+      { "key": "bAllowReplay", "label": "Replay erlauben", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Erlaubt Replay-Aufzeichnungen. Standard: Nein." },
+      { "key": "bEnableHumans", "label": "Menschen aktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Aktiviert experimentelle Menschen. Standard: Nein." },
+      { "key": "bServerPassword", "label": "Kennwortschutz", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "false", "description": "Aktiviert das Serverkennwort. Standard: Nein." },
+      { "key": "ServerPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort. Standard: leer." },
+      { "key": "bRconEnabled", "label": "RCON aktivieren", "group": "RCON", "valueType": "boolean", "defaultValue": "false", "description": "Aktiviert RCON. Standard: Nein." },
+      { "key": "RconPort", "label": "RCON-Port", "group": "RCON", "valueType": "integer", "portKey": "rcon", "minimum": 1, "maximum": 65535, "description": "Automatisch verwalteter TCP-Port für RCON." },
+      { "key": "RconPassword", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-TheIsle", "description": "Kennwort der entfernten Konsole. Vor Verwendung ändern." },
+      { "key": "bQueueEnabled", "label": "Warteschlange aktivieren", "group": "Spieler", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert die Beitrittswarteschlange. Standard: Ja." },
+      { "key": "QueuePort", "label": "Warteschlangen-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "queue", "minimum": 1, "maximum": 65535, "description": "Automatisch verwalteter TCP-Port der Warteschlange." }
+    ]
+  }],
+  "persistentPaths": ["TheIsle/Saved"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

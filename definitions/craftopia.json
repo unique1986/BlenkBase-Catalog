@@ -1,0 +1,115 @@
+{
+    "schemaVersion":  3,
+    "id":  "craftopia",
+    "displayName":  "Craftopia Dedicated Server",
+    "package":  {
+                    "author":  "BLNK Labs",
+                    "version":  "1.0.0",
+                    "homepage":  "https://store.steampowered.com/app/1307550/Craftopia/"
+                },
+    "summary":  "Craftopia-Server mit Welt-, Port-, Zugriffs-, Grafik- und Autosave-Konfiguration.",
+    "maturity":  "beta",
+    "tags":  [
+                 "survival",
+                 "crafting",
+                 "open-world"
+             ],
+    "capabilities":  [
+                         "install",
+                         "update",
+                         "start",
+                         "stop",
+                         "configure",
+                         "backup"
+                     ],
+    "artwork":  {
+                    "storeAppId":  1307550
+                },
+    "adapters":  {
+                     "installation":  "steamcmd",
+                     "lifecycle":  "generic-process",
+                     "configuration":  "catalog-files",
+                     "health":  "process-and-ports",
+                     "population":  "none",
+                     "backup":  "persistent-paths",
+                     "mods":  "none"
+                 },
+    "installer":  {
+                      "kind":  "steamcmd",
+                      "appId":  1670340,
+                      "anonymous":  true,
+                      "branch":  "public"
+                  },
+    "process":  {
+                    "executable":  "Craftopia.exe",
+                    "workingDirectory":  ".",
+                    "arguments":  [
+
+                                  ],
+                    "stopTimeoutSeconds":  60
+                },
+    "ports":  [
+                  {
+                      "key":  "game",
+                      "protocol":  "udp",
+                      "preferred":  6587
+                  }
+              ],
+    "configurationFiles":  [
+                               {
+                                   "path":  "ServerSetting.ini",
+                                   "label":  "Server und Welt",
+                                   "format":  "ini",
+                                   "fields":  [
+                                                  {
+                                                      "key":  "port",
+                                                      "label":  "Spielport",
+                                                      "group":  "Netzwerk",
+                                                      "valueType":  "integer",
+                                                      "portKey":  "game",
+                                                      "minimum":  1,
+                                                      "maximum":  65535,
+                                                      "description":  "Von blnk Base automatisch zugewiesener UDP-Port. Spielstandard: 6587."
+                                                  },
+                                                  {
+                                                      "key":  "maxPlayerNumber",
+                                                      "label":  "Maximale Spieler",
+                                                      "group":  "Spieler",
+                                                      "valueType":  "integer",
+                                                      "defaultValue":  "7",
+                                                      "minimum":  1,
+                                                      "maximum":  127,
+                                                      "description":  "Maximal gleichzeitig verbundene Spieler. Standard: 7."
+                                                  },
+                                                  {
+                                                      "key":  "usePassword",
+                                                      "label":  "Serverkennwort verwenden",
+                                                      "group":  "Sicherheit",
+                                                      "valueType":  "boolean",
+                                                      "defaultValue":  "false",
+                                                      "description":  "Aktiviert das numerische Serverkennwort. Standard: Nein."
+                                                  },
+                                                  {
+                                                      "key":  "serverPassword",
+                                                      "label":  "Serverkennwort",
+                                                      "group":  "Sicherheit",
+                                                      "valueType":  "string",
+                                                      "secret":  true,
+                                                      "defaultValue":  "00000000",
+                                                      "description":  "Numerische PIN mit bis zu acht Stellen. Nur relevant, wenn der Kennwortschutz aktiviert ist."
+                                                  }
+                                              ],
+                                   "section":  "Host"
+                               }
+                           ],
+    "persistentPaths":  [
+                            "DedicatedServerSave",
+                            "ServerSetting.ini"
+                        ],
+    "health":  {
+                   "processRequired":  true,
+                   "portKeys":  [
+                                    "game"
+                                ]
+               }
+}

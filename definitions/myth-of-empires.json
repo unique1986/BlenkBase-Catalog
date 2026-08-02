@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 3,
+  "id": "myth-of-empires",
+  "displayName": "Myth of Empires Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://store.steampowered.com/app/1371580/Myth_of_Empires/" },
+  "summary": "Myth-of-Empires-Privatserver mit Karte, PvE/PvP, Cluster, RCON und administrativen Konten.",
+  "maturity": "experimental",
+  "tags": ["survival", "sandbox", "pvp"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 1371580 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1794810, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "MOE/Binaries/Win64/MOEServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["{{setting.MapName}}", "-game", "-server", "-DataLocalFile", "-NotCheckServerSteamAuth", "-LOCALLOGTIMES", "-PrivateServer", "-MultiHome=0.0.0.0", "-SessionName={{setting.ServerName}}", "-GameServerPVPType={{setting.PvpMode}}", "-MaxPlayers={{setting.MaxPlayers}}", "-MapDifficultyRate={{setting.Difficulty}}", "-UseACE", "-EnableVACBan=1", "-ServerId={{setting.ServerId}}", "-ClusterId={{setting.ClusterId}}", "-Port={{port.game}}", "-QueryPort={{port.query}}", "-bStartShutDownServiceInPrivateServer=1", "-ShutDownServiceIP=127.0.0.1", "-ShutDownServicePort={{port.rcon}}", "-ShutDownServiceKey={{setting.RconPassword}}", "-ServerAdminAccounts={{setting.AdminIds}}"],
+    "consoleLogFiles": ["MOE/Saved/Logs/*.log"],
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 12877 },
+    { "key": "query", "protocol": "udp", "preferred": 12888 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 13888 }
+  ],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json",
+    "label": "Serverstart",
+    "format": "json",
+    "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Myth of Empires", "description": "Öffentlicher Servername. Standard: blnk - Base Myth of Empires." },
+      { "key": "MapName", "label": "Karte", "group": "Welt", "valueType": "string", "defaultValue": "LargeTerrain_Central_Main", "choices": [{ "value": "LargeTerrain_Central_Main", "label": "Zhongzhou" }, { "value": "LargeTerrain_East_Main", "label": "Dongzhou" }], "description": "Interner Kartenname. Standard: Zhongzhou." },
+      { "key": "PvpMode", "label": "Spielmodus", "group": "Spielregeln", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "PvE" }, { "value": "1", "label": "PvP" }], "description": "Grundlegender Konfliktmodus. Standard: PvE." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "25", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 25." },
+      { "key": "Difficulty", "label": "Kartenschwierigkeit", "group": "Welt", "valueType": "number", "defaultValue": "1", "minimum": 0.1, "maximum": 10, "description": "Multiplikator der Kartenschwierigkeit. Standard: 1,0." },
+      { "key": "ServerId", "label": "Server-ID", "group": "Cluster", "valueType": "integer", "defaultValue": "100", "minimum": 1, "maximum": 999999, "description": "Eindeutige Kennung innerhalb eines Clusters. Standard: 100." },
+      { "key": "ClusterId", "label": "Cluster-ID", "group": "Cluster", "valueType": "integer", "defaultValue": "1", "minimum": 1, "maximum": 999999, "description": "Gemeinsame Kennung zusammengehöriger Server. Standard: 1." },
+      { "key": "RconPassword", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-MOE", "description": "Schlüssel des Shutdown-/RCON-Dienstes. Vor öffentlichem Betrieb ändern." },
+      { "key": "AdminIds", "label": "Administratoren", "group": "Administration", "valueType": "string", "defaultValue": "", "description": "Kommagetrennte Plattformkennungen administrativer Konten. Standard: leer." }
+    ]
+  }],
+  "persistentPaths": ["MOE/Saved", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 3,
+  "id": "stationeers",
+  "displayName": "Stationeers Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://store.steampowered.com/app/544550/Stationeers/" },
+  "summary": "Stationeers-Server mit Welt, Spielstand, Sichtbarkeit, Slots, Kennwort und Autosave.",
+  "maturity": "beta",
+  "tags": ["survival", "space", "simulation"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"],
+  "artwork": { "storeAppId": 544550 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "none", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 600760, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "rocketstation_DedicatedServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["-loadlatest", "{{setting.SaveName}}", "{{setting.WorldName}}", "-settings", "ServerName", "{{setting.ServerName}}", "StartLocalHost", "true", "ServerVisible", "{{setting.ServerVisible}}", "GamePort", "{{port.game}}", "UpdatePort", "{{port.update}}", "AutoSave", "{{setting.AutoSave}}", "SaveInterval", "{{setting.SaveInterval}}", "ServerPassword", "{{setting.Password}}", "ServerMaxPlayers", "{{setting.MaxPlayers}}", "UPNPEnabled", "false"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27500 },
+    { "key": "update", "protocol": "udp", "preferred": 27014 }
+  ],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json",
+    "label": "Serverstart",
+    "format": "json",
+    "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Stationeers", "description": "Öffentlicher Servername. Standard: blnk - Base Stationeers." },
+      { "key": "WorldName", "label": "Weltvorlage", "group": "Welt", "valueType": "string", "defaultValue": "Moon", "description": "Interner Name der Weltvorlage, beispielsweise Moon oder Mars. Standard: Moon." },
+      { "key": "SaveName", "label": "Spielstandname", "group": "Spielstand", "valueType": "string", "defaultValue": "BlenkBase", "description": "Name des persistenten Spielstands. Standard: BlenkBase." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 64, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 10." },
+      { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort. Standard: leer." },
+      { "key": "ServerVisible", "label": "Öffentlich sichtbar", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Listet den Server öffentlich. Standard: Ja." },
+      { "key": "AutoSave", "label": "Autosave", "group": "Spielstand", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert automatische Spielstandsicherungen. Standard: Ja." },
+      { "key": "SaveInterval", "label": "Autosave-Intervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "300", "minimum": 30, "maximum": 86400, "description": "Sekunden zwischen Speicherungen. Standard: 300." }
+    ]
+  }],
+  "persistentPaths": ["saves", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game", "update"] }
+}

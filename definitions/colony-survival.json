@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 3,
+  "id": "colony-survival",
+  "displayName": "Colony Survival Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://store.steampowered.com/app/366090/Colony_Survival/" },
+  "summary": "Kooperativer Kolonie-Server mit eigener Welt, Steam-Liste, Slots und automatischer Portverwaltung.",
+  "maturity": "beta",
+  "tags": ["survival", "building", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 366090 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 748090, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "colonyserver.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["-batchmode", "-nographics", "+server.world", "{{setting.WorldName}}", "+server.networktype", "SteamOnline", "+server.name", "{{setting.ServerName}}", "+server.maxplayers", "{{setting.MaxPlayers}}", "+server.gameport", "{{port.game}}", "+server.ip", "0.0.0.0", "+server.steamport", "{{port.query}}"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27004 },
+    { "key": "query", "protocol": "udp", "preferred": 27005 }
+  ],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json",
+    "label": "Serverstart",
+    "format": "json",
+    "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Colony Survival", "description": "Name im Steam-Serverbrowser. Standard: blnk - Base Colony Survival." },
+      { "key": "WorldName", "label": "Weltname", "group": "Welt", "valueType": "string", "defaultValue": "BlenkBase", "description": "Interne Kennung des persistenten Spielstands. Eine Änderung lädt eine andere Welt. Standard: BlenkBase." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 10." }
+    ]
+  }],
+  "persistentPaths": ["gamedata/savegames", "gamedata/settings", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

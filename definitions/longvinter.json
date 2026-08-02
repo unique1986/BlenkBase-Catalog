@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 3,
+  "id": "longvinter",
+  "displayName": "Longvinter Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://store.steampowered.com/app/1635450/Longvinter/" },
+  "summary": "Longvinter-Inselserver mit Steam-Sichtbarkeit, PvP, Kennwort, MOTD und Zeltregeln.",
+  "maturity": "beta",
+  "tags": ["survival", "open-world", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 1635450 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1639880, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "Longvinter/Binaries/Win64/LongvinterServer-Win64-Shipping.exe",
+    "workingDirectory": ".",
+    "arguments": ["Longvinter", "-Port={{port.game}}", "-QueryPort={{port.query}}", "-log"],
+    "consoleLogFiles": ["Longvinter/Saved/Logs/*.log"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7777 },
+    { "key": "query", "protocol": "udp", "preferred": 27015 }
+  ],
+  "configurationFiles": [{
+    "path": "Longvinter/Saved/Config/WindowsServer/Game.ini",
+    "label": "Insel und Server",
+    "format": "ini",
+    "section": "/Script/Longvinter.LongvinterGameSession",
+    "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Longvinter", "description": "Name im Serverbrowser. Standard: blnk - Base Longvinter." },
+      { "key": "ServerTag", "label": "Server-Tag", "group": "Allgemein", "valueType": "string", "defaultValue": "BLNK", "description": "Kurze Kennzeichnung des Servers. Standard: BLNK." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "32", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 32." },
+      { "key": "ServerMOTD", "label": "Begrüßungsnachricht", "group": "Kommunikation", "valueType": "string", "defaultValue": "Willkommen auf der blnk - Base Insel!", "description": "Nachricht für beitretende Spieler." },
+      { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort. Standard: leer." },
+      { "key": "CommunityWebsite", "label": "Community-Webseite", "group": "Allgemein", "valueType": "string", "defaultValue": "", "description": "Optionale Webadresse der Community. Standard: leer." },
+      { "key": "AdminSteamID", "label": "Admin-EOS-/Steam-ID", "group": "Administration", "valueType": "string", "defaultValue": "", "description": "Plattformkennung des ersten Administrators. Standard: leer." },
+      { "key": "PVP", "label": "PvP aktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Kämpfe zwischen Spielern. Standard: Ja." },
+      { "key": "TentDecay", "label": "Zeltverfall", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Lässt verlassene Zelte verfallen. Standard: Ja." },
+      { "key": "MaxTents", "label": "Maximale Zelte pro Spieler", "group": "Welt", "valueType": "integer", "defaultValue": "2", "minimum": 0, "maximum": 100, "description": "Zeltlimit pro Spieler. Standard: 2." }
+    ]
+  }],
+  "persistentPaths": ["Longvinter/Saved"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

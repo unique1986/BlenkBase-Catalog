@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 3,
+  "id": "necesse",
+  "displayName": "Necesse Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://necessewiki.com/Multiplayer" },
+  "summary": "Necesse-Server mit gebündelter Java-Laufzeit, Welt, Slots, Kennwort, MOTD und lokalem Datenordner.",
+  "maturity": "beta",
+  "tags": ["survival", "sandbox", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"],
+  "artwork": { "storeAppId": 1169040 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "none", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1169370, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "jre/bin/java.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["-Xms128M", "-Xmx{{setting.MemoryMb}}M", "-Dterminal.jline=false", "-Dterminal.ansi=true", "-jar", "Server.jar", "-localdir", "-nogui", "-world", "{{setting.WorldName}}", "-port", "{{port.game}}", "-slots", "{{setting.MaxPlayers}}", "-motd", "{{setting.Motd}}", "-pausewhenempty", "{{setting.PauseWhenEmpty}}", "-giveclientspower", "{{setting.GiveClientsPower}}", "-logging", "1", "-logs", "logs"],
+    "conditionalArguments": [{ "setting": "Password", "omitValues": [""], "arguments": ["-password", "{{setting.Password}}"] }],
+    "consoleLogFiles": ["logs/*.log"],
+    "stopCommand": "stop",
+    "stopTimeoutSeconds": 45
+  },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 14159 }],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json",
+    "label": "Serverstart",
+    "format": "json",
+    "fields": [
+      { "key": "WorldName", "label": "Weltname", "group": "Welt", "valueType": "string", "defaultValue": "BlenkBase", "description": "Name der zu ladenden Welt. Eine Änderung erzeugt beziehungsweise lädt einen anderen Spielstand. Standard: BlenkBase." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 250, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 10." },
+      { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort. Standard: leer." },
+      { "key": "Motd", "label": "Begrüßungsnachricht", "group": "Kommunikation", "valueType": "string", "defaultValue": "Willkommen auf dem blnk - Base Necesse Server!", "description": "Nachricht des Tages für beitretende Spieler." },
+      { "key": "MemoryMb", "label": "Java-Speicherlimit (MB)", "group": "Leistung", "valueType": "integer", "defaultValue": "2048", "minimum": 512, "maximum": 65536, "description": "Maximaler Heap der gebündelten Java-Laufzeit. Standard: 2048 MB." },
+      { "key": "PauseWhenEmpty", "label": "Ohne Spieler pausieren", "group": "Welt", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Pausiert die Welt ohne verbundene Spieler. Standard: Ja." },
+      { "key": "GiveClientsPower", "label": "Clientaktionen vertrauen", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Reduziert Serverprüfungen für flüssigere Clients, schwächt aber die Prüfung von Clientaktionen. Standard: Nein." }
+    ]
+  }],
+  "persistentPaths": ["saves", "cfg", "logs", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

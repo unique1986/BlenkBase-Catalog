@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "*.json"
+      - "definitions/*.json"
       - "build-catalog-feed.mjs"
       - ".github/workflows/catalog.yml"
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Feed und Prüfsummen erzeugen
-        run: node build-catalog-feed.mjs --source . --output feed.json
+        run: node build-catalog-feed.mjs --source definitions --output feed.json --url-prefix definitions
 
       - name: Geänderten Feed veröffentlichen
         run: |

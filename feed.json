@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Offizieller BlenkBase-Katalog",
-  "generatedAtUtc": "2026-08-02T14:09:17.890Z",
+  "generatedAtUtc": "2026-08-02T15:41:17.640Z",
   "definitions": [
     {
       "id": "abiotic-factor",
@@ -85,6 +85,15 @@
       "notes": "Source-Dedicated-Server für Black Mesa mit Karte, Slots, LAN/Internet, Kennwort, RCON und Serverlogs."
     },
     {
+      "id": "colony-survival",
+      "displayName": "Colony Survival Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/colony-survival.json",
+      "sha256": "884e739f098eef5a54f6069bbfa9919aef85b030bfd59ed872d3b427b06244e2",
+      "notes": "Kooperativer Kolonie-Server mit eigener Welt, Steam-Liste, Slots und automatischer Portverwaltung."
+    },
+    {
       "id": "conan-exiles",
       "displayName": "Conan Exiles Dedicated Server",
       "version": "1.1.0",
@@ -119,6 +128,15 @@
       "definitionUrl": "definitions/counter-strike-2.json",
       "sha256": "1901007a684d872be9060ecd829d153e31eb7f56a4a2fc991c5353e769b053f0",
       "notes": "Source-2-Server mit Karte, Spielmodus, RCON, GOTV- und Serverbrowser-Einstellungen."
+    },
+    {
+      "id": "craftopia",
+      "displayName": "Craftopia Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/craftopia.json",
+      "sha256": "a21526c241bc9dad724f651289e7fafa8d74fb584fc4781b8aec7499c3d1e7c9",
+      "notes": "Craftopia-Server mit Welt-, Port-, Zugriffs-, Grafik- und Autosave-Konfiguration."
     },
     {
       "id": "dayz",
@@ -256,6 +274,15 @@
       "notes": "Offizieller Source-Dedicated-Server mit Kampagne, Spielmodus, Lobby-, RCON- und Matchregeln."
     },
     {
+      "id": "longvinter",
+      "displayName": "Longvinter Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/longvinter.json",
+      "sha256": "d620901c6954bfc4c899b366cdd5ec11ce266c3db2582be5fc9c6a32f5faaead",
+      "notes": "Longvinter-Inselserver mit Steam-Sichtbarkeit, PvP, Kennwort, MOTD und Zeltregeln."
+    },
+    {
       "id": "minecraft-java",
       "displayName": "Minecraft: Java Edition",
       "version": "1.1.0",
@@ -274,6 +301,24 @@
       "notes": "Mittelalter-Kampfserver mit Kartenwahl, Slots, Kennwörtern, RCON und getrennten Spiel-, Beacon- und Query-Ports."
     },
     {
+      "id": "myth-of-empires",
+      "displayName": "Myth of Empires Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "definitions/myth-of-empires.json",
+      "sha256": "d60c6eadde99a534c7290a15703f12c42b55eb22142024eb801ad5526fea25e8",
+      "notes": "Myth-of-Empires-Privatserver mit Karte, PvE/PvP, Cluster, RCON und administrativen Konten."
+    },
+    {
+      "id": "necesse",
+      "displayName": "Necesse Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/necesse.json",
+      "sha256": "184625e81ef7d0117b139371dfe2b79b818a88145a9d4f6bcffb220a57c72f6f",
+      "notes": "Necesse-Server mit gebündelter Java-Laufzeit, Welt, Slots, Kennwort, MOTD und lokalem Datenordner."
+    },
+    {
       "id": "no-more-room-in-hell",
       "displayName": "No More Room in Hell Dedicated Server",
       "version": "1.0.0",
@@ -290,6 +335,15 @@
       "definitionUrl": "definitions/palworld.json",
       "sha256": "96addfd4271efb29ae76ad1037b07e64de8392da26f0f8ae8419bc763a2facf5",
       "notes": "Palworld Dedicated Server mit deutscher Vollkonfiguration."
+    },
+    {
+      "id": "pixark",
+      "displayName": "PixARK Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "definitions/pixark.json",
+      "sha256": "6a705ab01a530697a7d02071304a638f9f9b336080737a3c2f9ed0ebf2e44dba",
+      "notes": "PixARK-Server mit Welt, Seed, Slots, Kennwörtern, RCON, Steam-Query und Workshop-Unterstützung."
     },
     {
       "id": "project-zomboid",
@@ -382,6 +436,15 @@
       "notes": "Taktik-Shooter-Server mit Layerrotation, Slots, reservierten Plätzen, Adminlisten und getrennten Spiel-/Query-Ports."
     },
     {
+      "id": "stationeers",
+      "displayName": "Stationeers Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/stationeers.json",
+      "sha256": "8adae0c2153ab569c1c6c54d87fb9d5ba754371499f6f5c50ed1b47383bbc638",
+      "notes": "Stationeers-Server mit Welt, Spielstand, Sichtbarkeit, Slots, Kennwort und Autosave."
+    },
+    {
       "id": "sven-coop",
       "displayName": "Sven Co-op Dedicated Server",
       "version": "1.0.0",
@@ -416,6 +479,15 @@
       "definitionUrl": "definitions/the-forest.json",
       "sha256": "4658e4a60bdaaa406cdeb4cd870cbb023dbfe3c9194c500e6b195bb6a420a06c",
       "notes": "Koop-Survival-Server mit instanzgebundener Konfiguration, Spielständen und Steam-Ports."
+    },
+    {
+      "id": "the-isle",
+      "displayName": "The Isle Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "definitions/the-isle.json",
+      "sha256": "1871ae386163c26d8161ca148cdb80e2ba28292de27ec5aa8acc1397726c6e68",
+      "notes": "The-Isle-Evrima-Server mit Gateway, Slots, Wetter, Queue, Kennwort und RCON."
     },
     {
       "id": "unturned",

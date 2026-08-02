@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 3,
+  "id": "gefechtsstation",
+  "displayName": "Gefechtsstation",
+  "package": {
+    "author": "Blenk",
+    "version": "1.1.0",
+    "license": "Proprietary"
+  },
+  "summary": "Schiffe-versenken-Duell für Android, Browser und Apple-PWA mit serverautoritärem Online-Multiplayer.",
+  "maturity": "experimental",
+  "tags": ["strategy", "multiplayer", "web"],
+  "capabilities": ["install", "update", "start", "stop", "configure"],
+  "artwork": {},
+  "adapters": {
+    "installation": "github-release",
+    "lifecycle": "generic-process",
+    "configuration": "catalog-files",
+    "health": "process-and-ports",
+    "population": "none",
+    "backup": "persistent-paths",
+    "mods": "none"
+  },
+  "installer": {
+    "kind": "github-release",
+    "repository": "unique1986/Gefechtsstation-Releases",
+    "assetPattern": "^Gefechtsstation-server-windows-x64-.*\\.zip$"
+  },
+  "process": {
+    "executable": "runtime/node.exe",
+    "workingDirectory": ".",
+    "arguments": ["server/src/standalone.mjs", "{{port.game}}"],
+    "consoleLogFiles": [],
+    "stopTimeoutSeconds": 15
+  },
+  "ports": [
+    { "key": "game", "protocol": "tcp", "preferred": 8787 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "server-config.json",
+      "label": "Gefechtsserver",
+      "format": "json",
+      "fields": [
+        {
+          "key": "host",
+          "jsonPath": "host",
+          "label": "Bind-Adresse",
+          "group": "Netzwerk",
+          "valueType": "string",
+          "defaultValue": "127.0.0.1",
+          "description": "Für Caddy auf demselben Rechner sicher auf 127.0.0.1 belassen."
+        },
+        {
+          "key": "allowedOrigins",
+          "jsonPath": "allowedOrigins",
+          "label": "Erlaubte Web-Adressen",
+          "group": "Sicherheit",
+          "valueType": "string",
+          "defaultValue": "",
+          "description": "Kommagetrennte HTTPS-Adressen, zum Beispiel https://battle.example.de. Leer erlaubt alle Origins."
+        },
+        {
+          "key": "roomTtlMinutes",
+          "jsonPath": "roomTtlMinutes",
+          "label": "Raum-Nachlaufzeit (Minuten)",
+          "group": "Spielbetrieb",
+          "valueType": "integer",
+          "defaultValue": "5",
+          "minimum": 1,
+          "maximum": 1440,
+          "description": "Zeit, in der ein Raum nach einem Netzwechsel für die Wiederverbindung erhalten bleibt."
+        }
+      ]
+    }
+  ],
+  "persistentPaths": [],
+  "health": {
+    "processRequired": true,
+    "portKeys": ["game"]
+  }
+}

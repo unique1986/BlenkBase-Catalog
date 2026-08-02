@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 3,
+  "id": "the-forest",
+  "displayName": "The Forest Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://steamdb.info/app/556450/config/" },
+  "summary": "Koop-Survival-Server mit instanzgebundener Konfiguration, Spielständen und Steam-Ports.",
+  "maturity": "beta",
+  "tags": ["survival", "coop", "horror"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 242760 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 556450, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "TheForestDedicatedServer.exe",
+    "workingDirectory": ".",
+    "arguments": ["-batchmode", "-nographics", "-dedicated", "-configfilepath", "{{instance.root}}/config/config.cfg"],
+    "consoleLogFiles": ["logs/*.log"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "steam", "protocol": "udp", "preferred": 8766 },
+    { "key": "game", "protocol": "udp", "preferred": 27015 },
+    { "key": "query", "protocol": "udp", "preferred": 27016 }
+  ],
+  "configurationFiles": [{
+    "path": "config/config.cfg",
+    "label": "Dedicated-Server-Konfiguration",
+    "format": "command-list",
+    "fields": [
+      { "key": "serverName", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base The Forest", "description": "Name im Serverbrowser. Standard: blnk - Base The Forest." },
+      { "key": "serverPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "8", "minimum": 1, "maximum": 8, "description": "Maximal gleichzeitig verbundene Spieler. Standard und Spielmaximum: 8." },
+      { "key": "serverPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "serverPasswordAdmin", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-Forest", "description": "Kennwort für Serveradministratoren. Vor öffentlichem Betrieb ändern." },
+      { "key": "serverSteamPort", "label": "Steam-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "steam", "minimum": 1, "maximum": 65535, "description": "UDP-Port der Steam-Kommunikation. BlenkBase weist ihn automatisch zu." },
+      { "key": "serverGamePort", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "UDP-Port des Spielverkehrs. BlenkBase weist ihn automatisch zu." },
+      { "key": "serverQueryPort", "label": "Query-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "query", "minimum": 1, "maximum": 65535, "description": "UDP-Port für Serverbrowser-Abfragen. BlenkBase weist ihn automatisch zu." },
+      { "key": "serverAutoSaveInterval", "label": "Autosave-Intervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "15", "minimum": 1, "maximum": 240, "description": "Minuten zwischen automatischen Speicherungen. Standard: 15." },
+      { "key": "difficulty", "label": "Schwierigkeit", "group": "Spielregeln", "valueType": "string", "defaultValue": "Normal", "choices": [{ "value": "Peaceful", "label": "Friedlich" }, { "value": "Normal", "label": "Normal" }, { "value": "Hard", "label": "Schwer" }, { "value": "HardSurvival", "label": "Schweres Überleben" }], "description": "Schwierigkeitsgrad der Welt. Standard: Normal." },
+      { "key": "initType", "label": "Startmodus", "group": "Spielstand", "valueType": "string", "defaultValue": "Continue", "choices": [{ "value": "Continue", "label": "Fortsetzen" }, { "value": "New", "label": "Neue Welt" }], "description": "Fortsetzen lädt den gewählten Slot; Neue Welt überschreibt den Slot beim Start. Standard: Fortsetzen." },
+      { "key": "slot", "label": "Spielstand-Slot", "group": "Spielstand", "valueType": "integer", "defaultValue": "1", "minimum": 1, "maximum": 5, "description": "Verwendeter Welt-Slot. Standard: 1." },
+      { "key": "showLogs", "label": "Logfenster", "group": "Protokollierung", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert ausführliche Serverprotokolle. Standard: Ja." },
+      { "key": "veganMode", "label": "Keine Gegner", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Entfernt Gegner vollständig. Standard: Nein." },
+      { "key": "vegetarianMode", "label": "Gegner nur nachts", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Lässt Gegner nur nachts erscheinen. Standard: Nein." },
+      { "key": "resetHolesMode", "label": "Gebäudelöcher zurücksetzen", "group": "Wartung", "valueType": "boolean", "defaultValue": "false", "description": "Repariert beim nächsten Start ausgeschnittene Gebäudeteile und wird danach normalerweise wieder deaktiviert." },
+      { "key": "treeRegrowMode", "label": "Bäume wachsen nach", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Lässt gefällte Bäume beim Schlafen nachwachsen. Standard: Nein." },
+      { "key": "allowBuildingDestruction", "label": "Gebäudeschaden", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Schaden an Spielergebäuden. Standard: Ja." },
+      { "key": "allowCheats", "label": "Cheats", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "false", "description": "Erlaubt Cheatbefehle. Standard: Nein." },
+      { "key": "targetFpsIdle", "label": "FPS ohne Spieler", "group": "Leistung", "valueType": "integer", "defaultValue": "5", "minimum": 1, "maximum": 120, "description": "Zielbildrate ohne verbundene Spieler. Standard: 5." },
+      { "key": "targetFpsActive", "label": "FPS mit Spielern", "group": "Leistung", "valueType": "integer", "defaultValue": "60", "minimum": 10, "maximum": 240, "description": "Zielbildrate bei aktiven Spielern. Standard: 60." }
+    ]
+  }],
+  "persistentPaths": ["config", "saves", "logs"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

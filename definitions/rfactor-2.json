@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3, "id": "rfactor-2", "displayName": "rFactor 2 Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://docs.studio-397.com/users-guide/setting-up-a-dedicated-server" },
+  "summary": "Rennsimulationsserver mit Spieler-/Zuschauerplätzen, Serverkennwort, Runden-, Schadens- und Fahrhilfenkonfiguration.",
+  "maturity": "experimental", "tags": ["racing", "simulation", "motorsport"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 365960 }, "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 400300, "anonymous": true, "branch": "public" },
+  "process": { "executable": "Bin64/rFactor2 Dedicated.exe", "workingDirectory": ".", "arguments": ["+path=.", "+profile=player", "+oneclick"], "consoleLogFiles": ["UserData/Log/*.log", "UserData/Log/Results/*.xml"], "stopTimeoutSeconds": 60 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 54297 }, { "key": "http", "protocol": "tcp", "preferred": 64297 }, { "key": "query", "protocol": "udp", "preferred": 64298 }],
+  "configurationFiles": [{ "path": "UserData/player/Multiplayer.JSON", "label": "Mehrspieler und Server", "format": "json", "fields": [
+    { "key": "Race Server Name", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base rFactor 2", "description": "Name im Serverbrowser. Standard: blnk - Base rFactor 2." },
+    { "key": "Server Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+    { "key": "Admin Password", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-rF2", "description": "Kennwort für administrative Befehle. Vor öffentlichem Betrieb ändern." },
+    { "key": "Max MP Players", "label": "Maximale Fahrer", "group": "Allgemein", "valueType": "integer", "defaultValue": "24", "minimum": 1, "maximum": 104, "description": "Maximal gleichzeitig verbundene Fahrer. Standard: 24." },
+    { "key": "Max Data Per Client", "label": "Bandbreite pro Client", "group": "Netzwerk", "valueType": "integer", "defaultValue": "9999", "minimum": 64, "maximum": 99999, "description": "Maximale Datenrate je Client in kbit/s. Standard: 9999." },
+    { "key": "HTTP Server Max File Size", "label": "Maximale Downloadgröße", "group": "Netzwerk", "valueType": "integer", "defaultValue": "100", "minimum": 0, "maximum": 10000, "description": "Maximale Dateigröße des HTTP-Downloads in MB. Standard: 100." }
+  ] }],
+  "persistentPaths": ["UserData", "Packages", "Installed"], "health": { "processRequired": true, "portKeys": ["game", "http", "query"] }
+}

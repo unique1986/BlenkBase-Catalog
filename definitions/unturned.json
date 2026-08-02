@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 3,
+  "id": "unturned",
+  "displayName": "Unturned Dedicated Server",
+  "package": {
+    "author": "BLNK Labs",
+    "version": "1.0.0",
+    "homepage": "https://docs.smartlydressedgames.com/en/latest/servers/steamcmd.html"
+  },
+  "summary": "Offizieller Unturned-Server mit SteamCMD, Workshop-Unterstützung und deutscher Grundkonfiguration.",
+  "maturity": "beta",
+  "tags": ["survival", "zombies", "workshop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query", "mods"],
+  "artwork": { "storeAppId": 304930 },
+  "adapters": {
+    "installation": "steamcmd",
+    "lifecycle": "stdin-command",
+    "configuration": "catalog-files",
+    "health": "process-and-ports",
+    "population": "steam-a2s",
+    "backup": "persistent-paths",
+    "mods": "steam-workshop"
+  },
+  "installer": { "kind": "steamcmd", "appId": 1110390, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "Unturned.exe",
+    "workingDirectory": ".",
+    "arguments": ["-batchmode", "-nographics", "+InternetServer/BlenkBase"],
+    "consoleLogFiles": ["Servers/BlenkBase/Logs/*.log"],
+    "stopCommand": "shutdown",
+    "stopTimeoutSeconds": 45
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27015 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "Servers/BlenkBase/Server/Commands.dat",
+      "label": "Server-Grundeinstellungen",
+      "format": "command-list",
+      "fields": [
+        {
+          "key": "Name",
+          "label": "Servername",
+          "group": "Allgemein",
+          "valueType": "string",
+          "defaultValue": "blnk - Base Unturned",
+          "description": "Name im Serverbrowser. Standard: blnk - Base Unturned."
+        },
+        {
+          "key": "Map",
+          "label": "Karte",
+          "group": "Welt",
+          "valueType": "string",
+          "defaultValue": "PEI",
+          "description": "Interner Kartenname oder Workshop-Kartenname. Standard: PEI."
+        },
+        {
+          "key": "MaxPlayers",
+          "label": "Maximale Spieler",
+          "group": "Spieler",
+          "valueType": "integer",
+          "minimum": 1,
+          "maximum": 48,
+          "defaultValue": "24",
+          "description": "Maximal gleichzeitig verbundene Spieler. Standard: 24."
+        },
+        {
+          "key": "Port",
+          "label": "Spielport",
+          "group": "Netzwerk",
+          "valueType": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "portKey": "game",
+          "defaultValue": "27015",
+          "description": "Wird von der automatischen Portverwaltung gesetzt. Standard: 27015/UDP."
+        },
+        {
+          "key": "Mode",
+          "label": "Schwierigkeitsgrad",
+          "group": "Welt",
+          "valueType": "string",
+          "defaultValue": "Normal",
+          "choices": [
+            { "value": "Easy", "label": "Einfach" },
+            { "value": "Normal", "label": "Normal" },
+            { "value": "Hard", "label": "Schwer" }
+          ],
+          "description": "Grundlegender Schwierigkeitsgrad. Standard: Normal."
+        },
+        {
+          "key": "Perspective",
+          "label": "Kameraperspektive",
+          "group": "Spieler",
+          "valueType": "string",
+          "defaultValue": "Both",
+          "choices": [
+            { "value": "First", "label": "Nur Ego-Perspektive" },
+            { "value": "Third", "label": "Nur Drittperson" },
+            { "value": "Both", "label": "Beides" },
+            { "value": "Vehicle", "label": "Drittperson nur in Fahrzeugen" }
+          ],
+          "description": "Erlaubte Kameraperspektive. Standard: Beides."
+        },
+        {
+          "key": "Password",
+          "label": "Serverkennwort",
+          "group": "Sicherheit",
+          "valueType": "string",
+          "secret": true,
+          "description": "Optionales Kennwort. Leer bedeutet: öffentlich zugänglich."
+        },
+        { "key": "Owner", "label": "Serverbesitzer (Steam64-ID)", "group": "Administration", "valueType": "string", "defaultValue": "0", "description": "Steam64-ID des Serverbesitzers. 0 bedeutet: nicht gesetzt." },
+        { "key": "Welcome", "label": "Willkommensnachricht", "group": "Kommunikation", "valueType": "string", "defaultValue": "Willkommen auf dem blnk - Base Server!", "description": "Nachricht, die Spielern beim Beitritt angezeigt wird." },
+        { "key": "Queue_Size", "label": "Warteschlangengröße", "group": "Spieler", "valueType": "integer", "defaultValue": "8", "minimum": 0, "maximum": 1000, "description": "Maximale Zahl wartender Spieler. Standard: 8." },
+        { "key": "Timeout", "label": "Verbindungs-Timeout (Sekunden)", "group": "Netzwerk", "valueType": "integer", "defaultValue": "600", "minimum": 30, "maximum": 3600, "description": "Zeit bis eine nicht mehr reagierende Verbindung getrennt wird. Standard: 600 Sekunden." },
+        { "key": "Max_Ping", "label": "Maximaler Ping", "group": "Netzwerk", "valueType": "integer", "defaultValue": "750", "minimum": 0, "maximum": 5000, "description": "Spieler über diesem Ping werden getrennt. 0 deaktiviert die Grenze. Standard: 750 ms." },
+        { "key": "Cheats", "label": "Cheats und Adminbefehle", "group": "Administration", "valueType": "string", "defaultValue": "Disabled", "choices": [{ "value": "Disabled", "label": "Nein" }, { "value": "Enabled", "label": "Ja" }], "description": "Aktiviert Cheat- und erweiterte Adminbefehle. Standard: Nein." },
+        { "key": "VAC_Secure", "label": "Valve Anti-Cheat", "group": "Sicherheit", "valueType": "string", "defaultValue": "Enabled", "choices": [{ "value": "Enabled", "label": "Ja" }, { "value": "Disabled", "label": "Nein" }], "description": "Aktiviert VAC. Standard und Empfehlung: Ja." },
+        { "key": "BattlEye_Secure", "label": "BattlEye", "group": "Sicherheit", "valueType": "string", "defaultValue": "Enabled", "choices": [{ "value": "Enabled", "label": "Ja" }, { "value": "Disabled", "label": "Nein" }], "description": "Aktiviert BattlEye. Standard und Empfehlung: Ja." },
+        { "key": "Hide_Admins", "label": "Administratoren verbergen", "group": "Datenschutz", "valueType": "string", "defaultValue": "Disabled", "choices": [{ "value": "Enabled", "label": "Ja" }, { "value": "Disabled", "label": "Nein" }], "description": "Verbirgt Administratorstatus in der Spielerliste. Standard: Nein." },
+        { "key": "Cycle", "label": "Tageszyklus", "group": "Welt", "valueType": "string", "defaultValue": "3600", "description": "Dauer bzw. Zykluswert für Tag und Nacht gemäß Unturned-Serverlogik. Standard: 3600." },
+        { "key": "Loadout", "label": "Startausrüstung", "group": "Spieler", "valueType": "string", "defaultValue": "", "description": "Optionale Loadout-Angabe im offiziellen Unturned-Format. Standard: leer." }
+      ]
+    }
+  ],
+  "persistentPaths": ["Servers/BlenkBase"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

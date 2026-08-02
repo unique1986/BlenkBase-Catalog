@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 3,
+  "id": "mordhau",
+  "displayName": "MORDHAU Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://mordhau.fandom.com/wiki/Dedicated_Server_Hosting_Guide" },
+  "summary": "Mittelalter-Kampfserver mit Kartenwahl, Slots, Kennwörtern, RCON und getrennten Spiel-, Beacon- und Query-Ports.",
+  "maturity": "beta",
+  "tags": ["action", "medieval", "pvp"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 629760 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 629800, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "MordhauServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["{{setting.Map}}", "-log", "-Port={{port.game}}", "-RconPort={{port.rcon}}", "-BeaconPort={{port.beacon}}", "-QueryPort={{port.query}}"],
+    "consoleLogFiles": ["Mordhau/Saved/Logs/*.log"],
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7777 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 7778 },
+    { "key": "beacon", "protocol": "udp", "preferred": 15000 },
+    { "key": "query", "protocol": "udp", "preferred": 27015 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "blenkbase-startup.json",
+      "label": "Karte und Serverstart",
+      "format": "json",
+      "fields": [
+        { "key": "Map", "label": "Startkarte", "group": "Karte", "valueType": "string", "defaultValue": "FFA_ThePit", "choices": [{ "value": "FFA_ThePit", "label": "The Pit – Free For All" }, { "value": "FFA_Camp", "label": "Camp – Free For All" }, { "value": "TDM_Camp", "label": "Camp – Team Deathmatch" }, { "value": "FL_Grad", "label": "Grad – Frontline" }, { "value": "INV_Castello", "label": "Castello – Invasion" }, { "value": "SKM_MountainPeak", "label": "Mountain Peak – Skirmish" }], "description": "Karte und Spielmodus beim Start. Standard: The Pit – Free For All." }
+      ]
+    },
+    {
+      "path": "Mordhau/Saved/Config/WindowsServer/Game.ini",
+      "label": "Server, Zugang und RCON",
+      "format": "ini",
+      "section": "/Script/Mordhau.MordhauGameSession",
+      "fields": [
+        { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base MORDHAU", "description": "Name im Serverbrowser. Standard: blnk - Base MORDHAU." },
+        { "key": "ServerPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "AdminPassword", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Mordhau", "description": "Kennwort für Ingame-Administration. Vor öffentlichem Betrieb ändern." },
+        { "key": "MaxSlots", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "16", "minimum": 1, "maximum": 64, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 16." },
+        { "key": "bIsThirdPersonCameraDisabled", "label": "Dritte Person deaktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Beschränkt Spieler auf die Ego-Perspektive. Standard: Nein." },
+        { "key": "bIsHitStopOnTeamHitsDisabled", "label": "Hitstop bei Teamtreffern deaktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Deaktiviert den Trefferstopp bei Teamtreffern. Standard: Nein." },
+        { "key": "RconPassword", "label": "RCON-Kennwort", "group": "RCON", "section": "Rcon", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-RCON", "description": "Kennwort für Source-RCON. Vor öffentlichem Betrieb ändern." },
+        { "key": "bTieredAdmins", "label": "Gestufte Adminrechte", "group": "RCON", "section": "Rcon", "valueType": "boolean", "defaultValue": "false", "description": "Verwendet mehrere administrative Berechtigungsstufen. Standard: Nein." },
+        { "key": "ListeningToByDefault", "label": "RCON-Ereigniskanal", "group": "RCON", "section": "Rcon", "valueType": "string", "defaultValue": "chat", "choices": [{ "value": "chat", "label": "Chat" }, { "value": "login", "label": "An- und Abmeldungen" }, { "value": "matchstate", "label": "Matchstatus" }, { "value": "killfeed", "label": "Killfeed" }], "description": "Ereigniskanal, den neue RCON-Verbindungen standardmäßig empfangen. Standard: Chat." }
+      ]
+    }
+  ],
+  "persistentPaths": ["Mordhau/Saved", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

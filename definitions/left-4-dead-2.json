@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 3,
+  "id": "left-4-dead-2",
+  "displayName": "Left 4 Dead 2 Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://developer.valvesoftware.com/wiki/Category:Left_4_Dead_2" },
+  "summary": "Offizieller Source-Dedicated-Server mit Kampagne, Spielmodus, Lobby-, RCON- und Matchregeln.",
+  "maturity": "beta",
+  "tags": ["coop", "shooter", "source"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 550 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 222860, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "srcds.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "left4dead2/cfg/blenkbase-startup.json",
+    "arguments": ["-console", "-game", "left4dead2", "-port", "{{port.game}}", "+map", "{{setting.StartMap}}", "+mp_gamemode", "{{setting.GameMode}}", "+exec", "server.cfg"],
+    "consoleLogFiles": ["left4dead2/console.log", "left4dead2/logs/*.log"],
+    "stopCommand": "quit",
+    "stopTimeoutSeconds": 30
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27015 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 27015 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "left4dead2/cfg/blenkbase-startup.json",
+      "label": "Kampagne und Spielmodus",
+      "format": "json",
+      "fields": [
+        { "key": "StartMap", "label": "Startkapitel", "group": "Start", "valueType": "string", "defaultValue": "c1m1_hotel", "choices": [{ "value": "c1m1_hotel", "label": "Dead Center – Hotel" }, { "value": "c2m1_highway", "label": "Dark Carnival – Highway" }, { "value": "c3m1_plankcountry", "label": "Swamp Fever – Plank Country" }, { "value": "c4m1_milltown_a", "label": "Hard Rain – Milltown" }, { "value": "c5m1_waterfront", "label": "The Parish – Waterfront" }, { "value": "c8m1_apartment", "label": "No Mercy – Apartments" }], "description": "Erstes Kapitel beim Serverstart. Standard: Dead Center – Hotel." },
+        { "key": "GameMode", "label": "Spielmodus", "group": "Start", "valueType": "string", "defaultValue": "campaign", "choices": [{ "value": "campaign", "label": "Kampagne" }, { "value": "versus", "label": "Versus" }, { "value": "survival", "label": "Survival" }, { "value": "scavenge", "label": "Scavenge" }, { "value": "realism", "label": "Realismus" }], "description": "Spielmodus beim nächsten Start. Standard: Kampagne." }
+      ]
+    },
+    {
+      "path": "left4dead2/cfg/server.cfg",
+      "label": "Servereinstellungen",
+      "format": "source-cfg",
+      "fields": [
+        { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Left 4 Dead 2", "description": "Name im Serverbrowser. Standard: blnk - Base Left 4 Dead 2." },
+        { "key": "sv_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-L4D2", "description": "Kennwort für die Fernadministration. Vor öffentlichem Betrieb ändern." },
+        { "key": "sv_lan", "label": "Nur LAN", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Ja beschränkt den Server auf das lokale Netzwerk. Standard: Nein." },
+        { "key": "sv_region", "label": "Serverregion", "group": "Netzwerk", "valueType": "integer", "defaultValue": "3", "minimum": -1, "maximum": 7, "description": "Region im Serverbrowser. 3 steht für Europa, -1 für weltweit. Standard: Europa." },
+        { "key": "sv_steamgroup_exclusive", "label": "Nur Steam-Gruppe", "group": "Lobby", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Beschränkt Lobby und Direktverbindungen auf die konfigurierte Steam-Gruppe. Standard: Nein." },
+        { "key": "sv_steamgroup", "label": "Steam-Gruppen-ID", "group": "Lobby", "valueType": "string", "defaultValue": "", "description": "Optionale numerische Steam-Gruppen-ID. Standard: leer." },
+        { "key": "sv_allow_lobby_connect_only", "label": "Nur Lobby-Verbindungen", "group": "Lobby", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Verhindert direkte Verbindungen außerhalb einer Lobby. Standard: Nein." },
+        { "key": "sv_consistency", "label": "Client-Dateien prüfen", "group": "Sicherheit", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Prüft wichtige Client-Dateien auf Übereinstimmung. Standard: Ja." },
+        { "key": "sv_cheats", "label": "Cheats", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert Cheat-CVars. Standard: Nein." },
+        { "key": "sv_voiceenable", "label": "Sprachchat", "group": "Kommunikation", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Aktiviert den integrierten Sprachchat. Standard: Ja." },
+        { "key": "sv_alltalk", "label": "Globaler Sprachchat", "group": "Kommunikation", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Alle Teams hören sich gegenseitig. Standard: Nein." },
+        { "key": "log", "label": "Serverprotokoll", "group": "Protokollierung", "valueType": "string", "defaultValue": "on", "choices": [{ "value": "on", "label": "An" }, { "value": "off", "label": "Aus" }], "description": "Aktiviert Source-Serverlogs. Standard: An." }
+      ]
+    }
+  ],
+  "persistentPaths": ["left4dead2/cfg", "left4dead2/logs", "left4dead2/addons"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

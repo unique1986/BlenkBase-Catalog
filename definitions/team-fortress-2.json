@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 3,
+  "id": "team-fortress-2",
+  "displayName": "Team Fortress 2 Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://wiki.teamfortress.com/wiki/Windows_dedicated_server" },
+  "summary": "Offizieller Source-Dedicated-Server mit Karten-, Spieler-, RCON-, Download- und Matchregeln.",
+  "maturity": "beta",
+  "tags": ["shooter", "source", "valve"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 440 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 232250, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "srcds.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "tf/cfg/blenkbase-startup.json",
+    "arguments": ["-console", "-game", "tf", "-port", "{{port.game}}", "+map", "{{setting.StartMap}}", "+maxplayers", "{{setting.MaxPlayers}}", "+exec", "server.cfg"],
+    "consoleLogFiles": ["tf/console.log", "tf/logs/*.log"],
+    "stopCommand": "quit",
+    "stopTimeoutSeconds": 30
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27015 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 27015 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "tf/cfg/blenkbase-startup.json",
+      "label": "Serverstart",
+      "format": "json",
+      "fields": [
+        { "key": "StartMap", "label": "Startkarte", "group": "Start", "valueType": "string", "defaultValue": "ctf_2fort", "choices": [{ "value": "ctf_2fort", "label": "2Fort" }, { "value": "cp_dustbowl", "label": "Dustbowl" }, { "value": "cp_badlands", "label": "Badlands" }, { "value": "pl_upward", "label": "Upward" }, { "value": "koth_viaduct", "label": "Viaduct" }, { "value": "mvm_mannworks", "label": "Mannworks (MvM)" }], "description": "Karte beim nächsten Start. Standard: 2Fort." },
+        { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Start", "valueType": "integer", "defaultValue": "24", "minimum": 1, "maximum": 32, "description": "Maximal gleichzeitig verbundene Spieler. Standard in BlenkBase: 24." }
+      ]
+    },
+    {
+      "path": "tf/cfg/server.cfg",
+      "label": "Servereinstellungen",
+      "format": "source-cfg",
+      "fields": [
+        { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Team Fortress 2", "description": "Name im Serverbrowser. Standard: blnk - Base Team Fortress 2." },
+        { "key": "sv_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-TF2", "description": "Kennwort für die Fernadministration. Vor öffentlichem Betrieb ändern." },
+        { "key": "sv_lan", "label": "Nur LAN", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Ja beschränkt den Server auf das lokale Netzwerk. Standard: Nein." },
+        { "key": "sv_region", "label": "Serverregion", "group": "Netzwerk", "valueType": "integer", "defaultValue": "3", "minimum": -1, "maximum": 7, "description": "Region im Serverbrowser. 3 steht für Europa, -1 für weltweit. Standard: Europa." },
+        { "key": "sv_pure", "label": "Dateireinheit", "group": "Sicherheit", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "0", "label": "Benutzerdefinierte Inhalte erlauben" }, { "value": "1", "label": "Whitelist prüfen" }, { "value": "2", "label": "Streng" }], "description": "Prüft Client-Dateien gegen Servervorgaben. Standard: Whitelist prüfen." },
+        { "key": "mp_timelimit", "label": "Kartenzeit", "group": "Match", "valueType": "integer", "defaultValue": "30", "minimum": 0, "maximum": 1440, "description": "Minuten pro Karte; 0 deaktiviert den Zeitwechsel. Standard: 30." },
+        { "key": "mp_maxrounds", "label": "Maximale Runden", "group": "Match", "valueType": "integer", "defaultValue": "10", "minimum": 0, "maximum": 1000, "description": "Runden vor dem Kartenwechsel; 0 deaktiviert die Grenze. Standard: 10." },
+        { "key": "mp_winlimit", "label": "Sieglimit", "group": "Match", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 1000, "description": "Benötigte Rundensiege für den Kartenwechsel; 0 deaktiviert. Standard: 0." },
+        { "key": "mp_autoteambalance", "label": "Automatischer Teamausgleich", "group": "Teams", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Gleicht ungleich große Teams automatisch aus. Standard: Ja." },
+        { "key": "mp_teams_unbalance_limit", "label": "Maximale Teamdifferenz", "group": "Teams", "valueType": "integer", "defaultValue": "1", "minimum": 0, "maximum": 31, "description": "Zulässiger Größenunterschied zwischen Teams. Standard: 1." },
+        { "key": "sv_allowdownload", "label": "Downloads erlauben", "group": "Downloads", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Erlaubt Clients benötigte Karten und Inhalte herunterzuladen. Standard: Ja." },
+        { "key": "sv_allowupload", "label": "Uploads erlauben", "group": "Downloads", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Erlaubt Client-Anpassungen wie Sprays. Standard laut Valve-Beispiel: Ja." },
+        { "key": "net_maxfilesize", "label": "Maximale Downloaddatei", "group": "Downloads", "valueType": "integer", "defaultValue": "64", "minimum": 1, "maximum": 512, "description": "Maximale Dateigröße für Serverdownloads in MB. Standard in BlenkBase: 64." },
+        { "key": "sv_cheats", "label": "Cheats", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert Cheat-CVars. Standard: Nein." },
+        { "key": "log", "label": "Serverprotokoll", "group": "Protokollierung", "valueType": "string", "defaultValue": "on", "choices": [{ "value": "on", "label": "An" }, { "value": "off", "label": "Aus" }], "description": "Aktiviert Source-Serverlogs. Standard: An." }
+      ]
+    }
+  ],
+  "persistentPaths": ["tf/cfg", "tf/logs", "tf/download", "tf/addons"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

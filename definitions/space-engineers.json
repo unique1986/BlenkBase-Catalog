@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 3,
+  "id": "space-engineers",
+  "displayName": "Space Engineers Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://spaceengineers.wiki.gg/wiki/Setting_up_a_Space_Engineers_Dedicated_Server" },
+  "summary": "Offizieller Windows-Server für mehrere isolierte Space-Engineers-Welten mit Steam-Workshop, Welt-, Slot- und Sicherheitskonfiguration.",
+  "maturity": "beta",
+  "tags": ["space", "sandbox", "simulation"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "mods", "player-query"],
+  "artwork": { "storeAppId": 244850 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 298740, "anonymous": true, "branch": "public" },
+  "process": { "executable": "DedicatedServer64/SpaceEngineersDedicated.exe", "workingDirectory": "DedicatedServer64", "arguments": ["-console", "-path", "{{instance.root}}/data"], "consoleLogFiles": ["data/*.log", "data/Logs/*.log"], "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 27016 }],
+  "configurationFiles": [{
+    "path": "data/SpaceEngineers-Dedicated.cfg", "label": "Server und Welt", "format": "xml", "fields": [
+      { "key": "ServerName", "xmlPath": "/MyConfigDedicated/ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Space Engineers", "description": "Name im Serverbrowser. Standard: blnk - Base Space Engineers." },
+      { "key": "ServerPort", "xmlPath": "/MyConfigDedicated/ServerPort", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "UDP-Spielport. Blenk Base weist ihn automatisch zu." },
+      { "key": "MaxPlayers", "xmlPath": "/MyConfigDedicated/MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "8", "minimum": 1, "maximum": 64, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 8." },
+      { "key": "ServerPassword", "xmlPath": "/MyConfigDedicated/ServerPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "SteamGroupID", "xmlPath": "/MyConfigDedicated/GroupID", "label": "Steam-Gruppen-ID", "group": "Zugriff", "valueType": "string", "defaultValue": "0", "description": "Optionale Steam-Gruppen-ID; 0 erlaubt öffentlichen Zugriff. Standard: 0." },
+      { "key": "PauseGameWhenEmpty", "xmlPath": "/MyConfigDedicated/PauseGameWhenEmpty", "label": "Ohne Spieler pausieren", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Pausiert die Simulation, wenn niemand verbunden ist. Standard: Ja." },
+      { "key": "AutoRestart", "xmlPath": "/MyConfigDedicated/AutoRestartEnabled", "label": "Spielinterner Neustart", "group": "Wartung", "valueType": "boolean", "defaultValue": "false", "description": "Aktiviert den spielinternen Neustartmechanismus. Blenk-Base-Standard: Nein." },
+      { "key": "LoadWorld", "xmlPath": "/MyConfigDedicated/LoadWorld", "label": "Weltpfad", "group": "Welt", "valueType": "string", "defaultValue": "Saves/blnk-world", "description": "Relativer Weltordner innerhalb des Instanzdatenpfads. Standard: Saves/blnk-world." }
+    ]
+  }],
+  "persistentPaths": ["data"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

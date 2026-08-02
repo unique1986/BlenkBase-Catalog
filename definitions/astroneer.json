@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 3, "id": "astroneer", "displayName": "ASTRONEER Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://blog.astroneer.space/p/astroneer-dedicated-server-details/" },
+  "summary": "Astroneer-Koopserver mit instanzgebundenem Save, Slots, Besitzer, Kennwort und Spiel-/Steam-Port.",
+  "maturity": "beta", "tags": ["space", "survival", "coop"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 361420 }, "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 728470, "anonymous": true, "branch": "public" },
+  "process": { "executable": "Astro/Binaries/Win64/AstroServer-Win64-Shipping.exe", "workingDirectory": ".", "arguments": ["-log", "-NoSound"], "consoleLogFiles": ["Astro/Saved/Logs/*.log"], "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 8777 }, { "key": "steam", "protocol": "udp", "preferred": 27015 }],
+  "configurationFiles": [{ "path": "Astro/Saved/Config/WindowsServer/AstroServerSettings.ini", "label": "Server und Welt", "format": "ini", "section": "/Script/Astro.AstroServerSettings", "fields": [
+    { "key": "bLoadAutoSave", "label": "Automatischen Spielstand laden", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Lädt beim Start den festgelegten Spielstand. Standard: Ja." },
+    { "key": "SaveGameName", "label": "Spielstandname", "group": "Welt", "valueType": "string", "defaultValue": "BLNK$2026.08.02-00.00.00", "description": "Name des zu ladenden oder anzulegenden Spielstands. Standard ist ein BLNK-Spielstand." },
+    { "key": "MaximumPlayerCount", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "8", "minimum": 1, "maximum": 8, "description": "Maximal gleichzeitig verbundene Spieler. Standard und Maximum: 8." },
+    { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base ASTRONEER", "description": "Name im Serverbrowser. Standard: blnk - Base ASTRONEER." },
+    { "key": "ServerPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+    { "key": "OwnerName", "label": "Besitzername", "group": "Zugriff", "valueType": "string", "defaultValue": "", "description": "Steam-Anzeigename des ersten Besitzers. Standard: leer." },
+    { "key": "ServerGuid", "label": "Server-GUID", "group": "Erweitert", "valueType": "string", "defaultValue": "", "description": "Vom Server erzeugte Identität. Bei bestehender Instanz nicht verändern. Standard: leer." }
+  ] }, { "path": "Astro/Saved/Config/WindowsServer/Engine.ini", "label": "Netzwerkports", "format": "ini", "section": "URL", "fields": [
+    { "key": "Port", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "UDP-Spielport. Blenk Base weist ihn automatisch zu." }
+  ] }],
+  "persistentPaths": ["Astro/Saved"], "health": { "processRequired": true, "portKeys": ["game", "steam"] }
+}

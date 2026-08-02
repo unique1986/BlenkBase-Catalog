@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 3,
+  "id": "v-rising",
+  "displayName": "V Rising Dedicated Server",
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "summary": "V-Rising-Server mit Host-, Welt-, PvE/PvP-, Fortschritts- und Speichereinstellungen.",
+  "maturity": "stable",
+  "tags": ["survival", "pvp", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 1604030 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1829350, "anonymous": true },
+  "process": {
+    "executable": "VRisingServer.exe",
+    "workingDirectory": ".",
+    "arguments": ["-persistentDataPath", "{{instance.root}}/save-data", "-gamePort", "{{port.game}}", "-queryPort", "{{port.query}}"],
+    "consoleLogFiles": ["save-data/Logs/*.log"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 9876 },
+    { "key": "query", "protocol": "udp", "preferred": 9877 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "save-data/Settings/ServerHostSettings.json",
+      "label": "Server- und Hosteinstellungen",
+      "format": "json",
+      "fields": [
+        { "key": "Name", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base V Rising", "description": "Öffentlicher Name im Serverbrowser. Standard: blnk - Base V Rising." },
+        { "key": "Description", "label": "Beschreibung", "group": "Allgemein", "valueType": "string", "defaultValue": "V Rising Server verwaltet mit blnk - Base", "description": "Beschreibung im Serverbrowser." },
+        { "key": "Port", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "UDP-Port für Spielverbindungen. Wird von BlenkBase automatisch zugewiesen." },
+        { "key": "QueryPort", "label": "Query-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "query", "minimum": 1, "maximum": 65535, "description": "UDP-Port für Serverbrowser-Abfragen. Wird von BlenkBase automatisch zugewiesen." },
+        { "key": "MaxConnectedUsers", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "40", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 40." },
+        { "key": "MaxConnectedAdmins", "label": "Reservierte Adminplätze", "group": "Spieler", "valueType": "integer", "defaultValue": "4", "minimum": 0, "maximum": 100, "description": "Zusätzliche Verbindungen für Administratoren. Standard: 4." },
+        { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "ListOnMasterServer", "label": "Im öffentlichen Serverbrowser", "group": "Sichtbarkeit", "valueType": "boolean", "defaultValue": "true", "description": "Listet den Server im öffentlichen Masterserver. Standard: Ja." },
+        { "key": "ListOnSteam", "label": "In Steam listen", "group": "Sichtbarkeit", "valueType": "boolean", "defaultValue": "true", "description": "Listet den Server in der Steam-Serversuche. Standard: Ja." },
+        { "key": "SaveName", "label": "Spielstandname", "group": "Spielstand", "valueType": "string", "defaultValue": "world1", "description": "Name des verwendeten Spielstands. Standard: world1." },
+        { "key": "AutoSaveCount", "label": "Anzahl automatischer Speicherstände", "group": "Spielstand", "valueType": "integer", "defaultValue": "20", "minimum": 1, "maximum": 100, "description": "Anzahl rotierender Autosaves. Standard: 20." },
+        { "key": "AutoSaveInterval", "label": "Autosave-Intervall (Sekunden)", "group": "Spielstand", "valueType": "integer", "defaultValue": "120", "minimum": 30, "maximum": 3600, "description": "Zeit zwischen automatischen Speicherungen. Standard: 120 Sekunden." },
+        { "key": "ServerFps", "label": "Server-Tickrate", "group": "Leistung", "valueType": "integer", "defaultValue": "30", "minimum": 10, "maximum": 60, "description": "Simulationen pro Sekunde. Standard: 30." },
+        { "key": "GameSettingsPreset", "label": "Regel-Preset", "group": "Spielregeln", "valueType": "string", "defaultValue": "", "description": "Optionaler interner Name eines Regel-Presets. Leer nutzt ServerGameSettings.json." },
+        { "key": "GameDifficultyPreset", "label": "Schwierigkeits-Preset", "group": "Spielregeln", "valueType": "string", "defaultValue": "Difficulty_Normal", "choices": [{ "value": "Difficulty_Relaxed", "label": "Entspannt" }, { "value": "Difficulty_Normal", "label": "Normal" }, { "value": "Difficulty_Brutal", "label": "Brutal" }], "description": "Grundlegende Schwierigkeit. Standard: Normal." },
+        { "key": "AdminOnlyDebugEvents", "label": "Debug-Ereignisse nur für Admins", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Beschränkt Debug-Ereignisse auf Administratoren. Standard: Ja." },
+        { "key": "DisableDebugEvents", "label": "Debug-Ereignisse deaktivieren", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "false", "description": "Deaktiviert Debug-Ereignisse vollständig. Standard: Nein." }
+      ]
+    },
+    {
+      "path": "save-data/Settings/ServerGameSettings.json",
+      "label": "Welt- und Spielregeln",
+      "format": "json",
+      "fields": [
+        { "key": "GameModeType", "label": "Spielmodus", "group": "Modus", "valueType": "string", "defaultValue": "PvE", "choices": [{ "value": "PvE", "label": "PvE" }, { "value": "PvP", "label": "PvP" }], "description": "PvE deaktiviert direkten Spielerkampf; PvP aktiviert ihn. Standard: PvE." },
+        { "key": "CastleDamageMode", "label": "Burgschaden", "group": "PvP", "valueType": "string", "defaultValue": "Never", "choices": [{ "value": "Never", "label": "Nie" }, { "value": "Always", "label": "Immer" }, { "value": "TimeRestricted", "label": "Zeitlich begrenzt" }], "description": "Legt fest, wann Spielerburgen beschädigt werden können. Standard: Nie." },
+        { "key": "PlayerDamageMode", "label": "Spielerschaden", "group": "PvP", "valueType": "string", "defaultValue": "Always", "choices": [{ "value": "Always", "label": "Immer" }, { "value": "TimeRestricted", "label": "Zeitlich begrenzt" }], "description": "Zeitfenster für PvP-Schaden. Standard: Immer." },
+        { "key": "PvPProtectionMode", "label": "PvP-Anfängerschutz", "group": "PvP", "valueType": "string", "defaultValue": "Medium", "choices": [{ "value": "Disabled", "label": "Aus" }, { "value": "VeryShort", "label": "Sehr kurz" }, { "value": "Short", "label": "Kurz" }, { "value": "Medium", "label": "Mittel" }, { "value": "Long", "label": "Lang" }], "description": "Dauer des Schutzes für neue Spieler. Standard: Mittel." },
+        { "key": "DeathContainerPermission", "label": "Zugriff auf Todescontainer", "group": "Tod", "valueType": "string", "defaultValue": "Anyone", "choices": [{ "value": "Anyone", "label": "Alle" }, { "value": "ClanMembers", "label": "Clanmitglieder" }, { "value": "OnlySelf", "label": "Nur Besitzer" }], "description": "Wer Beute aus einem Todescontainer nehmen darf. Standard: Alle." },
+        { "key": "RelicSpawnType", "label": "Einzigartige Relikte", "group": "Welt", "valueType": "string", "defaultValue": "Unique", "choices": [{ "value": "Unique", "label": "Einzigartig" }, { "value": "Plentiful", "label": "Mehrfach vorhanden" }], "description": "Bestimmt, ob wichtige Relikte einzigartig sind. Standard: Einzigartig." },
+        { "key": "CanLootEnemyContainers", "label": "Fremde Container plündern", "group": "PvP", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt das Plündern gegnerischer Container. Standard: Ja." },
+        { "key": "BloodBoundEquipment", "label": "Ausrüstung bleibt nach Tod", "group": "Tod", "valueType": "boolean", "defaultValue": "true", "description": "Behält ausgerüstete Gegenstände nach dem Tod. Standard: Ja." },
+        { "key": "TeleportBoundItems", "label": "Gebundene Gegenstände blockieren Teleport", "group": "Reise", "valueType": "boolean", "defaultValue": "true", "description": "Verhindert Teleport mit gebundenen Ressourcen. Standard: Ja." },
+        { "key": "ClanSize", "label": "Maximale Clangröße", "group": "Spieler", "valueType": "integer", "defaultValue": "4", "minimum": 1, "maximum": 50, "description": "Maximale Mitgliederzahl eines Clans. Standard: 4." },
+        { "key": "InventoryStacksModifier", "label": "Stapelgrößen-Multiplikator", "group": "Multiplikatoren", "valueType": "number", "defaultValue": "1", "minimum": 0.25, "maximum": 10, "description": "Multiplikator für Inventarstapel. Standard: 1,0." },
+        { "key": "DropTableModifier_General", "label": "Allgemeine Beutemenge", "group": "Multiplikatoren", "valueType": "number", "defaultValue": "1", "minimum": 0.25, "maximum": 10, "description": "Multiplikator für allgemeine Beute. Standard: 1,0." },
+        { "key": "MaterialYieldModifier_Global", "label": "Ressourcenertrag", "group": "Multiplikatoren", "valueType": "number", "defaultValue": "1", "minimum": 0.25, "maximum": 10, "description": "Multiplikator für abgebaute Ressourcen. Standard: 1,0." },
+        { "key": "BloodEssenceYieldModifier", "label": "Blutessenz-Ertrag", "group": "Multiplikatoren", "valueType": "number", "defaultValue": "1", "minimum": 0.25, "maximum": 10, "description": "Multiplikator für erhaltene Blutessenz. Standard: 1,0." },
+        { "key": "GarlicAreaStrengthModifier", "label": "Knoblauchstärke", "group": "Welt", "valueType": "number", "defaultValue": "1", "minimum": 0, "maximum": 5, "description": "Stärke von Knoblauchgebieten. Standard: 1,0." },
+        { "key": "SunDamageModifier", "label": "Sonnenschaden", "group": "Welt", "valueType": "number", "defaultValue": "1", "minimum": 0, "maximum": 5, "description": "Multiplikator für Sonnenschaden. Standard: 1,0." },
+        { "key": "CastleDecayRateModifier", "label": "Burgverfall", "group": "Bau", "valueType": "number", "defaultValue": "1", "minimum": 0, "maximum": 5, "description": "Geschwindigkeit des Burgverfalls. Standard: 1,0." },
+        { "key": "CastleBloodEssenceDrainModifier", "label": "Burg-Blutverbrauch", "group": "Bau", "valueType": "number", "defaultValue": "1", "minimum": 0, "maximum": 5, "description": "Verbrauch von Blutessenz durch Burgen. Standard: 1,0." },
+        { "key": "CraftRateModifier", "label": "Herstellungsgeschwindigkeit", "group": "Fortschritt", "valueType": "number", "defaultValue": "1", "minimum": 0.1, "maximum": 10, "description": "Multiplikator der Herstellungsgeschwindigkeit. Standard: 1,0." },
+        { "key": "RefinementRateModifier", "label": "Veredelungsgeschwindigkeit", "group": "Fortschritt", "valueType": "number", "defaultValue": "1", "minimum": 0.1, "maximum": 10, "description": "Multiplikator der Veredelungsgeschwindigkeit. Standard: 1,0." },
+        { "key": "ServantConvertRateModifier", "label": "Diener-Konvertierung", "group": "Fortschritt", "valueType": "number", "defaultValue": "1", "minimum": 0.1, "maximum": 10, "description": "Multiplikator der Konvertierungsgeschwindigkeit. Standard: 1,0." }
+      ]
+    }
+  ],
+  "persistentPaths": ["save-data"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

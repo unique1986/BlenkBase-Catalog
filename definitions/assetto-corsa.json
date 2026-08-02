@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 3,
+  "id": "assetto-corsa",
+  "displayName": "Assetto Corsa Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://steamdb.info/app/302550/config/" },
+  "summary": "Rennserver mit Strecke, Fahrzeugen, Sessions, Zugangsschutz und eindeutig zugewiesenen Netzwerkports.",
+  "maturity": "beta",
+  "tags": ["racing", "simulation"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"],
+  "artwork": { "storeAppId": 244210 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "none", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 302550, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "acServer.exe",
+    "workingDirectory": ".",
+    "arguments": [],
+    "consoleLogFiles": ["logs/*.txt"],
+    "stopTimeoutSeconds": 30
+  },
+  "ports": [
+    { "key": "gameUdp", "protocol": "udp", "preferred": 9600 },
+    { "key": "gameTcp", "protocol": "tcp", "preferred": 9600 },
+    { "key": "http", "protocol": "tcp", "preferred": 8081 }
+  ],
+  "configurationFiles": [{
+    "path": "cfg/server_cfg.ini",
+    "label": "Server und Rennwochenende",
+    "format": "ini",
+    "section": "SERVER",
+    "fields": [
+      { "key": "NAME", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Assetto Corsa", "description": "Name in der Lobby. Standard: blnk - Base Assetto Corsa." },
+      { "key": "PASSWORD", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "ADMIN_PASSWORD", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-AC", "description": "Kennwort für administrative Befehle. Vor öffentlichem Betrieb ändern." },
+      { "key": "CARS", "label": "Fahrzeuge", "group": "Inhalt", "valueType": "string", "defaultValue": "ks_abarth500", "description": "Interne Fahrzeug-IDs, mehrere mit Semikolon getrennt. Standard: ks_abarth500." },
+      { "key": "TRACK", "label": "Strecke", "group": "Inhalt", "valueType": "string", "defaultValue": "magione", "description": "Interne Strecken-ID. Standard: magione." },
+      { "key": "CONFIG_TRACK", "label": "Streckenlayout", "group": "Inhalt", "valueType": "string", "defaultValue": "", "description": "Optionales Layout der Strecke. Standard: leer." },
+      { "key": "MAX_CLIENTS", "label": "Maximale Fahrer", "group": "Allgemein", "valueType": "integer", "defaultValue": "12", "minimum": 1, "maximum": 64, "description": "Maximale Zahl verbundener Fahrer. Darf die Boxenplätze der Strecke nicht überschreiten. Standard: 12." },
+      { "key": "UDP_PORT", "label": "UDP-Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "gameUdp", "minimum": 1, "maximum": 65535, "description": "UDP-Port der Rennsimulation. BlenkBase weist ihn automatisch zu." },
+      { "key": "TCP_PORT", "label": "TCP-Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "gameTcp", "minimum": 1, "maximum": 65535, "description": "TCP-Port der Rennsimulation. BlenkBase weist ihn automatisch zu." },
+      { "key": "HTTP_PORT", "label": "HTTP-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "http", "minimum": 1, "maximum": 65535, "description": "HTTP-Port für Lobby und Abfragen. BlenkBase weist ihn automatisch zu." },
+      { "key": "REGISTER_TO_LOBBY", "label": "In Lobby veröffentlichen", "group": "Netzwerk", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Registriert den Server in der öffentlichen Lobby. Standard: Ja." },
+      { "key": "PICKUP_MODE_ENABLED", "label": "Freie Fahrzeugwahl", "group": "Spielregeln", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Erlaubt das Beitreten ohne vorab feste Entry-List. Standard: Ja." },
+      { "key": "LOOP_MODE", "label": "Wochenende wiederholen", "group": "Spielregeln", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Startet nach dem Rennen wieder bei der ersten Session. Standard: Ja." },
+      { "key": "SUN_ANGLE", "label": "Sonnenwinkel", "group": "Umgebung", "valueType": "integer", "defaultValue": "16", "minimum": -80, "maximum": 80, "description": "Position der Sonne und damit Tageszeitwirkung. Standard: 16." },
+      { "key": "ALLOWED_TYRES_OUT", "label": "Erlaubte Räder außerhalb", "group": "Regeln", "valueType": "integer", "defaultValue": "2", "minimum": -1, "maximum": 4, "description": "Räder außerhalb der Strecke vor einer Strafe; -1 deaktiviert. Standard: 2." },
+      { "key": "DAMAGE_MULTIPLIER", "label": "Schadensmultiplikator", "group": "Regeln", "valueType": "integer", "defaultValue": "100", "minimum": 0, "maximum": 100, "description": "Fahrzeugschaden in Prozent. Standard: 100." },
+      { "key": "TYRE_WEAR_RATE", "label": "Reifenverschleiß", "group": "Regeln", "valueType": "integer", "defaultValue": "100", "minimum": 0, "maximum": 1000, "description": "Reifenverschleiß in Prozent. Standard: 100." },
+      { "key": "FUEL_RATE", "label": "Kraftstoffverbrauch", "group": "Regeln", "valueType": "integer", "defaultValue": "100", "minimum": 0, "maximum": 1000, "description": "Kraftstoffverbrauch in Prozent. Standard: 100." },
+      { "key": "LAPS", "label": "Rennrunden", "group": "Sessions", "section": "RACE", "valueType": "integer", "defaultValue": "10", "minimum": 0, "maximum": 1000, "description": "Rundenanzahl des Rennens. Standard: 10." }
+    ]
+  }],
+  "persistentPaths": ["cfg", "results", "logs"],
+  "health": { "processRequired": true, "portKeys": ["gameUdp", "gameTcp", "http"] }
+}

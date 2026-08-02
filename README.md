@@ -1,4 +1,4 @@
-# BlenkBase Catalog
+# blnk Base Catalog
 
 Offizieller Spiele- und Definitionskatalog für **BlenkBase – Command your world.**
 
@@ -21,7 +21,7 @@ Webinterface weiterhin bewusst durch einen Administrator ausgelöst.
 
 ## Definitionen erweitern
 
-Eine Definition ist eine JSON-Datei im Hauptverzeichnis. Nach einer Änderung
+Eine Definition ist eine JSON-Datei im Unterverzeichnis `definitions`. Nach einer Änderung
 erzeugt die GitHub-Aktion den Feed und alle Prüfsummen neu. Neue Definitionen
 sollen zunächst den Reifegrad `experimental` erhalten und erst nach einem echten
 Installations-, Start-, Stop-, Port-, Konfigurations- und Backuptest freigegeben

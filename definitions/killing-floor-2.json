@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 3,
+  "id": "killing-floor-2",
+  "displayName": "Killing Floor 2 Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://steamdb.info/app/232130/config/" },
+  "summary": "Windows-Dedicated-Server mit Karte, Modus, Schwierigkeit, WebAdmin, RCON und Workshop-Vorbereitung.",
+  "maturity": "beta",
+  "tags": ["coop", "shooter", "unreal"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 232090 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 232130, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "Binaries/Win64/KFServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "KFGame/Config/blenkbase-startup.json",
+    "arguments": ["{{setting.TravelUrl}}", "-Port={{port.game}}", "-QueryPort={{port.query}}", "-WebAdminPort={{port.webadmin}}", "-log"],
+    "consoleLogFiles": ["KFGame/Logs/*.log"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7777 },
+    { "key": "query", "protocol": "udp", "preferred": 27015 },
+    { "key": "webadmin", "protocol": "tcp", "preferred": 8080 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "KFGame/Config/blenkbase-startup.json",
+      "label": "Karte und Spielmodus",
+      "format": "json",
+      "fields": [
+        { "key": "TravelUrl", "label": "Karte und Modus", "group": "Start", "valueType": "string", "defaultValue": "KF-BioticsLab?Game=KFGameContent.KFGameInfo_Survival?Difficulty=0", "choices": [{ "value": "KF-BioticsLab?Game=KFGameContent.KFGameInfo_Survival?Difficulty=0", "label": "Biotics Lab – Survival – Normal" }, { "value": "KF-Outpost?Game=KFGameContent.KFGameInfo_Survival?Difficulty=1", "label": "Outpost – Survival – Hard" }, { "value": "KF-Farmhouse?Game=KFGameContent.KFGameInfo_Survival?Difficulty=2", "label": "Farmhouse – Survival – Suicide" }, { "value": "KF-BurningParis?Game=KFGameContent.KFGameInfo_Endless?Difficulty=1", "label": "Burning Paris – Endless – Hard" }, { "value": "KF-BioticsLab?Game=KFGameContent.KFGameInfo_VersusSurvival?Difficulty=1", "label": "Biotics Lab – Versus – Hard" }], "description": "Unreal-Travel-URL aus Karte, Modus und Schwierigkeit. Standard: Biotics Lab, Survival, Normal." }
+      ]
+    },
+    {
+      "path": "KFGame/Config/PCServer-KFGame.ini",
+      "label": "Server und Match",
+      "format": "ini",
+      "section": "KFGame.KFGameInfo",
+      "fields": [
+        { "key": "ServerName", "label": "Servername", "group": "Allgemein", "section": "OnlineSubsystemSteamworks.KFGameEngine", "valueType": "string", "defaultValue": "blnk - Base Killing Floor 2", "description": "Name im Serverbrowser. Standard: blnk - Base Killing Floor 2." },
+        { "key": "ShortName", "label": "Kurzname", "group": "Allgemein", "section": "OnlineSubsystemSteamworks.KFGameEngine", "valueType": "string", "defaultValue": "blnk KF2", "description": "Kurzer Servername für kompakte Anzeigen. Standard: blnk KF2." },
+        { "key": "ServerPassword", "label": "Serverkennwort", "group": "Sicherheit", "section": "Engine.AccessControl", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "AdminPassword", "label": "Admin-Kennwort", "group": "WebAdmin", "section": "Engine.AccessControl", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-KF2", "description": "Kennwort für WebAdmin und administrative Anmeldung. Vor öffentlichem Betrieb ändern." },
+        { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "section": "Engine.GameInfo", "valueType": "integer", "defaultValue": "6", "minimum": 1, "maximum": 12, "description": "Maximal gleichzeitig verbundene Spieler. Das Basisspiel ist auf sechs ausgelegt; Standard: 6." },
+        { "key": "bDisableTeamCollision", "label": "Teamkollision deaktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Deaktiviert Kollisionen zwischen Teammitgliedern. Standard: Nein." },
+        { "key": "bDisableFriendlyFire", "label": "Teambeschuss deaktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Verhindert Schaden an Teammitgliedern. Standard: Ja." },
+        { "key": "GameLength", "label": "Spiellänge", "group": "Match", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "0", "label": "Kurz" }, { "value": "1", "label": "Mittel" }, { "value": "2", "label": "Lang" }], "description": "Länge eines Survival-Matches. Standard: Mittel." },
+        { "key": "ServerMOTD", "label": "Willkommensnachricht", "group": "Allgemein", "valueType": "string", "defaultValue": "Willkommen auf blnk - Base", "description": "Nachricht beim Verbinden. Standard: Willkommen auf blnk - Base." },
+        { "key": "WebsiteLink", "label": "Webseite", "group": "Allgemein", "valueType": "string", "defaultValue": "", "description": "Optionale Community-Webseite in der Serverinformation. Standard: leer." }
+      ]
+    },
+    {
+      "path": "KFGame/Config/PCServer-KFWeb.ini",
+      "label": "WebAdmin",
+      "format": "ini",
+      "section": "IpDrv.WebServer",
+      "fields": [
+        { "key": "bEnabled", "label": "WebAdmin aktiv", "group": "WebAdmin", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert die integrierte Webadministration. Standard in BlenkBase: Ja." },
+        { "key": "ListenPort", "label": "WebAdmin-Port", "group": "WebAdmin", "valueType": "integer", "portKey": "webadmin", "minimum": 1, "maximum": 65535, "description": "TCP-Port der Webadministration. BlenkBase weist ihn automatisch zu." }
+      ]
+    }
+  ],
+  "persistentPaths": ["KFGame/Config", "KFGame/Logs", "KFGame/Cache"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

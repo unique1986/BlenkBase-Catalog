@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 3,
+  "id": "soulmask",
+  "displayName": "Soulmask Dedicated Server",
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "summary": "Soulmask-Survival-Server mit wirksamen Start-, Zugriffs-, Speicher- und PvE/PvP-Einstellungen.",
+  "maturity": "experimental",
+  "tags": ["survival", "open-world"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 2646460 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 3017310, "anonymous": true },
+  "process": {
+    "executable": "WS/Binaries/Win64/WSServer-Win64-Shipping.exe",
+    "workingDirectory": "WS/Binaries/Win64",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["Level01_Main", "-server", "-Silent", "-log", "-UTF8Output", "-Port={{port.game}}", "-QueryPort={{port.query}}", "-EchoPort={{port.echo}}", "-SteamServerName={{setting.ServerName}}", "-MaxPlayers={{setting.MaxPlayers}}", "-PSW={{setting.Password}}", "-adminpsw={{setting.AdminPassword}}", "-saving={{setting.SaveInterval}}", "-backup={{setting.BackupInterval}}", "{{setting.GameModeArgument}}", "-online=Steam"],
+    "consoleLogFiles": ["WS/Saved/Logs/*.log"],
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 8777 },
+    { "key": "query", "protocol": "udp", "preferred": 27015 },
+    { "key": "echo", "protocol": "tcp", "preferred": 18888 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "blenkbase-startup.json",
+      "label": "Serverstart",
+      "format": "json",
+      "fields": [
+        { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "BlenkBase Soulmask", "description": "Öffentlicher Name im Steam-Serverbrowser. Standard: BlenkBase Soulmask." },
+        { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "50", "minimum": 1, "maximum": 70, "description": "Maximal gleichzeitig verbundene Spieler. Standard in BlenkBase: 50." },
+        { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "AdminPassword", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Soulmask", "description": "Kennwort für GM key und administrative Einstellungen. Unbedingt ändern." },
+        { "key": "GameModeArgument", "label": "Spielmodus", "group": "Spielregeln", "valueType": "string", "defaultValue": "-pve", "choices": [{ "value": "-pve", "label": "PvE" }, { "value": "-pvp", "label": "PvP" }], "description": "Grundmodus des Servers. Standard: PvE." },
+        { "key": "SaveInterval", "label": "Speicherintervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "600", "minimum": 60, "maximum": 7200, "description": "Sekunden zwischen regulären Speichervorgängen. Standard: 600." },
+        { "key": "BackupInterval", "label": "Backup-Intervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "900", "minimum": 300, "maximum": 86400, "description": "Sekunden zwischen servereigenen Sicherungen. Standard: 900." }
+      ]
+    }
+  ],
+  "persistentPaths": ["WS/Saved"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

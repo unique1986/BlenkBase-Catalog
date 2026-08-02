@@ -1,186 +1,456 @@
 {
   "schemaVersion": 1,
   "name": "Offizieller BlenkBase-Katalog",
-  "generatedAtUtc": "2026-07-19T11:45:48.126Z",
+  "generatedAtUtc": "2026-08-02T13:55:39.117Z",
   "definitions": [
+    {
+      "id": "abiotic-factor",
+      "displayName": "Abiotic Factor Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/abiotic-factor.json",
+      "sha256": "f6e8b13cb51e006c168eabfd5022094f3a8434fa17e36567a3e3778bc4b9206f",
+      "notes": "Windows-Koop-Survivalserver mit Weltname, Slots, Server-/Admin-Kennwort und Steam-Query-Unterstützung."
+    },
     {
       "id": "ark-survival-ascended",
       "displayName": "ARK: Survival Ascended",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "maturity": "stable",
-      "definitionUrl": "ark-survival-ascended.json",
-      "sha256": "4dd1b0a696d95e5fe0dcaac14d81ff7f0b3a9095fb0483f8fc6c61bd7e047140",
+      "definitionUrl": "definitions/ark-survival-ascended.json",
+      "sha256": "4ebee87cd2521ed64622f688796eccebd241c3fcbe0678e9ccee72b5b3b843d5",
       "notes": "ARK: Survival Ascended mit Karten-, RCON- und Serverkonfiguration."
     },
     {
       "id": "ark-survival-evolved",
       "displayName": "ARK: Survival Evolved",
+      "version": "1.1.0",
+      "maturity": "stable",
+      "definitionUrl": "definitions/ark-survival-evolved.json",
+      "sha256": "af8bf97fa6c3d727036b52ff3ce87da293d16035cab75a4a2e343b11996fa26f",
+      "notes": "ARK: Survival Evolved mit Karten-, RCON-, Server- und Spielweltkonfiguration."
+    },
+    {
+      "id": "arma-3",
+      "displayName": "Arma 3 Dedicated Server",
       "version": "1.0.0",
       "maturity": "beta",
-      "definitionUrl": "ark-survival-evolved.json",
-      "sha256": "df8626e3f7edff47e0d829aa3ef8d4b1e8453610c678107dd04117ba090f241f",
-      "notes": "Klassischer ARK-Dedicated-Server."
+      "definitionUrl": "definitions/arma-3.json",
+      "sha256": "7475b3f2dafadcf9b1b83e6ed40e014665391ddfee4ef4b37299bef4e94f6245",
+      "notes": "Militär-Sandbox-Server mit Profil-, Netzwerk-, Zugriffs- und Missionsgrundkonfiguration."
+    },
+    {
+      "id": "arma-reforger",
+      "displayName": "Arma Reforger Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/arma-reforger.json",
+      "sha256": "7edbf584e93b712b6125bf6777801ad393324db941ab19c859dec0d40d2a12de",
+      "notes": "Offizieller Windows-Dedicated-Server mit Szenario-, Crossplay-, Netzwerk-, RCON- und Leistungsprofil."
+    },
+    {
+      "id": "assetto-corsa",
+      "displayName": "Assetto Corsa Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/assetto-corsa.json",
+      "sha256": "7df9594b6c2056fddd13faa0641a504ce417840c298f344a4a0ddc815eb8623b",
+      "notes": "Rennserver mit Strecke, Fahrzeugen, Sessions, Zugangsschutz und eindeutig zugewiesenen Netzwerkports."
+    },
+    {
+      "id": "astroneer",
+      "displayName": "ASTRONEER Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/astroneer.json",
+      "sha256": "3265c97232146525405c94be1ab5e5040c465f432c6a2071510befa50e7eabdf",
+      "notes": "Astroneer-Koopserver mit instanzgebundenem Save, Slots, Besitzer, Kennwort und Spiel-/Steam-Port."
+    },
+    {
+      "id": "avorion",
+      "displayName": "Avorion Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/avorion.json",
+      "sha256": "eb16a3500d1e58fccd6076bb408195624068642b2ac51b4dfac58370abf0ce3f",
+      "notes": "Weltraum-Sandbox-Server mit eigener Galaxie, Steam-Netzwerk, RCON, Schwierigkeit und sicherem Speicherpfad innerhalb der Instanz."
+    },
+    {
+      "id": "black-mesa",
+      "displayName": "Black Mesa Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/black-mesa.json",
+      "sha256": "4a8052a4ddec979c5a5b5b8d78bef8b2c84a70313cd6f0e13d2fa38669060321",
+      "notes": "Source-Dedicated-Server für Black Mesa mit Karte, Slots, LAN/Internet, Kennwort, RCON und Serverlogs."
     },
     {
       "id": "conan-exiles",
       "displayName": "Conan Exiles Dedicated Server",
+      "version": "1.1.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/conan-exiles.json",
+      "sha256": "493e25b1651d0a13d9e9fd050b65daf25e91edd0ee11a71728681997a4e8cbd1",
+      "notes": "Conan-Exiles-Survival-Server mit Karten-, Zugriffs-, PvP-, Fortschritts- und Welteinstellungen."
+    },
+    {
+      "id": "contagion",
+      "displayName": "Contagion Dedicated Server",
       "version": "1.0.0",
       "maturity": "beta",
-      "definitionUrl": "conan-exiles.json",
-      "sha256": "51511a244a658b38efd357cd8ce7097ba68da710ac2aed68a0f275f47bc6bf32",
-      "notes": "Conan-Exiles-Survival-Server."
+      "definitionUrl": "definitions/contagion.json",
+      "sha256": "e415b8075042427e47c4fd1b2c7e91b73111263bc1e5e6da1246eccda7245130",
+      "notes": "Contagion-Zombieserver mit Karte, Slots, Schwierigkeitsmodus, RCON, Kennwort und Source-Serverprotokollen."
     },
     {
       "id": "core-keeper",
       "displayName": "Core Keeper Dedicated Server",
+      "version": "1.1.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/core-keeper.json",
+      "sha256": "5f66620c8102072d691a20f0c972d7d47a81420590b43364ed452ac0c76d1c73",
+      "notes": "Kooperativer Core-Keeper-Server mit editierbarer Weltkonfiguration."
+    },
+    {
+      "id": "counter-strike-2",
+      "displayName": "Counter-Strike 2 Dedicated Server",
       "version": "1.0.0",
-      "maturity": "experimental",
-      "definitionUrl": "core-keeper.json",
-      "sha256": "7df49b91b5499d8923e09cc8b42d8b3cc81cfd48dabe0def8a5eecc59bd90b30",
-      "notes": "Kooperativer Core-Keeper-Dedicated-Server."
+      "maturity": "beta",
+      "definitionUrl": "definitions/counter-strike-2.json",
+      "sha256": "1901007a684d872be9060ecd829d153e31eb7f56a4a2fc991c5353e769b053f0",
+      "notes": "Source-2-Server mit Karte, Spielmodus, RCON, GOTV- und Serverbrowser-Einstellungen."
     },
     {
       "id": "dayz",
       "displayName": "DayZ Dedicated Server",
+      "version": "1.1.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/dayz.json",
+      "sha256": "907c1e2dd5cc03443616c2261dd9a0c209fa351fd18f0c30bc2a19f8e68a131d",
+      "notes": "DayZ-Survival-Server mit Serverbrowser-, Zugriffs-, Gameplay- und Mod-Einstellungen."
+    },
+    {
+      "id": "dont-starve-together",
+      "displayName": "Don't Starve Together Dedicated Server",
       "version": "1.0.0",
-      "maturity": "experimental",
-      "definitionUrl": "dayz.json",
-      "sha256": "7fec06cf1a9ea2136d9e7b8c91b2632d5c9fd25a214288a884cd67d0d93c9ac9",
-      "notes": "DayZ-Survival-Dedicated-Server."
+      "maturity": "beta",
+      "definitionUrl": "definitions/dont-starve-together.json",
+      "sha256": "2ae38e8f51c7ce083950eda6762c66b921f29283db7b6fc5f8aeaf8254634a6a",
+      "notes": "Klei-Koopserver mit isoliertem Cluster, Oberwelt/Höhlen, Token-, PvP-, Slot- und Pausenkonfiguration."
+    },
+    {
+      "id": "eco",
+      "displayName": "Eco Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/eco.json",
+      "sha256": "018878234f52361f23ced737f21068986e53f61371c782580e33a257820d380a",
+      "notes": "Eco-Server mit Weltname, Slots, Sichtbarkeit, Spiel-/Webport, Passwort und persistenten Config-/Storage-Pfaden."
+    },
+    {
+      "id": "empyrion",
+      "displayName": "Empyrion - Galactic Survival Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/empyrion.json",
+      "sha256": "b895651951df12ee07d24264ddbdc95e5be580d043075b7274f8d78684c63b60",
+      "notes": "Galaktischer Survival-Server mit Weltname, Szenario, Slots, EAC, Passwort und getrennten Spiel-/Telnet-Ports."
     },
     {
       "id": "enshrouded",
       "displayName": "Enshrouded",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "maturity": "stable",
-      "definitionUrl": "enshrouded.json",
-      "sha256": "101cc15661c538c0cb0889ff33656faa1f0d295cf5be33a2e6d320f9b17676b8",
-      "notes": "Enshrouded Dedicated Server mit JSON-Konfiguration."
+      "definitionUrl": "definitions/enshrouded.json",
+      "sha256": "a70c7f7fdf952e9993e111dc1c2487839109c8bc5ab0c10440c5aaea25a67d5b",
+      "notes": "Enshrouded Dedicated Server mit aktueller Chat-, Schwierigkeits-, Welt- und Fortschrittskonfiguration."
     },
     {
       "id": "farming-simulator-22",
       "displayName": "Landwirtschafts-Simulator 22",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "maturity": "stable",
-      "definitionUrl": "farming-simulator-22.json",
-      "sha256": "1dfd2e3b0e7c7d3bb4ce01bd4af98ca24d2f1191ea1c4d96467029766efdd087",
+      "definitionUrl": "definitions/farming-simulator-22.json",
+      "sha256": "0743bbb702253f903c5a03903d8192967a70150a04604ba3d1f77c7877f14e1a",
       "notes": "LS22 Dedicated Server mit ModHub und Mod-Verwaltung."
     },
     {
       "id": "farming-simulator-25",
       "displayName": "Landwirtschafts-Simulator 25",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "maturity": "stable",
-      "definitionUrl": "farming-simulator-25.json",
-      "sha256": "9f0422f6b9e44d172a04458df2019d5020802600f47041f8f9ecd23b7825c0c9",
+      "definitionUrl": "definitions/farming-simulator-25.json",
+      "sha256": "da011edeb64f68293e3c3754fb912f6d4ba0a69a5b396f37285e9e3803ff192d",
       "notes": "LS25 Dedicated Server mit ModHub und Mod-Verwaltung."
+    },
+    {
+      "id": "garrys-mod",
+      "displayName": "Garry's Mod Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/garrys-mod.json",
+      "sha256": "13b40d759ba8111e0c516d59e96b0b31e9fb0550350bcdb8e0cae34b8bfc1fec",
+      "notes": "Garry's-Mod-Server mit SteamCMD, Source-Konfiguration, Workshop-Sammlung und Spielerabfrage."
+    },
+    {
+      "id": "gefechtsstation",
+      "displayName": "Gefechtsstation",
+      "version": "1.1.0",
+      "maturity": "experimental",
+      "definitionUrl": "definitions/gefechtsstation.json",
+      "sha256": "d10ac47909e8159df5e4fa783e7a7310dde73eb4854a62af10a1981b6534694e",
+      "notes": "Schiffe-versenken-Duell für Android, Browser und Apple-PWA mit serverautoritärem Online-Multiplayer."
+    },
+    {
+      "id": "icarus",
+      "displayName": "Icarus Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/icarus.json",
+      "sha256": "daa60aff7fe66443aaccca82b914de7c686ad630179c90fff4dc3050a96241d1",
+      "notes": "Icarus-Koopserver mit benannter Instanz, Slots, Kennwort, Spiel-/Query-Port und persistentem Unreal-Datenpfad."
+    },
+    {
+      "id": "insurgency-sandstorm",
+      "displayName": "Insurgency: Sandstorm Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/insurgency-sandstorm.json",
+      "sha256": "af953ab6a39307b0da781e867e6189ea2404972ff94cea5e180382ae126b891b",
+      "notes": "Sandstorm-Server mit Szenario, Slots, Query, RCON, GSLT, Kennwörtern und grundlegenden Spielregeln."
+    },
+    {
+      "id": "insurgency",
+      "displayName": "Insurgency Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/insurgency.json",
+      "sha256": "69b67aa238a51fcffd3e9660a285731c514d3a901413eef28f4f04fe0d67b1c7",
+      "notes": "Source-Taktikserver für Insurgency 2014 mit Karte, Modus, Slots, Kennwort, RCON, Workshop und Serverlogs."
+    },
+    {
+      "id": "killing-floor-2",
+      "displayName": "Killing Floor 2 Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/killing-floor-2.json",
+      "sha256": "3f2ae08f1f66decc4d0b3b9c6e9282e58619e0fe7ddc12fbcb61b1a105ba419e",
+      "notes": "Windows-Dedicated-Server mit Karte, Modus, Schwierigkeit, WebAdmin, RCON und Workshop-Vorbereitung."
+    },
+    {
+      "id": "killing-floor",
+      "displayName": "Killing Floor Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "definitions/killing-floor.json",
+      "sha256": "70b020bdea289afeb18096f1ca01895c936bc6fec3525d62cfc4be7d51fd00fe",
+      "notes": "Klassischer Killing-Floor-Koopserver mit Karte, Schwierigkeit, Slots, VAC, Kennwort und Webadministration; die Installation erfordert ein berechtigtes Steam-Konto."
+    },
+    {
+      "id": "left-4-dead-2",
+      "displayName": "Left 4 Dead 2 Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/left-4-dead-2.json",
+      "sha256": "da7eec11419caba6ddd1b26d64ae9c6bf6b20592485f8d74b7ea1753e3b5084c",
+      "notes": "Offizieller Source-Dedicated-Server mit Kampagne, Spielmodus, Lobby-, RCON- und Matchregeln."
     },
     {
       "id": "minecraft-java",
       "displayName": "Minecraft: Java Edition",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "maturity": "stable",
-      "definitionUrl": "minecraft-java.json",
-      "sha256": "f4103fd45d18fdd7a26e41814e733038f204b4316f25fe9a05a335fba2fac7d1",
+      "definitionUrl": "definitions/minecraft-java.json",
+      "sha256": "d3c93020d9cd6d6c1110fb2152b5ed8c58c7f5aa94450bcd2f35f6b236e75d63",
       "notes": "Minecraft Java mit Vanilla- und Forge-Auswahl."
+    },
+    {
+      "id": "mordhau",
+      "displayName": "MORDHAU Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/mordhau.json",
+      "sha256": "45e3b71df17867f239b3bb384943dcdbfe26aef36e71bd953e014797f35d193a",
+      "notes": "Mittelalter-Kampfserver mit Kartenwahl, Slots, Kennwörtern, RCON und getrennten Spiel-, Beacon- und Query-Ports."
+    },
+    {
+      "id": "no-more-room-in-hell",
+      "displayName": "No More Room in Hell Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/no-more-room-in-hell.json",
+      "sha256": "2170cc869366ec813d37d9442e277bcc4d05787c527de0fa2794730003e4c1fe",
+      "notes": "Kooperativer Source-Zombieserver mit Karte, Slots, Schwierigkeit, RCON, Download- und Sprachchatoptionen."
     },
     {
       "id": "palworld",
       "displayName": "Palworld",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "maturity": "stable",
-      "definitionUrl": "palworld.json",
-      "sha256": "6cfec8c31a561add0e788916325c8d4706dab8beb2354cf83bb5049824c1c46e",
+      "definitionUrl": "definitions/palworld.json",
+      "sha256": "96addfd4271efb29ae76ad1037b07e64de8392da26f0f8ae8419bc763a2facf5",
       "notes": "Palworld Dedicated Server mit deutscher Vollkonfiguration."
     },
     {
       "id": "project-zomboid",
       "displayName": "Project Zomboid Dedicated Server",
+      "version": "1.1.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/project-zomboid.json",
+      "sha256": "459a51f6ff9736dd3040801d55036127ca66707654bc27ec9654aa9c9755319f",
+      "notes": "Persistenter Zombie-Survival-Server mit Server-, Workshop- und Spielregelkonfiguration."
+    },
+    {
+      "id": "rfactor-2",
+      "displayName": "rFactor 2 Dedicated Server",
       "version": "1.0.0",
       "maturity": "experimental",
-      "definitionUrl": "project-zomboid.json",
-      "sha256": "d5d6b61b4ae84fe46b3995a210aa3813b09ef9fa66285489400ad6f37860dcef",
-      "notes": "Persistenter Zombie-Survival-Server."
+      "definitionUrl": "definitions/rfactor-2.json",
+      "sha256": "b210f46a54c06607f58a17ef2168c4ba80e71b33d1d495540b46eef617197ab5",
+      "notes": "Rennsimulationsserver mit Spieler-/Zuschauerplätzen, Serverkennwort, Runden-, Schadens- und Fahrhilfenkonfiguration."
     },
     {
       "id": "rust",
       "displayName": "Rust Dedicated Server",
-      "version": "1.0.0",
-      "maturity": "beta",
-      "definitionUrl": "rust.json",
-      "sha256": "b9c1d88d62d09164f4a86e981ee510df2d554bc56489f253bff2331410591983",
-      "notes": "Rust-Survival-Server mit RCON- und Workshop-Grundlage."
+      "version": "1.1.0",
+      "maturity": "stable",
+      "definitionUrl": "definitions/rust.json",
+      "sha256": "5c8665a8239afd21978469fff2902eb089875ec0ff4514bbba2a65539df49fff",
+      "notes": "Rust-Survival-Server mit RCON, Rust+ und voll wirksamen Starteinstellungen."
     },
     {
       "id": "satisfactory",
       "displayName": "Satisfactory Dedicated Server",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "maturity": "stable",
-      "definitionUrl": "satisfactory.json",
-      "sha256": "db094544be550cbf1d635c668960c48738f913a51b17d3e89c0273e01bf1ade3",
-      "notes": "Automatisierungs- und Fabrikbau-Server."
+      "definitionUrl": "definitions/satisfactory.json",
+      "sha256": "97ab0afb9e2a24fe34304eb0b12e9bec9a98cdcba88eb2c2b32da79fed6e1050",
+      "notes": "Automatisierungs- und Fabrikbau-Server mit Leistungs-, Speicher- und Netzwerkeinstellungen."
+    },
+    {
+      "id": "scp-secret-laboratory",
+      "displayName": "SCP: Secret Laboratory Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "experimental",
+      "definitionUrl": "definitions/scp-secret-laboratory.json",
+      "sha256": "bd12c98fdd7718a9b306b22697728d36009a669d5a35473b543ebfc71c036ca7",
+      "notes": "SCP-SL-Server mit LocalAdmin, eigenem Port, Slots, Friendly Fire, Zugangsschutz und instanzgebundenem Konfigurationspfad."
     },
     {
       "id": "seven-days-to-die",
       "displayName": "7 Days to Die",
-      "version": "1.0.0",
-      "maturity": "beta",
-      "definitionUrl": "seven-days-to-die.json",
-      "sha256": "2b7f590a4652e6ddf0b35577189f24b60d46c8710d48549f0d54fad1a4484caf",
-      "notes": "Zombie-Survival-Dedicated-Server."
+      "version": "1.1.0",
+      "maturity": "stable",
+      "definitionUrl": "definitions/seven-days-to-die.json",
+      "sha256": "83929f589276b085e4ea6e2101d463521213db89c946b44cd297015f4d052a1d",
+      "notes": "Zombie-Survival-Server mit Welt-, Netzwerk-, Zugriffs- und Spielregelkonfiguration."
     },
     {
       "id": "sons-of-the-forest",
       "displayName": "Sons Of The Forest Dedicated Server",
-      "version": "1.0.0",
-      "maturity": "experimental",
-      "definitionUrl": "sons-of-the-forest.json",
-      "sha256": "2602f1b4d05968e3c000fc9f1d52e50d3b8bb1d2619cd350832c3866c48b8a6a",
-      "notes": "Sons-of-the-Forest-Koop-Server."
+      "version": "1.1.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/sons-of-the-forest.json",
+      "sha256": "c22ab338c30ccabdd7e24df9fe7ccadf7280fa30731c7201256e7d824a008e9e",
+      "notes": "Sons-of-the-Forest-Koop-Server mit vollständiger Basis-, Netzwerk-, Spielstand- und Leistungssteuerung."
     },
     {
       "id": "soulmask",
       "displayName": "Soulmask Dedicated Server",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "maturity": "experimental",
-      "definitionUrl": "soulmask.json",
-      "sha256": "60d36b58c944edaa12e4d5248e5093f9fea00937433fa1e4338685b1657c99c6",
-      "notes": "Soulmask-Survival-Server; Definition noch in Erprobung."
+      "definitionUrl": "definitions/soulmask.json",
+      "sha256": "ea9b6881e2bb5ba367641d1455ea43f4cd46d386bc3a894dc4662c25b8bfae15",
+      "notes": "Soulmask-Survival-Server mit wirksamen Start-, Zugriffs-, Speicher- und PvE/PvP-Einstellungen."
+    },
+    {
+      "id": "space-engineers",
+      "displayName": "Space Engineers Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/space-engineers.json",
+      "sha256": "2dc325aabf495e2738aa887f28294781ed4d4f13434f5527679fbaa8a71af4ea",
+      "notes": "Offizieller Windows-Server für mehrere isolierte Space-Engineers-Welten mit Steam-Workshop, Welt-, Slot- und Sicherheitskonfiguration."
+    },
+    {
+      "id": "squad",
+      "displayName": "Squad Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/squad.json",
+      "sha256": "d909d752018b56ef5200feb74915f39a739282d7bc549305f05acf18528b3031",
+      "notes": "Taktik-Shooter-Server mit Layerrotation, Slots, reservierten Plätzen, Adminlisten und getrennten Spiel-/Query-Ports."
+    },
+    {
+      "id": "sven-coop",
+      "displayName": "Sven Co-op Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/sven-coop.json",
+      "sha256": "2d14e79fdfa6ac294fb5b09eee3cf3dbc703e90ad10f8c21643b199cbcd3b2f0",
+      "notes": "Sven-Co-op-Server mit Karte, Slots, LAN/Internet, Kennwort, RCON, Download- und Friendly-Fire-Optionen."
+    },
+    {
+      "id": "team-fortress-2",
+      "displayName": "Team Fortress 2 Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/team-fortress-2.json",
+      "sha256": "721aaea2add8992cbaad390d227fc1b9c4f9b7f87b529b16e90e8e59039f9784",
+      "notes": "Offizieller Source-Dedicated-Server mit Karten-, Spieler-, RCON-, Download- und Matchregeln."
     },
     {
       "id": "teamspeak-6",
       "displayName": "TeamSpeak 6 Server",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "maturity": "stable",
-      "definitionUrl": "teamspeak-6.json",
-      "sha256": "9ded6673a6dbd233a256311d1e3fe125b89c80e1e7db3b3b1f81b810ca7887d1",
-      "notes": "TeamSpeak 6 mit Blenk Voice, Bots und Viewer."
+      "definitionUrl": "definitions/teamspeak-6.json",
+      "sha256": "fbe82662498ec9a2375b36649d8ab6caf4388b86283ea18c55fbbd488231914c",
+      "notes": "TeamSpeak 6 mit integrierter Medien-Engine, Bots und Viewer."
+    },
+    {
+      "id": "the-forest",
+      "displayName": "The Forest Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/the-forest.json",
+      "sha256": "4658e4a60bdaaa406cdeb4cd870cbb023dbfe3c9194c500e6b195bb6a420a06c",
+      "notes": "Koop-Survival-Server mit instanzgebundener Konfiguration, Spielständen und Steam-Ports."
+    },
+    {
+      "id": "unturned",
+      "displayName": "Unturned Dedicated Server",
+      "version": "1.0.0",
+      "maturity": "beta",
+      "definitionUrl": "definitions/unturned.json",
+      "sha256": "640a285f9ad3b05670ba8c10276d3af85e1b2e9eb5e6f27bc1eb8902734b9128",
+      "notes": "Offizieller Unturned-Server mit SteamCMD, Workshop-Unterstützung und deutscher Grundkonfiguration."
     },
     {
       "id": "v-rising",
       "displayName": "V Rising Dedicated Server",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "maturity": "stable",
-      "definitionUrl": "v-rising.json",
-      "sha256": "49cbd7e397840634d5ae098e49ea3f7f34fa61c3be4a4c85338b6a853019c89d",
-      "notes": "Vampir-Survival-Dedicated-Server."
+      "definitionUrl": "definitions/v-rising.json",
+      "sha256": "9e4f25fa5298f9715d329cdae35ca964251627f8d0e6d070ab244f86630b6d62",
+      "notes": "V-Rising-Server mit Host-, Welt-, PvE/PvP-, Fortschritts- und Speichereinstellungen."
     },
     {
       "id": "valheim",
       "displayName": "Valheim Dedicated Server",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "maturity": "stable",
-      "definitionUrl": "valheim.json",
-      "sha256": "b44472426950981b4d359f1712301e2ac34970031e6a433443cbaaa8b9759265",
-      "notes": "Kooperativer Viking-Survival-Server."
+      "definitionUrl": "definitions/valheim.json",
+      "sha256": "fea36454c8496b3493c97d7863881a7c93b4d2ae9ea842d45871b277cfbeb02f",
+      "notes": "Kooperativer Viking-Survival-Server mit editierbarer Welt- und Zugriffssteuerung."
     },
     {
       "id": "windrose",
       "displayName": "Windrose",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "maturity": "stable",
-      "definitionUrl": "windrose.json",
-      "sha256": "a105684fa90582c2e10d570ec6f180b950ab5203ab67154b57adcf94a919769e",
+      "definitionUrl": "definitions/windrose.json",
+      "sha256": "2e9bdd66531ffbba22b4c713443ad5b928ae1dd8bbf1a4c718f56ba67bfa3cdf",
       "notes": "Windrose Dedicated Server."
     }
   ]

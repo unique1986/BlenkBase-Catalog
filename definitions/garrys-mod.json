@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 3,
+  "id": "garrys-mod",
+  "displayName": "Garry's Mod Dedicated Server",
+  "package": {
+    "author": "BLNK Labs",
+    "version": "1.0.0",
+    "homepage": "https://wiki.facepunch.com/gmod/Downloading_a_Dedicated_Server"
+  },
+  "summary": "Garry's-Mod-Server mit SteamCMD, Source-Konfiguration, Workshop-Sammlung und Spielerabfrage.",
+  "maturity": "beta",
+  "tags": ["sandbox", "source", "workshop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query", "mods"],
+  "artwork": { "storeAppId": 4000 },
+  "adapters": {
+    "installation": "steamcmd",
+    "lifecycle": "stdin-command",
+    "configuration": "catalog-files",
+    "health": "process-and-ports",
+    "population": "steam-a2s",
+    "backup": "persistent-paths",
+    "mods": "steam-workshop"
+  },
+  "installer": { "kind": "steamcmd", "appId": 4020, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "srcds.exe",
+    "workingDirectory": ".",
+    "arguments": ["-console", "-game", "garrysmod", "-port", "{{port.game}}", "+map", "{{setting.StartMap}}", "+gamemode", "{{setting.StartGameMode}}", "+maxplayers", "{{setting.StartMaxPlayers}}", "+exec", "server.cfg"],
+    "startupSettingsFile": "garrysmod/cfg/blenkbase-startup.json",
+    "consoleLogFiles": ["garrysmod/console.log", "garrysmod/logs/*.log"],
+    "stopCommand": "quit",
+    "stopTimeoutSeconds": 30
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27015 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 27015 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "garrysmod/cfg/blenkbase-startup.json",
+      "label": "Startkarte und Spielmodus",
+      "format": "json",
+      "fields": [
+        { "key": "StartMap", "label": "Startkarte", "group": "Start", "valueType": "string", "defaultValue": "gm_construct", "description": "Interner Kartenname für den nächsten Start. Standard: gm_construct." },
+        { "key": "StartGameMode", "label": "Spielmodus", "group": "Start", "valueType": "string", "defaultValue": "sandbox", "description": "Interner Gamemode-Name für den nächsten Start. Standard: sandbox." },
+        { "key": "StartMaxPlayers", "label": "Maximale Spieler", "group": "Start", "valueType": "integer", "minimum": 1, "maximum": 128, "defaultValue": "20", "description": "Maximal gleichzeitig verbundene Spieler. Standard: 20." }
+      ]
+    },
+    {
+      "path": "garrysmod/cfg/server.cfg",
+      "label": "Server-Grundeinstellungen",
+      "format": "source-cfg",
+      "fields": [
+        {
+          "key": "hostname",
+          "label": "Servername",
+          "group": "Allgemein",
+          "valueType": "string",
+          "quoted": true,
+          "defaultValue": "blnk - Base Garry's Mod",
+          "description": "Name im Serverbrowser. Standard: blnk - Base Garry's Mod."
+        },
+        {
+          "key": "sv_password",
+          "label": "Serverkennwort",
+          "group": "Sicherheit",
+          "valueType": "string",
+          "quoted": true,
+          "secret": true,
+          "description": "Optionales Zugangskennwort. Leer bedeutet: öffentlich zugänglich."
+        },
+        {
+          "key": "rcon_password",
+          "label": "RCON-Kennwort",
+          "group": "RCON",
+          "valueType": "string",
+          "quoted": true,
+          "secret": true,
+          "description": "Eigenes starkes Kennwort für die Fernadministration."
+        },
+        {
+          "key": "sv_setsteamaccount",
+          "label": "Steam-Gameserver-Token",
+          "group": "Steam",
+          "valueType": "string",
+          "quoted": true,
+          "secret": true,
+          "description": "Von Steam erzeugter GSLT. Für einen korrekt gelisteten öffentlichen Server erforderlich."
+        },
+        {
+          "key": "host_workshop_collection",
+          "label": "Workshop-Sammlungs-ID",
+          "group": "Mods",
+          "valueType": "string",
+          "defaultValue": "0",
+          "description": "Optionale öffentliche oder nicht gelistete Workshop-Sammlung. Standard 0 deaktiviert sie."
+        },
+        {
+          "key": "sv_lan",
+          "label": "Nur im lokalen Netzwerk",
+          "group": "Netzwerk",
+          "valueType": "string",
+          "defaultValue": "0",
+          "choices": [
+            { "value": "0", "label": "Nein" },
+            { "value": "1", "label": "Ja" }
+          ],
+          "description": "Ja versteckt den Server vor dem Internet. Standard: Nein."
+        },
+        { "key": "sv_region", "label": "Serverregion", "group": "Netzwerk", "valueType": "integer", "defaultValue": "3", "minimum": -1, "maximum": 7, "description": "Region im Serverbrowser. 3 steht für Europa, -1 für weltweit. Standard: Europa." },
+        { "key": "sv_allowdownload", "label": "Downloads vom Server erlauben", "group": "Downloads", "valueType": "string", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Erlaubt Clients das Herunterladen benötigter Dateien. Standard: Ja." },
+        { "key": "sv_allowupload", "label": "Uploads von Clients erlauben", "group": "Downloads", "valueType": "string", "defaultValue": "0", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Erlaubt Uploads durch Clients. Aus Sicherheitsgründen standardmäßig Nein." },
+        { "key": "sv_cheats", "label": "Cheats", "group": "Sicherheit", "valueType": "string", "defaultValue": "0", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Aktiviert Cheat-CVars und -Befehle. Standard: Nein." },
+        { "key": "voice_enable", "label": "Sprachchat", "group": "Kommunikation", "valueType": "string", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Aktiviert den Sprachchat. Standard: Ja." },
+        { "key": "sv_alltalk", "label": "Globaler Sprachchat", "group": "Kommunikation", "valueType": "string", "defaultValue": "0", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Alle Spieler hören sich unabhängig vom Team. Standard: Nein." },
+        { "key": "sv_log_onefile", "label": "Eine gemeinsame Logdatei", "group": "Protokollierung", "valueType": "string", "defaultValue": "0", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Schreibt alle Sitzungen in eine Logdatei. Standard: Nein." },
+        { "key": "log", "label": "Serverprotokollierung", "group": "Protokollierung", "valueType": "string", "defaultValue": "on", "choices": [{ "value": "on", "label": "An" }, { "value": "off", "label": "Aus" }], "description": "Aktiviert Source-Serverlogs. Standard: An." },
+        { "key": "sbox_maxprops", "label": "Maximale Props pro Spieler", "group": "Sandbox-Limits", "valueType": "integer", "defaultValue": "200", "minimum": 0, "maximum": 10000, "description": "Maximale Zahl gespawnter Props pro Spieler. Standard: 200." },
+        { "key": "sbox_maxnpcs", "label": "Maximale NPCs pro Spieler", "group": "Sandbox-Limits", "valueType": "integer", "defaultValue": "10", "minimum": 0, "maximum": 1000, "description": "Maximale Zahl gespawnter NPCs pro Spieler. Standard: 10." },
+        { "key": "sbox_maxvehicles", "label": "Maximale Fahrzeuge pro Spieler", "group": "Sandbox-Limits", "valueType": "integer", "defaultValue": "10", "minimum": 0, "maximum": 1000, "description": "Maximale Zahl gespawnter Fahrzeuge pro Spieler. Standard: 10." },
+        { "key": "sbox_maxragdolls", "label": "Maximale Ragdolls pro Spieler", "group": "Sandbox-Limits", "valueType": "integer", "defaultValue": "10", "minimum": 0, "maximum": 1000, "description": "Maximale Zahl gespawnter Ragdolls pro Spieler. Standard: 10." },
+        { "key": "sbox_godmode", "label": "Sandbox-Godmode", "group": "Sandbox-Regeln", "valueType": "string", "defaultValue": "0", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Macht Spieler im Sandbox-Modus unverwundbar. Standard: Nein." },
+        { "key": "sbox_noclip", "label": "Sandbox-Noclip", "group": "Sandbox-Regeln", "valueType": "string", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Erlaubt Noclip im Sandbox-Modus. Standard: Ja." }
+      ]
+    }
+  ],
+  "persistentPaths": ["garrysmod/cfg", "garrysmod/data", "garrysmod/addons"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

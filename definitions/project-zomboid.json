@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 3, "id": "project-zomboid", "displayName": "Project Zomboid Dedicated Server", "summary": "Persistenter Zombie-Survival-Server mit Server-, Workshop- und Spielregelkonfiguration.", "maturity": "beta", "tags": ["survival", "zombies"],
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "mods"], "artwork": { "storeAppId": 108600 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 380870, "anonymous": true },
+  "process": { "executable": "StartServer64.bat", "workingDirectory": ".", "startupSettingsFile": "blenkbase-startup.json", "arguments": ["-cachedir={{instance.root}}/data", "-servername", "{{setting.ServerId}}", "-port", "{{port.game}}"], "consoleLogFiles": ["data/Logs/*.txt"], "stopCommand": "quit", "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 16261 }, { "key": "steam", "protocol": "udp", "preferred": 8766 }, { "key": "rcon", "protocol": "tcp", "preferred": 27015 }],
+  "configurationFiles": [
+    { "path": "blenkbase-startup.json", "label": "Start", "format": "json", "fields": [
+      { "key": "ServerId", "label": "Serverkennung", "group": "Allgemein", "valueType": "string", "defaultValue": "BlenkBase", "description": "Bestimmt die Dateinamen unter data/Server. Nach der ersten Welt nicht unbedacht ändern. Standard: BlenkBase." }
+    ]},
+    { "path": "data/Server/BlenkBase.ini", "label": "Servereinstellungen", "format": "properties", "fields": [
+      { "key": "PublicName", "label": "Öffentlicher Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "BlenkBase Project Zomboid", "description": "Name im öffentlichen Serverbrowser. Standard: BlenkBase Project Zomboid." },
+      { "key": "PublicDescription", "label": "Beschreibung", "group": "Allgemein", "valueType": "string", "defaultValue": "Verwaltet mit BlenkBase", "description": "Beschreibung im Serverbrowser. Standard: Verwaltet mit BlenkBase." },
+      { "key": "Public", "label": "Öffentlich listen", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Zeigt den Server im öffentlichen Browser. Standard: Ja." },
+      { "key": "Open", "label": "Offener Beitritt", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt neuen Spielern ohne vorher angelegtes Konto beizutreten. Standard: Ja." },
+      { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort für alle Spieler. Standard: leer." },
+      { "key": "RCONPort", "label": "RCON-Port", "group": "RCON", "valueType": "integer", "portKey": "rcon", "minimum": 1, "maximum": 65535, "description": "TCP-Port der Fernadministration. BlenkBase weist ihn automatisch zu." },
+      { "key": "RCONPassword", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-PZ", "description": "Kennwort der Fernadministration. Vor öffentlichem Betrieb ändern." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "16", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 16." },
+      { "key": "SteamVAC", "label": "Steam VAC", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert Valve Anti-Cheat. Standard: Ja." },
+      { "key": "UPnP", "label": "UPnP-Portfreigabe", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "false", "description": "Versucht Ports automatisch am Router zu öffnen. Auf Rootservern unnötig; Standard: Nein." },
+      { "key": "DoLuaChecksum", "label": "Lua-Prüfsumme erzwingen", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Prüft Client-Lua-Dateien gegen den Server. Standard: Ja." },
+      { "key": "AutoCreateUserInWhiteList", "label": "Neue Benutzer whitelisten", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "false", "description": "Trägt neue Benutzer beim ersten Beitritt automatisch in die Whitelist ein. Standard: Nein." },
+      { "key": "PauseEmpty", "label": "Pausieren wenn leer", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Hält die Weltzeit an, wenn niemand verbunden ist. Standard: Ja." },
+      { "key": "PVP", "label": "PvP erlauben", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Schaden zwischen Spielern. Standard: Ja." },
+      { "key": "SafetySystem", "label": "Sicherheitsmodus", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert den umschaltbaren PvP-Sicherheitsmodus. Standard: Ja." },
+      { "key": "VoiceEnable", "label": "Sprachchat", "group": "Kommunikation", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert den spielinternen Sprachchat. Standard: Ja." },
+      { "key": "VoiceMinDistance", "label": "Minimale Sprachchat-Distanz", "group": "Kommunikation", "valueType": "number", "defaultValue": "10", "minimum": 0, "maximum": 1000, "description": "Entfernung, bis zu der Sprachchat in voller Lautstärke hörbar ist. Standard: 10." },
+      { "key": "VoiceMaxDistance", "label": "Maximale Sprachchat-Distanz", "group": "Kommunikation", "valueType": "number", "defaultValue": "100", "minimum": 0, "maximum": 5000, "description": "Maximale Reichweite des Sprachchats. Standard: 100." },
+      { "key": "AnnounceDeath", "label": "Tode ankündigen", "group": "Kommunikation", "valueType": "boolean", "defaultValue": "false", "description": "Veröffentlicht Todesmeldungen für verbundene Spieler. Standard: Nein." },
+      { "key": "DisplayUserName", "label": "Benutzernamen anzeigen", "group": "Datenschutz", "valueType": "boolean", "defaultValue": "true", "description": "Zeigt den Kontonamen über Spielern. Standard: Ja." },
+      { "key": "SteamScoreboard", "label": "Steam-Spielerliste", "group": "Datenschutz", "valueType": "string", "defaultValue": "true", "choices": [{ "value": "true", "label": "Alle anzeigen" }, { "value": "admin", "label": "Nur Administratoren" }, { "value": "false", "label": "Ausblenden" }], "description": "Legt fest, wer die verbundene Spielerliste sehen darf. Standard: Alle." },
+      { "key": "Mods", "label": "Mod-IDs", "group": "Mods", "valueType": "string", "defaultValue": "", "description": "Semikolongetrennte Mod-IDs aus den jeweiligen mod.info-Dateien. Standard: leer." },
+      { "key": "WorkshopItems", "label": "Workshop-IDs", "group": "Mods", "valueType": "string", "defaultValue": "", "description": "Semikolongetrennte Steam-Workshop-IDs in derselben Reihenfolge wie die Mod-IDs. Standard: leer." },
+      { "key": "Map", "label": "Kartenreihenfolge", "group": "Welt", "valueType": "string", "defaultValue": "Muldraugh, KY", "description": "Karten und Mod-Karten, mit Semikolon getrennt. Standard: Muldraugh, KY." },
+      { "key": "SaveWorldEveryMinutes", "label": "Speicherintervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 1440, "description": "Zusätzliche Speicherungen in Minuten; 0 nutzt das normale Verhalten. Standard: 0." },
+      { "key": "BackupsCount", "label": "Interne Backups", "group": "Spielstand", "valueType": "integer", "defaultValue": "5", "minimum": 1, "maximum": 300, "description": "Anzahl rotierender servereigener Sicherungen. Standard: 5." },
+      { "key": "BackupsOnStart", "label": "Backup beim Start", "group": "Spielstand", "valueType": "boolean", "defaultValue": "true", "description": "Erzeugt beim Serverstart eine interne Sicherung. Standard: Ja." },
+      { "key": "BackupsOnVersionChange", "label": "Backup bei Versionswechsel", "group": "Spielstand", "valueType": "boolean", "defaultValue": "true", "description": "Sichert die Welt vor einem erkannten Versionswechsel. Standard: Ja." },
+      { "key": "BackupsPeriod", "label": "Backup-Intervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 10080, "description": "Minuten zwischen internen Sicherungen; 0 deaktiviert zeitgesteuerte Sicherungen. Standard: 0." }
+    ]}
+  ],
+  "persistentPaths": ["data"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

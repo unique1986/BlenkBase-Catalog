@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 3,
+  "id": "minecraft-java",
+  "displayName": "Minecraft: Java Edition",
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "summary": "Minecraft Java mit Vanilla- und Forge-Auswahl.", "maturity": "stable", "tags": ["sandbox", "mods"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query", "mods"], "artwork": { "iconUrl": "/artwork/minecraft-java.svg", "headerUrl": "/artwork/minecraft-java.svg" },
+  "adapters": { "installation": "minecraft-java", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "minecraft-status", "backup": "persistent-paths", "mods": "minecraft" },
+  "installer": { "kind": "minecraft-java" },
+  "process": {
+    "executable": "runtime/bin/java.exe",
+    "workingDirectory": ".",
+    "arguments": ["-Xms{{setting.InitialMemoryMb}}M", "-Xmx{{setting.MaximumMemoryMb}}M", "-jar", "server.jar", "nogui"],
+    "startupSettingsFile": "blenkbase-startup.json",
+    "consoleLogFiles": ["logs/latest.log"],
+    "stopCommand": "stop",
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [{ "key": "game", "protocol": "tcp", "preferred": 25565 }],
+  "configurationFiles": [
+    {
+      "path": "blenkbase-startup.json",
+      "label": "Java-Startparameter",
+      "format": "json",
+      "fields": [
+        { "key": "InitialMemoryMb", "label": "Java-Startspeicher (MB)", "group": "Java", "valueType": "integer", "defaultValue": "2048", "minimum": 512, "maximum": 131072, "description": "Beim Start reservierter Arbeitsspeicher. Standard: 2048 MB." },
+        { "key": "MaximumMemoryMb", "label": "Java-Maximalspeicher (MB)", "group": "Java", "valueType": "integer", "defaultValue": "8192", "minimum": 1024, "maximum": 131072, "description": "Maximal nutzbarer Java-Arbeitsspeicher. Standard: 8192 MB. Muss mindestens dem Startspeicher entsprechen." }
+      ]
+    },
+    {
+      "path": "eula.txt",
+      "label": "Minecraft-EULA",
+      "format": "properties",
+      "fields": [{ "key": "eula", "label": "Minecraft-EULA akzeptieren", "group": "Lizenz", "valueType": "boolean", "defaultValue": "false", "description": "Nur auf Ja setzen, wenn du die Minecraft-EULA gelesen und akzeptiert hast. Standard: Nein." }]
+    },
+    {
+      "path": "server.properties",
+      "label": "Servereinstellungen",
+      "format": "properties",
+      "fields": [
+        { "key": "motd", "label": "Serverbeschreibung", "group": "Allgemein", "valueType": "string", "defaultValue": "Ein BlenkBase Minecraft Server", "description": "Text in der Serverliste. Standard: Ein BlenkBase Minecraft Server." },
+        { "key": "server-port", "label": "Game-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "TCP-Port des Servers. Standard: 25565." },
+        { "key": "max-players", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "20", "minimum": 1, "maximum": 1000, "description": "Maximale Spielerzahl. Standard: 20." },
+        { "key": "online-mode", "label": "Online-Authentifizierung", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Prüft Spielerkonten bei Microsoft/Mojang. Standard und Empfehlung: Ja." },
+        { "key": "white-list", "label": "Whitelist", "group": "Zugriff", "valueType": "boolean", "defaultValue": "false", "description": "Nur freigegebene Spieler dürfen beitreten. Standard: Nein." },
+        { "key": "difficulty", "label": "Schwierigkeit", "group": "Welt", "valueType": "string", "defaultValue": "easy", "choices": [{ "value": "peaceful", "label": "Friedlich" }, { "value": "easy", "label": "Leicht" }, { "value": "normal", "label": "Normal" }, { "value": "hard", "label": "Schwer" }], "description": "Schwierigkeitsgrad. Standard: Leicht." },
+        { "key": "gamemode", "label": "Spielmodus", "group": "Welt", "valueType": "string", "defaultValue": "survival", "choices": [{ "value": "survival", "label": "Überleben" }, { "value": "creative", "label": "Kreativ" }, { "value": "adventure", "label": "Abenteuer" }, { "value": "spectator", "label": "Zuschauer" }], "description": "Standard-Spielmodus. Standard: Überleben." },
+        { "key": "pvp", "label": "PvP", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Schaden zwischen Spielern. Standard: Ja." },
+        { "key": "view-distance", "label": "Sichtweite", "group": "Leistung", "valueType": "integer", "defaultValue": "10", "minimum": 2, "maximum": 32, "description": "Serverseitige Sichtweite in Chunks. Standard: 10." },
+        { "key": "simulation-distance", "label": "Simulationsweite", "group": "Leistung", "valueType": "integer", "defaultValue": "10", "minimum": 2, "maximum": 32, "description": "Aktiv simulierte Entfernung in Chunks. Standard: 10." },
+        { "key": "level-name", "label": "Weltordner", "group": "Welt", "valueType": "string", "defaultValue": "world", "description": "Name des Weltordners. Standard: world. Nur bei gestopptem Server ändern." },
+        { "key": "level-seed", "label": "Welt-Seed", "group": "Welt", "valueType": "string", "defaultValue": "", "description": "Optionaler Seed für eine neu erzeugte Welt. Standard: zufällig." },
+        { "key": "level-type", "label": "Welttyp", "group": "Welt", "valueType": "string", "defaultValue": "minecraft:normal", "choices": [{ "value": "minecraft:normal", "label": "Normal" }, { "value": "minecraft:flat", "label": "Flach" }, { "value": "minecraft:large_biomes", "label": "Große Biome" }, { "value": "minecraft:amplified", "label": "Verstärkt" }], "description": "Generator für neue Welten. Standard: Normal." },
+        { "key": "generate-structures", "label": "Strukturen erzeugen", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Erzeugt Dörfer, Festungen und weitere Strukturen. Standard: Ja." },
+        { "key": "generate-settings", "label": "Generator-Einstellungen", "group": "Welt", "valueType": "string", "defaultValue": "{}", "description": "Erweiterte Generator-Daten für eine neue Welt. Standard: {}." },
+        { "key": "hardcore", "label": "Hardcore", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Sperrt Spieler nach dem Tod und erzwingt die Schwierigkeit Schwer. Standard: Nein." },
+        { "key": "force-gamemode", "label": "Spielmodus erzwingen", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Setzt Spieler beim Beitritt auf den konfigurierten Standardmodus. Standard: Nein." },
+        { "key": "allow-flight", "label": "Fliegen erlauben", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Verhindert automatische Kicks wegen Fliegens; für entsprechende Mods erforderlich. Standard: Nein." },
+        { "key": "allow-nether", "label": "Nether erlauben", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Reisen in den Nether. Standard: Ja." },
+        { "key": "spawn-animals", "label": "Tiere spawnen", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt das Spawnen friedlicher Tiere. Standard: Ja." },
+        { "key": "spawn-monsters", "label": "Monster spawnen", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt das Spawnen feindlicher Kreaturen. Standard: Ja." },
+        { "key": "spawn-npcs", "label": "Dorfbewohner spawnen", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt das Spawnen von Dorfbewohnern. Standard: Ja." },
+        { "key": "enable-command-block", "label": "Befehlsblöcke", "group": "Administration", "valueType": "boolean", "defaultValue": "false", "description": "Aktiviert Command Blocks. Standard: Nein." },
+        { "key": "op-permission-level", "label": "OP-Berechtigungsstufe", "group": "Administration", "valueType": "integer", "defaultValue": "4", "minimum": 1, "maximum": 4, "description": "Maximale Befehlsstufe für Operatoren. Standard: 4." },
+        { "key": "function-permission-level", "label": "Funktions-Berechtigungsstufe", "group": "Administration", "valueType": "integer", "defaultValue": "2", "minimum": 1, "maximum": 4, "description": "Berechtigungsstufe für Funktionen aus Datenpaketen. Standard: 2." },
+        { "key": "spawn-protection", "label": "Spawn-Schutzradius", "group": "Zugriff", "valueType": "integer", "defaultValue": "16", "minimum": 0, "maximum": 10000, "description": "Schutzradius um den Weltspawn. 0 deaktiviert ihn. Standard: 16." },
+        { "key": "enforce-whitelist", "label": "Whitelist sofort erzwingen", "group": "Zugriff", "valueType": "boolean", "defaultValue": "false", "description": "Entfernt nicht mehr freigegebene Spieler unmittelbar vom Server. Standard: Nein." },
+        { "key": "player-idle-timeout", "label": "AFK-Zeitlimit (Minuten)", "group": "Spieler", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 1440, "description": "Kick nach Inaktivität. 0 deaktiviert das Limit. Standard: 0." },
+        { "key": "max-world-size", "label": "Maximale Weltgröße", "group": "Welt", "valueType": "integer", "defaultValue": "29999984", "minimum": 1, "maximum": 29999984, "description": "Maximaler Weltradius in Blöcken. Standard: 29999984." },
+        { "key": "max-tick-time", "label": "Watchdog-Zeit (ms)", "group": "Leistung", "valueType": "integer", "defaultValue": "60000", "minimum": -1, "maximum": 2147483647, "description": "Maximale Dauer eines Ticks vor Watchdog-Abbruch. -1 deaktiviert den Watchdog. Standard: 60000." },
+        { "key": "network-compression-threshold", "label": "Kompressionsgrenze (Bytes)", "group": "Netzwerk", "valueType": "integer", "defaultValue": "256", "minimum": -1, "maximum": 65535, "description": "Pakete ab dieser Größe werden komprimiert. -1 deaktiviert die Kompression. Standard: 256." },
+        { "key": "rate-limit", "label": "Paketlimit pro Sekunde", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 1000000, "description": "Kick bei Überschreitung eingehender Pakete. 0 deaktiviert das Limit. Standard: 0." },
+        { "key": "enable-status", "label": "Serverstatus beantworten", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Serverlisten und BlenkBase die Statusabfrage. Standard: Ja." },
+        { "key": "hide-online-players", "label": "Spielerliste verbergen", "group": "Datenschutz", "valueType": "boolean", "defaultValue": "false", "description": "Verbirgt Spielernamen in der Statusantwort. Standard: Nein." },
+        { "key": "enforce-secure-profile", "label": "Sichere Profile erzwingen", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Verlangt kryptografisch signierte Spielerprofile. Standard: Ja." },
+        { "key": "resource-pack", "label": "Ressourcenpaket-URL", "group": "Ressourcenpaket", "valueType": "string", "defaultValue": "", "description": "Direkte HTTPS-Adresse eines optionalen Ressourcenpakets. Standard: leer." },
+        { "key": "resource-pack-sha1", "label": "Ressourcenpaket SHA-1", "group": "Ressourcenpaket", "valueType": "string", "defaultValue": "", "description": "SHA-1-Prüfsumme des Ressourcenpakets. Standard: leer." },
+        { "key": "require-resource-pack", "label": "Ressourcenpaket erzwingen", "group": "Ressourcenpaket", "valueType": "boolean", "defaultValue": "false", "description": "Verweigert den Beitritt bei abgelehntem Ressourcenpaket. Standard: Nein." },
+        { "key": "resource-pack-prompt", "label": "Hinweis zum Ressourcenpaket", "group": "Ressourcenpaket", "valueType": "string", "defaultValue": "", "description": "Optionaler JSON-Text in der Download-Abfrage. Standard: leer." },
+        { "key": "sync-chunk-writes", "label": "Chunk-Schreibvorgänge synchronisieren", "group": "Leistung", "valueType": "boolean", "defaultValue": "true", "description": "Schreibt Chunks synchron und sicherer auf den Datenträger. Standard: Ja." }
+      ]
+    }
+  ],
+  "persistentPaths": ["world", "world_nether", "world_the_end"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 3, "id": "killing-floor", "displayName": "Killing Floor Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://wiki.tripwireinteractive.com/index.php?title=Dedicated_Server_(KillingFloor)" },
+  "summary": "Klassischer Killing-Floor-Koopserver mit Karte, Schwierigkeit, Slots, VAC, Kennwort und Webadministration; die Installation erfordert ein berechtigtes Steam-Konto.",
+  "maturity": "experimental", "tags": ["coop", "horror", "shooter"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 1250 }, "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 215350, "anonymous": false, "branch": "public" },
+  "process": { "executable": "System/ucc.exe", "workingDirectory": "System", "startupSettingsFile": "blenkbase-startup.json", "arguments": ["server", "{{setting.Map}}.rom?game=KFMod.KFGameType?Difficulty={{setting.Difficulty}}?VACSecured={{setting.VacSecured}}", "-nohomedir", "-port={{port.game}}"], "consoleLogFiles": ["System/*.log"], "stopCommand": "exit", "stopTimeoutSeconds": 45 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 7707 }, { "key": "query", "protocol": "udp", "preferred": 7717 }, { "key": "web", "protocol": "tcp", "preferred": 8075 }],
+  "configurationFiles": [
+    { "path": "blenkbase-startup.json", "label": "Karte und Start", "format": "json", "fields": [
+      { "key": "Map", "label": "Startkarte", "group": "Karte", "valueType": "string", "defaultValue": "KF-BioticsLab", "choices": [{ "value": "KF-BioticsLab", "label": "Biotics Lab" }, { "value": "KF-WestLondon", "label": "West London" }, { "value": "KF-Farm", "label": "Farm" }, { "value": "KF-Manor", "label": "Manor" }], "description": "Karte beim Serverstart. Standard: Biotics Lab." },
+      { "key": "Difficulty", "label": "Schwierigkeit", "group": "Spielregeln", "valueType": "integer", "defaultValue": "2", "choices": [{ "value": "1", "label": "Anfänger" }, { "value": "2", "label": "Normal" }, { "value": "4", "label": "Schwer" }, { "value": "5", "label": "Suizidal" }, { "value": "7", "label": "Hölle auf Erden" }], "description": "Schwierigkeit der Gegner. Standard: Normal." },
+      { "key": "VacSecured", "label": "VAC-Schutz", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert Valve Anti-Cheat. Standard: Ja." }
+    ] },
+    { "path": "System/KillingFloor.ini", "label": "Server und WebAdmin", "format": "ini", "section": "Engine.GameReplicationInfo", "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Killing Floor", "description": "Name im Serverbrowser. Standard: blnk - Base Killing Floor." },
+      { "key": "ShortName", "label": "Kurzname", "group": "Allgemein", "valueType": "string", "defaultValue": "BLNK KF", "description": "Kurzer Servername. Standard: BLNK KF." },
+      { "key": "MaxPlayers", "section": "Engine.GameInfo", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "6", "minimum": 1, "maximum": 32, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 6." },
+      { "key": "GamePassword", "section": "Engine.AccessControl", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "AdminPassword", "section": "Engine.AccessControl", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-KF", "description": "Kennwort für WebAdmin und Administration. Vor öffentlichem Betrieb ändern." },
+      { "key": "bEnabled", "section": "UWeb.WebServer", "label": "WebAdmin aktiv", "group": "Administration", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert die Webadministration. Standard: Ja." },
+      { "key": "ListenPort", "section": "UWeb.WebServer", "label": "WebAdmin-Port", "group": "Administration", "valueType": "integer", "portKey": "web", "minimum": 1, "maximum": 65535, "description": "TCP-Port der Webadministration. Blenk Base weist ihn automatisch zu." }
+    ] }
+  ],
+  "persistentPaths": ["System/KillingFloor.ini"], "health": { "processRequired": true, "portKeys": ["game", "query", "web"] }
+}

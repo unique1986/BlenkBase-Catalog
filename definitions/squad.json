@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 3, "id": "squad", "displayName": "Squad Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://squad.fandom.com/wiki/Server_Installation" },
+  "summary": "Taktik-Shooter-Server mit Layerrotation, Slots, reservierten Plätzen, Adminlisten und getrennten Spiel-/Query-Ports.",
+  "maturity": "beta", "tags": ["military", "shooter", "tactical"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "mods", "player-query"], "artwork": { "storeAppId": 393380 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 403240, "anonymous": true, "branch": "public" },
+  "process": { "executable": "SquadGame/Binaries/Win64/SquadGameServer.exe", "workingDirectory": ".", "startupSettingsFile": "blenkbase-startup.json", "arguments": ["Port={{port.game}}", "QueryPort={{port.query}}", "FIXEDMAXPLAYERS={{setting.MaxPlayers}}", "RANDOM=NONE", "-log"], "consoleLogFiles": ["SquadGame/Saved/Logs/*.log"], "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 7787 }, { "key": "query", "protocol": "udp", "preferred": 27165 }, { "key": "rcon", "protocol": "tcp", "preferred": 21114 }],
+  "configurationFiles": [
+    { "path": "blenkbase-startup.json", "label": "Start und Slots", "format": "json", "fields": [{ "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "80", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 80." }] },
+    { "path": "SquadGame/ServerConfig/Server.cfg", "label": "Server und Zugriff", "format": "properties", "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Squad", "description": "Name im Serverbrowser. Standard: blnk - Base Squad." },
+      { "key": "ShouldAdvertise", "label": "Öffentlich anzeigen", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Veröffentlicht den Server in der Liste. Standard: Ja." },
+      { "key": "NumReservedSlots", "label": "Reservierte Slots", "group": "Zugriff", "valueType": "integer", "defaultValue": "2", "minimum": 0, "maximum": 100, "description": "Für Administratoren reservierte Plätze. Standard: 2." },
+      { "key": "PublicQueueLimit", "label": "Öffentliche Warteschlange", "group": "Zugriff", "valueType": "integer", "defaultValue": "25", "minimum": 0, "maximum": 100, "description": "Maximale öffentliche Warteschlange. Standard: 25." },
+      { "key": "RecordDemos", "label": "Demos aufzeichnen", "group": "Protokollierung", "valueType": "boolean", "defaultValue": "false", "description": "Zeichnet Runden als Serverdemo auf. Standard: Nein." },
+      { "key": "ServerMessageInterval", "label": "Nachrichtenintervall", "group": "Kommunikation", "valueType": "integer", "defaultValue": "300", "minimum": 0, "maximum": 3600, "description": "Sekunden zwischen Servernachrichten; 0 deaktiviert. Standard: 300." },
+      { "key": "RconPassword", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Squad", "description": "Kennwort für RCON. Vor öffentlichem Betrieb ändern." },
+      { "key": "RconPort", "label": "RCON-Port", "group": "RCON", "valueType": "integer", "portKey": "rcon", "minimum": 1, "maximum": 65535, "description": "TCP-Port für RCON. Blenk Base weist ihn automatisch zu." }
+    ] },
+    { "path": "SquadGame/ServerConfig/LayerRotation.cfg", "label": "Layerrotation", "format": "command-list", "fields": [{ "key": "Layer", "label": "Startlayer", "group": "Karte", "valueType": "string", "defaultValue": "Al_Basrah_RAAS_v1", "description": "Erster Layer der Rotation. Weitere Layer können im Dateimanager ergänzt werden. Standard: Al Basrah RAAS v1." }] }
+  ],
+  "persistentPaths": ["SquadGame/ServerConfig", "SquadGame/Saved", "blenkbase-startup.json"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

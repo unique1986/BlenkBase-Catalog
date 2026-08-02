@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 3, "id": "core-keeper", "displayName": "Core Keeper Dedicated Server", "summary": "Kooperativer Core-Keeper-Server mit editierbarer Weltkonfiguration.", "maturity": "beta", "tags": ["survival", "coop"],
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"], "artwork": { "storeAppId": 1621690 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "none", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1963720, "anonymous": true },
+  "process": { "executable": "CoreKeeperServer.exe", "workingDirectory": ".", "startupSettingsFile": "blenkbase-startup.json", "arguments": ["-batchmode", "-logfile", "CoreKeeperServer.log", "-datapath", "{{instance.root}}/data", "-world", "{{setting.WorldSlot}}", "-worldname", "{{setting.WorldName}}", "-worldseed", "{{setting.WorldSeed}}", "-maxplayers", "{{setting.MaxPlayers}}", "-gamemode", "{{setting.GameMode}}", "-season", "{{setting.Season}}", "-port", "{{port.game}}"], "conditionalArguments": [{ "setting": "Password", "omitValues": [""], "arguments": ["-password", "{{setting.Password}}"] }], "consoleLogFiles": ["CoreKeeperServer.log"], "stopCommand": "quit", "stopTimeoutSeconds": 45 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 27015 }],
+  "configurationFiles": [{ "path": "blenkbase-startup.json", "label": "Server und Welt", "format": "json", "fields": [
+    { "key": "WorldName", "label": "Weltname", "group": "Welt", "valueType": "string", "defaultValue": "BlenkBase", "description": "Anzeigename der Welt. Standard: BlenkBase." },
+    { "key": "WorldSlot", "label": "Welt-Slot", "group": "Welt", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 99, "description": "Nummer des gespeicherten Weltslots. Standard: 0." },
+    { "key": "WorldSeed", "label": "Welt-Seed", "group": "Welt", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 2147483647, "description": "Seed für eine neue Welt. 0 lässt den Server einen Seed wählen. Standard: 0." },
+    { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "8", "minimum": 1, "maximum": 100, "description": "Maximale Zahl gleichzeitiger Spieler. Standard: 8." },
+    { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Leer bedeutet kein Kennwort. Standard: leer." },
+    { "key": "GameMode", "label": "Spielmodus", "group": "Spielregeln", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Normal" }, { "value": "1", "label": "Schwer" }, { "value": "2", "label": "Kreativ" }, { "value": "4", "label": "Gelegenheitsmodus" }], "description": "Regelsatz für neu erstellte Welten. Standard: Normal." },
+    { "key": "Season", "label": "Saison", "group": "Welt", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Normal/Automatisch" }, { "value": "1", "label": "Ostern" }, { "value": "2", "label": "Halloween" }, { "value": "3", "label": "Weihnachten" }], "description": "Erzwingt eine saisonale Veranstaltung. Standard: Normal/Automatisch." }
+  ]}],
+  "persistentPaths": ["data"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

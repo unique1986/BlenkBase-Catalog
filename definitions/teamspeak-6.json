@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 3,
+  "id": "teamspeak-6",
+  "displayName": "TeamSpeak 6 Server",
+  "package": { "author": "blnk Base", "version": "1.2.0" },
+  "summary": "TeamSpeak 6 mit integrierter Medien-Engine, Bots und Viewer.", "maturity": "stable", "tags": ["voice", "communication"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"], "artwork": { "iconUrl": "/artwork/teamspeak-6.svg", "headerUrl": "/artwork/teamspeak-6.svg" },
+  "adapters": { "installation": "github-release", "lifecycle": "teamspeak-6", "configuration": "teamspeak-6", "health": "process-and-ports", "population": "teamspeak-query", "backup": "teamspeak-6", "mods": "none" },
+  "installer": { "kind": "github-release", "repository": "teamspeak/teamspeak6-server", "assetPattern": "teamspeak.*server.*win.*x64.*\\.zip$" },
+  "process": {
+    "executable": "tsserver.exe",
+    "workingDirectory": ".",
+    "arguments": ["--accept-license", "--default-voice-port", "{{port.voice}}", "--filetransfer-port", "{{port.filetransfer}}", "--query-http-enable", "--query-http-port", "{{port.webquery}}"],
+    "consoleLogFiles": ["logs/*.log"]
+  },
+  "ports": [
+    { "key": "voice", "protocol": "udp", "preferred": 9987 },
+    { "key": "filetransfer", "protocol": "tcp", "preferred": 30033 },
+    { "key": "webquery", "protocol": "tcp", "preferred": 10080 }
+  ],
+  "configurationFiles": [],
+  "persistentPaths": ["tsserver.sqlitedb", "files", "logs", "licensekey.dat"],
+  "health": { "processRequired": true, "portKeys": ["voice", "filetransfer", "webquery"] }
+}

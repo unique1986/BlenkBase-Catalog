@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 3, "id": "eco", "displayName": "Eco Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://wiki.play.eco/en/Server_Configuration" },
+  "summary": "Eco-Server mit Weltname, Slots, Sichtbarkeit, Spiel-/Webport, Passwort und persistenten Config-/Storage-Pfaden.",
+  "maturity": "beta", "tags": ["simulation", "survival", "economy"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 382310 }, "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 739590, "anonymous": true, "branch": "public" },
+  "process": { "executable": "EcoServer.exe", "workingDirectory": ".", "arguments": ["-nogui", "-configs={{instance.root}}/Configs", "-storage={{instance.root}}/Storage"], "consoleLogFiles": ["Logs/*.log"], "stopCommand": "shutdown", "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "tcp", "preferred": 3000 }, { "key": "web", "protocol": "tcp", "preferred": 3001 }],
+  "configurationFiles": [{ "path": "Configs/Network.eco", "label": "Netzwerk und Zugang", "format": "json", "fields": [
+    { "key": "PublicServer", "label": "Öffentlich anzeigen", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Listet den Server öffentlich. Standard: Ja." },
+    { "key": "PlayPort", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "TCP-Spielport. Blenk Base weist ihn automatisch zu." },
+    { "key": "WebServerPort", "label": "Webport", "group": "Netzwerk", "valueType": "integer", "portKey": "web", "minimum": 1, "maximum": 65535, "description": "TCP-Port der Eco-Weboberfläche. Blenk Base weist ihn automatisch zu." },
+    { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+    { "key": "MaxConnections", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "20", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 20." }
+  ] }, { "path": "Configs/WorldGenerator.eco", "label": "Welt", "format": "json", "fields": [
+    { "key": "WorldName", "label": "Weltname", "group": "Welt", "valueType": "string", "defaultValue": "blnk-world", "description": "Name des Weltspielstands. Standard: blnk-world." },
+    { "key": "Seed", "label": "Welt-Seed", "group": "Welt", "valueType": "integer", "defaultValue": "0", "minimum": 0, "maximum": 2147483647, "description": "Seed für eine neue Welt; 0 lässt das Spiel wählen. Standard: 0." }
+  ] }],
+  "persistentPaths": ["Configs", "Storage", "Mods", "Logs"], "health": { "processRequired": true, "portKeys": ["game", "web"] }
+}

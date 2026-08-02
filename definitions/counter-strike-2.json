@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 3,
+  "id": "counter-strike-2",
+  "displayName": "Counter-Strike 2 Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers" },
+  "summary": "Source-2-Server mit Karte, Spielmodus, RCON, GOTV- und Serverbrowser-Einstellungen.",
+  "maturity": "beta",
+  "tags": ["shooter", "source2", "competitive"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 730 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 730, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "game/bin/win64/cs2.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "game/csgo/cfg/blenkbase-startup.json",
+    "arguments": ["-dedicated", "-console", "-usercon", "-port", "{{port.game}}", "+game_type", "{{setting.GameType}}", "+game_mode", "{{setting.GameMode}}", "+map", "{{setting.StartMap}}", "+exec", "server.cfg"],
+    "consoleLogFiles": ["game/csgo/logs/*.log"],
+    "stopCommand": "quit",
+    "stopTimeoutSeconds": 30
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27015 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 27015 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "game/csgo/cfg/blenkbase-startup.json",
+      "label": "Karte und Spielmodus",
+      "format": "json",
+      "fields": [
+        { "key": "StartMap", "label": "Startkarte", "group": "Start", "valueType": "string", "defaultValue": "de_dust2", "choices": [{ "value": "de_dust2", "label": "Dust II" }, { "value": "de_mirage", "label": "Mirage" }, { "value": "de_inferno", "label": "Inferno" }, { "value": "de_nuke", "label": "Nuke" }, { "value": "de_ancient", "label": "Ancient" }, { "value": "de_anubis", "label": "Anubis" }, { "value": "de_vertigo", "label": "Vertigo" }], "description": "Beim Prozessstart geladene Valve-Karte. Standard: Dust II." },
+        { "key": "GameType", "label": "Spieltyp", "group": "Start", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Klassisch" }, { "value": "1", "label": "Gun Game" }, { "value": "3", "label": "Training" }], "description": "Numerischer Source-2-Spieltyp. Standard: klassisch." },
+        { "key": "GameMode", "label": "Spielmodus", "group": "Start", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "0", "label": "Casual" }, { "value": "1", "label": "Competitive" }, { "value": "2", "label": "Wingman" }], "description": "Modus innerhalb des gewählten Spieltyps. Standard: Competitive." }
+      ]
+    },
+    {
+      "path": "game/csgo/cfg/server.cfg",
+      "label": "Servereinstellungen",
+      "format": "source-cfg",
+      "fields": [
+        { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Counter-Strike 2", "description": "Name im Serverbrowser. Standard: blnk - Base Counter-Strike 2." },
+        { "key": "sv_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-CS2", "description": "Kennwort für die Fernadministration. Vor öffentlichem Betrieb ändern." },
+        { "key": "sv_lan", "label": "Nur LAN", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Ja beschränkt den Server auf das lokale Netz. Standard: Nein." },
+        { "key": "sv_cheats", "label": "Cheats", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert Cheat-CVars. Standard: Nein." },
+        { "key": "sv_hibernate_when_empty", "label": "Leerlaufmodus", "group": "Leistung", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Senkt den Ressourcenverbrauch ohne Spieler. Standard: Ja." },
+        { "key": "sv_logfile", "label": "Logdateien", "group": "Protokollierung", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Schreibt Serverereignisse in Logdateien. Standard: Ja." },
+        { "key": "tv_enable", "label": "GOTV", "group": "Zuschauer", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert den integrierten Zuschauer-/Relaydienst. Standard: Nein." }
+      ]
+    }
+  ],
+  "persistentPaths": ["game/csgo/cfg", "game/csgo/logs"],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

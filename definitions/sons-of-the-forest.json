@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 3,
+  "id": "sons-of-the-forest",
+  "displayName": "Sons Of The Forest Dedicated Server",
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "summary": "Sons-of-the-Forest-Koop-Server mit vollständiger Basis-, Netzwerk-, Spielstand- und Leistungssteuerung.",
+  "maturity": "beta",
+  "tags": ["survival", "coop", "horror"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 1326470 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 2465200, "anonymous": true },
+  "process": {
+    "executable": "SonsOfTheForestDS.exe",
+    "workingDirectory": ".",
+    "arguments": ["-userdatapath", "{{instance.root}}/data", "-dedicatedserver.ConfigFile", "{{instance.root}}/data/dedicatedserver.cfg"],
+    "consoleLogFiles": ["data/logs/*.txt"],
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 8766 },
+    { "key": "query", "protocol": "udp", "preferred": 27016 },
+    { "key": "blob", "protocol": "udp", "preferred": 9700 }
+  ],
+  "configurationFiles": [{
+    "path": "data/dedicatedserver.cfg",
+    "label": "Servereinstellungen",
+    "format": "json",
+    "fields": [
+      { "key": "IpAddress", "label": "Bind-Adresse", "group": "Netzwerk", "valueType": "string", "defaultValue": "0.0.0.0", "description": "Adresse, auf der der Server lauscht. Standard: 0.0.0.0." },
+      { "key": "GamePort", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "UDP-Port für den Spielverkehr. BlenkBase weist ihn automatisch zu." },
+      { "key": "QueryPort", "label": "Query-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "query", "minimum": 1, "maximum": 65535, "description": "UDP-Port für Serverbrowser-Abfragen. BlenkBase weist ihn automatisch zu." },
+      { "key": "BlobSyncPort", "label": "Blob-Sync-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "blob", "minimum": 1, "maximum": 65535, "description": "UDP-Port für die Synchronisation größerer Zustände. BlenkBase weist ihn automatisch zu." },
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "BlenkBase Sons Of The Forest", "description": "Öffentlicher Servername. Standard: BlenkBase Sons Of The Forest." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "8", "minimum": 1, "maximum": 8, "description": "Maximale Spielerzahl. Standard und Maximum: 8." },
+      { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "LanOnly", "label": "Nur lokales Netzwerk", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "false", "description": "Beschränkt den Server auf LAN-Verbindungen. Standard: Nein." },
+      { "key": "SaveSlot", "label": "Spielstand-Slot", "group": "Spielstand", "valueType": "integer", "defaultValue": "1", "minimum": 1, "maximum": 5, "description": "Zu verwendender Spielstand-Slot. Standard: 1." },
+      { "key": "SaveMode", "label": "Spielstandmodus", "group": "Spielstand", "valueType": "string", "defaultValue": "Continue", "choices": [{ "value": "Continue", "label": "Fortsetzen" }, { "value": "New", "label": "Neue Welt" }], "description": "Fortsetzen lädt den gewählten Slot; Neue Welt erzeugt ihn neu. Standard: Fortsetzen." },
+      { "key": "GameMode", "label": "Spielmodus", "group": "Spielregeln", "valueType": "string", "defaultValue": "Normal", "choices": [{ "value": "Normal", "label": "Normal" }, { "value": "Hard", "label": "Schwer" }, { "value": "HardSurvival", "label": "Schweres Überleben" }, { "value": "Peaceful", "label": "Friedlich" }, { "value": "Custom", "label": "Benutzerdefiniert" }], "description": "Grundlegender Schwierigkeitsmodus. Standard: Normal." },
+      { "key": "SaveInterval", "label": "Speicherintervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "600", "minimum": 60, "maximum": 3600, "description": "Sekunden zwischen automatischen Speicherungen. Standard: 600." },
+      { "key": "IdleDayCycleSpeed", "label": "Tageszyklus ohne Spieler", "group": "Leistung", "valueType": "number", "defaultValue": "0", "minimum": 0, "maximum": 1, "description": "Geschwindigkeit des Tageszyklus ohne verbundene Spieler. 0 pausiert ihn. Standard: 0." },
+      { "key": "IdleTargetFramerate", "label": "Ziel-FPS ohne Spieler", "group": "Leistung", "valueType": "integer", "defaultValue": "5", "minimum": 1, "maximum": 60, "description": "Server-Framerate ohne Spieler. Standard: 5." },
+      { "key": "ActiveTargetFramerate", "label": "Ziel-FPS mit Spielern", "group": "Leistung", "valueType": "integer", "defaultValue": "60", "minimum": 10, "maximum": 120, "description": "Server-Framerate bei aktiven Spielern. Standard: 60." },
+      { "key": "LogFilesEnabled", "label": "Logdateien aktiv", "group": "Protokollierung", "valueType": "boolean", "defaultValue": "true", "description": "Schreibt Serverereignisse in Dateien. BlenkBase-Standard: Ja." },
+      { "key": "TimestampLogFilenames", "label": "Zeitstempel in Log-Dateinamen", "group": "Protokollierung", "valueType": "boolean", "defaultValue": "true", "description": "Fügt Log-Dateinamen einen Zeitstempel hinzu. Standard: Ja." },
+      { "key": "TimestampLogEntries", "label": "Zeitstempel in Logzeilen", "group": "Protokollierung", "valueType": "boolean", "defaultValue": "true", "description": "Fügt jeder Logzeile einen Zeitstempel hinzu. Standard: Ja." },
+      { "key": "SkipNetworkAccessibilityTest", "label": "Öffentlichen Porttest überspringen", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "false", "description": "Überspringt den integrierten Erreichbarkeitstest. Nur aktivieren, wenn der Test trotz korrekter Freigaben scheitert. Standard: Nein." },
+      { "key": "TreeRegrowth", "jsonPath": "/GameSettings/Gameplay.TreeRegrowth", "label": "Bäume wachsen nach", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt das Nachwachsen gefällter Bäume. Standard: Ja." },
+      { "key": "StructureDamage", "jsonPath": "/GameSettings/Structure.Damage", "label": "Gebäudeschaden aktiv", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt Schaden an gebauten Strukturen. Standard: Ja." },
+      { "key": "Cheats", "jsonPath": "/CustomGameModeSettings/GameSetting.Multiplayer.Cheats", "label": "Cheats aktiv", "group": "Benutzerdefiniert", "valueType": "boolean", "defaultValue": "false", "description": "Aktiviert Cheats im benutzerdefinierten Modus. Standard: Nein." },
+      { "key": "PvpDamage", "jsonPath": "/CustomGameModeSettings/GameSetting.Multiplayer.PvpDamage", "label": "PvP-Schaden", "group": "Benutzerdefiniert", "valueType": "string", "defaultValue": "normal", "choices": [{ "value": "off", "label": "Aus" }, { "value": "low", "label": "Niedrig" }, { "value": "normal", "label": "Normal" }, { "value": "high", "label": "Hoch" }], "description": "Schaden zwischen Spielern im benutzerdefinierten Modus. Standard: Normal." },
+      { "key": "StartingSeason", "jsonPath": "/CustomGameModeSettings/GameSetting.Environment.StartingSeason", "label": "Startjahreszeit", "group": "Benutzerdefiniert", "valueType": "string", "defaultValue": "Summer", "choices": [{ "value": "Spring", "label": "Frühling" }, { "value": "Summer", "label": "Sommer" }, { "value": "Autumn", "label": "Herbst" }, { "value": "Winter", "label": "Winter" }], "description": "Jahreszeit einer neuen benutzerdefinierten Welt. Standard: Sommer." }
+    ]
+  }],
+  "persistentPaths": ["data"],
+  "health": { "processRequired": true, "portKeys": ["game", "query", "blob"] }
+}

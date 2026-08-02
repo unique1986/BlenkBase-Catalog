@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 3, "id": "rust", "displayName": "Rust Dedicated Server",
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "summary": "Rust-Survival-Server mit RCON, Rust+ und voll wirksamen Starteinstellungen.", "maturity": "stable", "tags": ["survival", "pvp"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"], "artwork": { "storeAppId": 252490 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "rcon-source", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 258550, "anonymous": true },
+  "process": {
+    "executable": "RustDedicated.exe", "workingDirectory": ".", "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["-batchmode", "-logfile", "output_log.txt", "+server.identity", "{{setting.Identity}}", "+server.hostname", "{{setting.ServerName}}", "+server.description", "{{setting.Description}}", "+server.url", "{{setting.Website}}", "+server.headerimage", "{{setting.HeaderImage}}", "+server.port", "{{port.game}}", "+server.queryport", "{{port.query}}", "+rcon.port", "{{port.rcon}}", "+rcon.password", "{{setting.RconPassword}}", "+rcon.web", "{{setting.RconWeb}}", "+server.maxplayers", "{{setting.MaxPlayers}}", "+server.level", "{{setting.Level}}", "+server.worldsize", "{{setting.WorldSize}}", "+server.seed", "{{setting.Seed}}", "+server.saveinterval", "{{setting.SaveInterval}}", "+server.pve", "{{setting.Pve}}", "+server.tags", "{{setting.Tags}}", "+app.port", "{{port.companion}}"],
+    "conditionalArguments": [
+      { "setting": "ServerIp", "omitValues": [""], "arguments": ["+server.ip", "{{setting.ServerIp}}"] },
+      { "setting": "LevelUrl", "omitValues": [""], "arguments": ["+server.levelurl", "{{setting.LevelUrl}}"] }
+    ],
+    "consoleLogFiles": ["output_log.txt"], "stopCommand": "quit", "stopTimeoutSeconds": 60
+  },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 28015 }, { "key": "query", "protocol": "udp", "preferred": 28016 }, { "key": "rcon", "protocol": "tcp", "preferred": 28016 }, { "key": "companion", "protocol": "tcp", "preferred": 28082 }],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json", "label": "Server und Welt", "format": "json", "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "BlenkBase Rust", "description": "Öffentlicher Name im Rust-Serverbrowser. Standard: BlenkBase Rust." },
+      { "key": "Description", "label": "Beschreibung", "group": "Allgemein", "valueType": "string", "defaultValue": "Verwaltet mit BlenkBase", "description": "Mehrzeilige Serverbeschreibung im Browser. Standard: Verwaltet mit BlenkBase." },
+      { "key": "Website", "label": "Webseite", "group": "Allgemein", "valueType": "string", "defaultValue": "", "description": "Optionale vollständige HTTPS-Adresse des Servers. Standard: leer." },
+      { "key": "HeaderImage", "label": "Kopfzeilenbild", "group": "Allgemein", "valueType": "string", "defaultValue": "", "description": "Direkte HTTPS-Adresse eines 512×256-PNG/JPG für den Serverbrowser. Standard: leer." },
+      { "key": "Identity", "label": "Weltkennung", "group": "Spielstand", "valueType": "string", "defaultValue": "blenkbase", "description": "Ordnerkennung unter server/. Eine Änderung erzeugt eine getrennte Welt. Standard: blenkbase." },
+      { "key": "ServerIp", "label": "Bindungsadresse", "group": "Netzwerk", "valueType": "string", "defaultValue": "", "description": "Optionale lokale IP-Adresse, auf der Rust lauschen soll. Leer bindet an alle Adressen (0.0.0.0). Standard: leer." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "50", "minimum": 1, "maximum": 500, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 50." },
+      { "key": "Level", "label": "Kartentyp", "group": "Welt", "valueType": "string", "defaultValue": "Procedural Map", "choices": [{ "value": "Procedural Map", "label": "Prozedurale Karte" }, { "value": "Barren", "label": "Barren" }], "description": "Zu erzeugender Kartentyp. Standard: Prozedurale Karte." },
+      { "key": "WorldSize", "label": "Kartengröße", "group": "Welt", "valueType": "integer", "defaultValue": "3500", "minimum": 1000, "maximum": 6000, "description": "Größe einer prozeduralen Karte. Größere Karten benötigen mehr RAM. Standard: 3500." },
+      { "key": "Seed", "label": "Karten-Seed", "group": "Welt", "valueType": "integer", "defaultValue": "12345", "minimum": 0, "maximum": 2147483647, "description": "Bestimmt den Aufbau der prozeduralen Karte. Standard: 12345." },
+      { "key": "LevelUrl", "label": "URL einer benutzerdefinierten Karte", "group": "Welt", "valueType": "string", "defaultValue": "", "description": "Direkte, dauerhaft erreichbare URL einer benutzerdefinierten .map-Datei. Leer verwendet die gewählte Standardkarte. Standard: leer." },
+      { "key": "SaveInterval", "label": "Speicherintervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "600", "minimum": 60, "maximum": 3600, "description": "Sekunden zwischen automatischen Welt-Sicherungen. Facepunch-Standard: 600." },
+      { "key": "Pve", "label": "PvE-Modus", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Deaktiviert direkten Spielerschaden. Standard: Nein (PvP)." },
+      { "key": "Tags", "label": "Serverbrowser-Tags", "group": "Allgemein", "valueType": "string", "defaultValue": "", "description": "Kommagetrennte offizielle Tags, z. B. monthly,vanilla,pve,EU. Standard: leer." },
+      { "key": "RconPassword", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Rust", "description": "Kennwort für die Fernverwaltung. Vor öffentlichem Betrieb unbedingt ändern." },
+      { "key": "RconWeb", "label": "WebRCON verwenden", "group": "RCON", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert das moderne WebSocket-RCON-Protokoll. Standard: Ja." }
+    ]
+  }],
+  "persistentPaths": ["server"], "health": { "processRequired": true, "portKeys": ["game", "query", "rcon"] }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 3, "id": "contagion", "displayName": "Contagion Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://developer.valvesoftware.com/wiki/Source_Dedicated_Server" },
+  "summary": "Contagion-Zombieserver mit Karte, Slots, Schwierigkeitsmodus, RCON, Kennwort und Source-Serverprotokollen.",
+  "maturity": "beta", "tags": ["horror", "coop", "source"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 238430 }, "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 238430, "anonymous": true, "branch": "public" },
+  "process": { "executable": "srcds.exe", "workingDirectory": ".", "startupSettingsFile": "contagion/cfg/blenkbase-startup.json", "arguments": ["-console", "-game", "contagion", "-port", "{{port.game}}", "+maxplayers", "{{setting.MaxPlayers}}", "+map", "{{setting.Map}}", "+exec", "server.cfg"], "consoleLogFiles": ["contagion/logs/*.log"], "stopCommand": "quit", "stopTimeoutSeconds": 30 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 27015 }],
+  "configurationFiles": [
+    { "path": "contagion/cfg/blenkbase-startup.json", "label": "Karte und Slots", "format": "json", "fields": [
+      { "key": "Map", "label": "Startkarte", "group": "Karte", "valueType": "string", "defaultValue": "ce_barlowe", "description": "Interner Kartenname beim Start. Standard: ce_barlowe." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "8", "minimum": 1, "maximum": 8, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 8." }
+    ] },
+    { "path": "contagion/cfg/server.cfg", "label": "Servereinstellungen", "format": "source-cfg", "fields": [
+      { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Contagion", "description": "Name im Serverbrowser. Standard: blnk - Base Contagion." },
+      { "key": "sv_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-Contagion", "description": "Kennwort für RCON. Vor öffentlichem Betrieb ändern." },
+      { "key": "sv_lan", "label": "Nur LAN", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Beschränkt den Server auf LAN. Standard: Nein." },
+      { "key": "sv_cheats", "label": "Cheats", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert Cheat-CVars. Standard: Nein." }
+    ] }
+  ],
+  "persistentPaths": ["contagion/cfg", "contagion/logs", "contagion/addons"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

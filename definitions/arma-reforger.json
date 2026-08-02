@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 3,
+  "id": "arma-reforger",
+  "displayName": "Arma Reforger Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://community.bohemia.net/wiki/Arma_Reforger:Server_Hosting" },
+  "summary": "Offizieller Windows-Dedicated-Server mit Szenario-, Crossplay-, Netzwerk-, RCON- und Leistungsprofil.",
+  "maturity": "beta",
+  "tags": ["military", "sandbox", "crossplay"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 1874880 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1874900, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "ArmaReforgerServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["-config", "{{instance.root}}/configs/server.json", "-profile", "{{instance.root}}/profile", "-maxFPS", "{{setting.MaxFps}}"],
+    "consoleLogFiles": ["profile/logs/*.log", "profile/*.log"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 2001 },
+    { "key": "query", "protocol": "udp", "preferred": 17777 },
+    { "key": "rcon", "protocol": "udp", "preferred": 19999 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "blenkbase-startup.json",
+      "label": "Serverstart",
+      "format": "json",
+      "fields": [
+        { "key": "MaxFps", "label": "Maximale Server-FPS", "group": "Leistung", "valueType": "integer", "defaultValue": "60", "minimum": 30, "maximum": 120, "description": "Begrenzt die Serverlast. Bohemia empfiehlt 60 bis 120; Standard in BlenkBase: 60." }
+      ]
+    },
+    {
+      "path": "configs/server.json",
+      "label": "Serverkonfiguration",
+      "format": "json",
+      "fields": [
+        { "key": "bindAddress", "label": "Bind-Adresse", "group": "Netzwerk", "valueType": "string", "defaultValue": "0.0.0.0", "description": "Lokale IPv4-Adresse. 0.0.0.0 lauscht auf allen Netzwerkkarten; Standard: 0.0.0.0." },
+        { "key": "bindPort", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "Öffentlicher UDP-Spielport. BlenkBase weist ihn automatisch zu." },
+        { "key": "publicAddress", "label": "Öffentliche IPv4-Adresse", "group": "Netzwerk", "valueType": "string", "defaultValue": "", "description": "Optional öffentlich registrierte IPv4-Adresse. Leer aktiviert die automatische Erkennung." },
+        { "key": "publicPort", "label": "Öffentlicher Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "Am Backend registrierter UDP-Port; entspricht ohne NAT-Übersetzung dem Spielport." },
+        { "key": "A2sAddress", "jsonPath": "a2s.address", "label": "A2S-Bind-Adresse", "group": "Serverabfrage", "valueType": "string", "defaultValue": "0.0.0.0", "description": "Bind-Adresse der Steam-Spielerabfrage. Standard: 0.0.0.0." },
+        { "key": "A2sPort", "jsonPath": "a2s.port", "label": "A2S-Port", "group": "Serverabfrage", "valueType": "integer", "portKey": "query", "minimum": 1, "maximum": 65535, "description": "UDP-Port der Steam-Spielerabfrage. BlenkBase weist ihn automatisch zu." },
+        { "key": "RconAddress", "jsonPath": "rcon.address", "label": "RCON-Bind-Adresse", "group": "RCON", "valueType": "string", "defaultValue": "127.0.0.1", "description": "Bind-Adresse für RCON. 127.0.0.1 hält RCON lokal; Standard: 127.0.0.1." },
+        { "key": "RconPort", "jsonPath": "rcon.port", "label": "RCON-Port", "group": "RCON", "valueType": "integer", "portKey": "rcon", "minimum": 1, "maximum": 65535, "description": "UDP-Port der Fernadministration. BlenkBase weist ihn automatisch zu." },
+        { "key": "RconPassword", "jsonPath": "rcon.password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Reforger", "description": "Eigenes starkes Kennwort für RCON. Vor öffentlichem Betrieb ändern." },
+        { "key": "ServerName", "jsonPath": "game.name", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Arma Reforger", "description": "Name im Serverbrowser. Standard: blnk - Base Arma Reforger." },
+        { "key": "ServerPassword", "jsonPath": "game.password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "AdminPassword", "jsonPath": "game.passwordAdmin", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Admin", "description": "Kennwort für die Ingame-Administration. Vor öffentlichem Betrieb ändern." },
+        { "key": "ScenarioId", "jsonPath": "game.scenarioId", "label": "Szenario-ID", "group": "Welt", "valueType": "string", "defaultValue": "{ECC61978EDCC2B5A}Missions/23_Campaign.conf", "description": "Ressourcen-ID des zu ladenden Szenarios. Standard: offizielles Conflict-Szenario." },
+        { "key": "MaxPlayers", "jsonPath": "game.maxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "64", "minimum": 1, "maximum": 128, "description": "Maximal gleichzeitig verbundene Spieler. Offizieller Standard: 64." },
+        { "key": "Visible", "jsonPath": "game.visible", "label": "Im Serverbrowser sichtbar", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Veröffentlicht den Server im Browser. Standard: Ja." },
+        { "key": "CrossPlatform", "jsonPath": "game.crossPlatform", "label": "Crossplay", "group": "Plattformen", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt PC-, Xbox- und PlayStation-Spielern gemeinsam beizutreten. Standard in BlenkBase: Ja." },
+        { "key": "ServerMaxViewDistance", "jsonPath": "game.gameProperties.serverMaxViewDistance", "label": "Maximale Sichtweite", "group": "Leistung", "valueType": "integer", "defaultValue": "1600", "minimum": 500, "maximum": 10000, "description": "Maximale serverseitige Sichtweite in Metern. Offizieller Standard: 1600." },
+        { "key": "NetworkViewDistance", "jsonPath": "game.gameProperties.networkViewDistance", "label": "Netzwerk-Sichtweite", "group": "Leistung", "valueType": "integer", "defaultValue": "1500", "minimum": 500, "maximum": 5000, "description": "Streaming-Reichweite replizierter Objekte. Offizieller Standard: 1500." },
+        { "key": "FastValidation", "jsonPath": "game.gameProperties.fastValidation", "label": "Schnelle Validierung", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Soll auf öffentlichen Servern laut Bohemia aktiviert bleiben. Standard: Ja." },
+        { "key": "BattlEye", "jsonPath": "game.gameProperties.battlEye", "label": "BattlEye", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert den offiziellen Anti-Cheat-Schutz. Standard: Ja." },
+        { "key": "DisableThirdPerson", "jsonPath": "game.gameProperties.disableThirdPerson", "label": "Nur Ego-Perspektive", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Deaktiviert die Third-Person-Perspektive. Standard: Nein." }
+      ]
+    }
+  ],
+  "persistentPaths": ["profile", "configs"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

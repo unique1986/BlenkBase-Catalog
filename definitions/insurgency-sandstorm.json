@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 3, "id": "insurgency-sandstorm", "displayName": "Insurgency: Sandstorm Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://mod.io/g/insurgencysandstorm/r/server-admin-guide" },
+  "summary": "Sandstorm-Server mit Szenario, Slots, Query, RCON, GSLT, Kennwörtern und grundlegenden Spielregeln.",
+  "maturity": "beta", "tags": ["shooter", "tactical", "coop"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 581320 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 581330, "anonymous": true, "branch": "public" },
+  "process": { "executable": "Insurgency/Binaries/Win64/InsurgencyServer-Win64-Shipping.exe", "workingDirectory": ".", "startupSettingsFile": "blenkbase-startup.json", "arguments": ["{{setting.Map}}?Scenario={{setting.Scenario}}?MaxPlayers={{setting.MaxPlayers}}?Password={{setting.Password}}", "-Port={{port.game}}", "-QueryPort={{port.query}}", "-Rcon", "-RconPassword={{setting.RconPassword}}", "-RconListenPort={{port.rcon}}", "-log"], "conditionalArguments": [{ "setting": "GSLT", "omitValues": [""], "arguments": ["-GSLTToken={{setting.GSLT}}"] }], "consoleLogFiles": ["Insurgency/Saved/Logs/*.log"], "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 27102 }, { "key": "query", "protocol": "udp", "preferred": 27131 }, { "key": "rcon", "protocol": "tcp", "preferred": 27015 }],
+  "configurationFiles": [{ "path": "blenkbase-startup.json", "label": "Szenario und Serverstart", "format": "json", "fields": [
+    { "key": "Map", "label": "Startkarte", "group": "Karte", "valueType": "string", "defaultValue": "Farmhouse", "choices": [{ "value": "Farmhouse", "label": "Farmhouse" }, { "value": "Town", "label": "Hideout" }, { "value": "Crossing", "label": "Crossing" }, { "value": "Refinery", "label": "Refinery" }, { "value": "Precinct", "label": "Precinct" }], "description": "Karte beim Serverstart. Standard: Farmhouse." },
+    { "key": "Scenario", "label": "Szenario", "group": "Karte", "valueType": "string", "defaultValue": "Scenario_Farmhouse_Checkpoint_Security", "description": "Interner Szenarioname mit Modus und Fraktion. Standard: Farmhouse Checkpoint Security." },
+    { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "28", "minimum": 1, "maximum": 50, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 28." },
+    { "key": "Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+    { "key": "RconPassword", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Sandstorm", "description": "Kennwort für RCON. Vor öffentlichem Betrieb ändern." },
+    { "key": "GSLT", "label": "Steam-GSLT", "group": "Netzwerk", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionaler Steam Game Server Login Token für öffentliche Listung. Standard: leer." }
+  ] }],
+  "persistentPaths": ["Insurgency/Saved", "blenkbase-startup.json"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

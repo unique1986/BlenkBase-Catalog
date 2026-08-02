@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 3, "id": "insurgency", "displayName": "Insurgency Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://developer.valvesoftware.com/wiki/Insurgency_2014_Dedicated_Server" },
+  "summary": "Source-Taktikserver für Insurgency 2014 mit Karte, Modus, Slots, Kennwort, RCON, Workshop und Serverlogs.",
+  "maturity": "beta", "tags": ["shooter", "tactical", "source"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "mods", "player-query"],
+  "artwork": { "storeAppId": 222880 }, "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 237410, "anonymous": true, "branch": "public" },
+  "process": { "executable": "srcds.exe", "workingDirectory": ".", "startupSettingsFile": "insurgency/cfg/blenkbase-startup.json", "arguments": ["-console", "-game", "insurgency", "-port", "{{port.game}}", "+maxplayers", "{{setting.MaxPlayers}}", "+map", "{{setting.Map}}", "+mp_gamemode", "{{setting.GameMode}}", "+exec", "server.cfg"], "consoleLogFiles": ["insurgency/logs/*.log"], "stopCommand": "quit", "stopTimeoutSeconds": 30 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 27015 }],
+  "configurationFiles": [
+    { "path": "insurgency/cfg/blenkbase-startup.json", "label": "Karte, Modus und Slots", "format": "json", "fields": [
+      { "key": "Map", "label": "Startkarte", "group": "Karte", "valueType": "string", "defaultValue": "market", "choices": [{ "value": "market", "label": "Market" }, { "value": "heights", "label": "Heights" }, { "value": "district", "label": "District" }, { "value": "sinjar", "label": "Sinjar" }], "description": "Karte beim Serverstart. Standard: Market." },
+      { "key": "GameMode", "label": "Spielmodus", "group": "Spielregeln", "valueType": "string", "defaultValue": "checkpoint", "choices": [{ "value": "checkpoint", "label": "Checkpoint" }, { "value": "firefight", "label": "Firefight" }, { "value": "push", "label": "Push" }, { "value": "skirmish", "label": "Skirmish" }], "description": "Spielmodus beim Start. Standard: Checkpoint." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "24", "minimum": 1, "maximum": 32, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 24." }
+    ] },
+    { "path": "insurgency/cfg/server.cfg", "label": "Servereinstellungen", "format": "source-cfg", "fields": [
+      { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Insurgency", "description": "Name im Serverbrowser. Standard: blnk - Base Insurgency." },
+      { "key": "sv_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-Insurgency", "description": "Kennwort für RCON. Vor öffentlichem Betrieb ändern." },
+      { "key": "sv_lan", "label": "Nur LAN", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Beschränkt den Server auf LAN. Standard: Nein." },
+      { "key": "sv_pure", "label": "Client-Inhalte prüfen", "group": "Sicherheit", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Standard" }, { "value": "0", "label": "Aus" }], "description": "Prüft wichtige Clientinhalte. Standard: Standardprüfung." },
+      { "key": "log", "label": "Serverlogs", "group": "Protokollierung", "valueType": "string", "defaultValue": "on", "choices": [{ "value": "on", "label": "An" }, { "value": "off", "label": "Aus" }], "description": "Aktiviert Source-Serverlogs. Standard: An." }
+    ] }
+  ],
+  "persistentPaths": ["insurgency/cfg", "insurgency/logs", "insurgency/addons"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

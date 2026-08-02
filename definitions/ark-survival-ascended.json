@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 3,
+  "id": "ark-survival-ascended",
+  "displayName": "ARK: Survival Ascended",
+  "package": { "author": "blnk Base", "version": "1.2.0" },
+  "summary": "ARK: Survival Ascended mit Karten-, RCON- und Serverkonfiguration.", "maturity": "stable", "tags": ["survival", "dinosaurs"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query", "mods"], "artwork": { "storeAppId": 2399830 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "rcon-source", "configuration": "ark", "health": "process-and-ports", "population": "ark-rcon", "backup": "persistent-paths", "mods": "curseforge-server-managed" },
+  "installer": { "kind": "steamcmd", "appId": 2430930, "anonymous": true },
+  "process": {
+    "executable": "ShooterGame/Binaries/Win64/ArkAscendedServer.exe",
+    "workingDirectory": "ShooterGame/Binaries/Win64",
+    "arguments": ["TheIsland_WP", "-server", "-log", "-servergamelog", "-NoGameAnalytics", "-ServerPlatform=ALL", "-Port={{port.game}}", "-QueryPort={{port.query}}"],
+    "consoleLogFiles": ["ShooterGame/Saved/Logs/ShooterGame.log"]
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7777 },
+    { "key": "peer", "protocol": "udp", "preferred": 7778, "offsetFrom": "game", "offset": 1 },
+    { "key": "query", "protocol": "udp", "preferred": 27015 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 27020 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "blenkbase-asa-startup.json",
+      "label": "Startkonfiguration",
+      "format": "json",
+      "fields": [
+        {
+          "key": "MapName",
+          "label": "Karte",
+          "group": "Karte und Start",
+          "valueType": "string",
+          "defaultValue": "TheIsland_WP",
+          "choices": [
+            { "value": "TheIsland_WP", "label": "The Island" },
+            { "value": "ScorchedEarth_WP", "label": "Scorched Earth" },
+            { "value": "TheCenter_WP", "label": "The Center" },
+            { "value": "Aberration_WP", "label": "Aberration" },
+            { "value": "Extinction_WP", "label": "Extinction" },
+            { "value": "Ragnarok_WP", "label": "Ragnarok" },
+            { "value": "Valguero_WP", "label": "Valguero" },
+            { "value": "Astraeos_WP", "label": "Astraeos" },
+            { "value": "LostColony_WP", "label": "Lost Colony" },
+            { "value": "__custom__", "label": "Mod-/benutzerdefinierte Karte" }
+          ],
+          "description": "Weltkarte, die beim Serverstart geladen wird. Ein Kartenwechsel verwendet einen eigenen Spielstand; der bisherige Spielstand bleibt erhalten. Standard: The Island."
+        },
+        {
+          "key": "CustomMapName",
+          "label": "Technischer Mod-Kartenname",
+          "group": "Karte und Start",
+          "valueType": "string",
+          "defaultValue": "",
+          "description": "Nur bei 'Mod-/benutzerdefinierte Karte' verwenden. Den exakten Server-Mapnamen aus der CurseForge-Beschreibung eintragen, zum Beispiel Svartalfheim_WP. Die zugehörige Mod-ID muss zusätzlich in der Mod-Liste konfiguriert sein."
+        },
+        {
+          "key": "ModIds",
+          "label": "CurseForge-Mod-IDs",
+          "group": "Karte und Start",
+          "valueType": "string",
+          "defaultValue": "",
+          "description": "Kommagetrennte ASA-CurseForge-Projekt-IDs. Bei einer Mod-Karte muss deren ID enthalten sein. Beispiel: 1234567,2345678. Standard: keine Mods."
+        },
+        {
+          "key": "ServerPlatform",
+          "label": "Erlaubte Plattformen",
+          "group": "Karte und Start",
+          "valueType": "string",
+          "defaultValue": "ALL",
+          "choices": [
+            { "value": "PC", "label": "Nur Steam-PC" },
+            { "value": "ALL", "label": "Alle Plattformen (Crossplay)" },
+            { "value": "WINGDK", "label": "Nur Microsoft Store / PC Game Pass" },
+            { "value": "XSX", "label": "Nur Xbox Series X|S" },
+            { "value": "PS5", "label": "Nur PlayStation 5" }
+          ],
+          "description": "Legt fest, von welchen Plattformen Spieler beitreten dürfen. PC erlaubt ausschließlich die Steam-Version. Standard: Alle Plattformen (Crossplay)."
+        }
+      ]
+    },
+    {
+      "path": "ShooterGame/Saved/Config/WindowsServer/GameUserSettings.ini",
+      "label": "Server und Spielwelt",
+      "format": "ini",
+      "section": "ServerSettings",
+      "fields": [
+        { "key": "SessionName", "label": "Servername", "group": "Allgemein", "valueType": "string", "section": "SessionSettings", "defaultValue": "BlenkBase ARK Server", "description": "Öffentlicher Name des ARK-Servers." },
+        { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "section": "/Script/Engine.GameSession", "defaultValue": "70", "minimum": 1, "maximum": 200, "description": "Maximale Zahl gleichzeitig verbundener Spieler." },
+        { "key": "ServerPassword", "label": "Serverpasswort", "group": "Zugriff", "valueType": "string", "secret": true, "description": "Optionales Kennwort für Spieler. Standard: kein Kennwort." },
+        { "key": "ServerAdminPassword", "label": "Administratorkennwort", "group": "Zugriff", "valueType": "string", "secret": true, "description": "Kennwort für administrative Konsolen- und RCON-Befehle." },
+        { "key": "RCONEnabled", "label": "RCON aktivieren", "group": "RCON", "valueType": "boolean", "defaultValue": "False", "description": "Aktiviert die entfernte Serverkonsole." },
+        { "key": "RCONPort", "label": "RCON-Port", "group": "RCON", "valueType": "integer", "portKey": "rcon", "minimum": 1, "maximum": 65535, "description": "TCP-Port der entfernten Serverkonsole." },
+        { "key": "ServerPVE", "label": "PvE-Server", "group": "Spielmodus", "valueType": "boolean", "defaultValue": "True", "description": "Deaktiviert direkte PvP-Kämpfe und verwendet PvE-Regeln." },
+        { "key": "ServerHardcore", "label": "Hardcore-Modus", "group": "Spielmodus", "valueType": "boolean", "defaultValue": "False", "description": "Lässt Spieler nach dem Tod auf Stufe 1 neu beginnen." },
+        { "key": "AllowThirdPersonPlayer", "label": "Dritte-Person-Ansicht", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt Spielern die Kamera in der dritten Person." },
+        { "key": "ShowMapPlayerLocation", "label": "Spielerposition auf Karte", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "False", "description": "Zeigt die eigene Position auf der Karte an." },
+        { "key": "ServerCrosshair", "label": "Fadenkreuz", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "False", "description": "Zeigt ein Fadenkreuz an." },
+        { "key": "ServerForceNoHud", "label": "HUD erzwingen deaktiviert", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "False", "description": "Blendet das HUD für alle Spieler aus." },
+        { "key": "GlobalVoiceChat", "label": "Globaler Sprachchat", "group": "Kommunikation", "valueType": "boolean", "defaultValue": "False", "description": "Sprachchat ist unabhängig von der Entfernung hörbar." },
+        { "key": "ProximityChat", "label": "Lokaler Textchat", "group": "Kommunikation", "valueType": "boolean", "defaultValue": "False", "description": "Begrenzt Textchat auf Spieler in der Nähe." },
+        { "key": "AlwaysNotifyPlayerJoined", "label": "Beitritte anzeigen", "group": "Kommunikation", "valueType": "boolean", "defaultValue": "False", "description": "Meldet den Beitritt eines Spielers im Chat." },
+        { "key": "AlwaysNotifyPlayerLeft", "label": "Austritte anzeigen", "group": "Kommunikation", "valueType": "boolean", "defaultValue": "False", "description": "Meldet das Verlassen eines Spielers im Chat." },
+        { "key": "AdminLogging", "label": "Adminbefehle protokollieren", "group": "Kommunikation", "valueType": "boolean", "defaultValue": "False", "description": "Zeigt ausgeführte Adminbefehle im Chat an." },
+        { "key": "EnablePvPGamma", "label": "Gamma-Anpassung im PvP", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt Gamma-Anpassungen auch auf PvP-Servern." },
+        { "key": "DisableStructureDecayPvE", "label": "Bauwerksverfall im PvE deaktivieren", "group": "Bauen", "valueType": "boolean", "defaultValue": "False", "description": "Deaktiviert den automatischen Verfall von Bauwerken im PvE." },
+        { "key": "AllowCaveBuildingPvE", "label": "Höhlenbau im PvE", "group": "Bauen", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt das Errichten von Bauwerken in Höhlen auf PvE-Servern." },
+        { "key": "AlwaysAllowStructurePickup", "label": "Bauwerke immer aufhebbar", "group": "Bauen", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt das Aufheben eigener Bauwerke ohne Zeitbegrenzung." },
+        { "key": "StructurePickupTimeAfterPlacement", "label": "Aufhebezeit nach Platzierung", "group": "Bauen", "valueType": "number", "defaultValue": "30", "minimum": 0, "maximum": 3600, "description": "Sekunden, in denen ein neu gesetztes Bauwerk wieder aufgehoben werden darf." },
+        { "key": "AllowFlyerCarryPvE", "label": "Flugtiere dürfen Spieler im PvE tragen", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt das Tragen anderer Spieler durch Flugtiere im PvE." },
+        { "key": "PreventOfflinePvP", "label": "Offline-Raidschutz", "group": "PvP", "valueType": "boolean", "defaultValue": "False", "description": "Aktiviert Schutzmechanismen, wenn ein Stamm offline ist." },
+        { "key": "PreventTribeAlliances", "label": "Stammesallianzen verhindern", "group": "PvP", "valueType": "boolean", "defaultValue": "False", "description": "Verhindert das Bilden von Allianzen zwischen Stämmen." },
+        { "key": "NoTributeDownloads", "label": "ARK-Downloads sperren", "group": "Transfers", "valueType": "boolean", "defaultValue": "False", "description": "Verhindert Downloads von Charakteren, Kreaturen und Gegenständen aus anderen Welten." },
+        { "key": "AutoSavePeriodMinutes", "label": "Autosave-Intervall", "group": "Speichern", "valueType": "number", "defaultValue": "15", "minimum": 1, "maximum": 1440, "description": "Zeit zwischen automatischen Spielstandsicherungen in Minuten." },
+        { "key": "KickIdlePlayersPeriod", "label": "Leerlauf-Zeitlimit", "group": "Leistung", "valueType": "integer", "defaultValue": "3600", "minimum": 0, "maximum": 86400, "description": "Sekunden bis inaktive Spieler getrennt werden; 0 deaktiviert das Limit." },
+        { "key": "MaxTamedDinos", "label": "Maximale gezähmte Kreaturen", "group": "Leistung", "valueType": "integer", "defaultValue": "5000", "minimum": 0, "maximum": 100000, "description": "Globales Limit gezähmter Kreaturen." },
+        { "key": "ItemStackSizeMultiplier", "label": "Stapelgrößen", "group": "Gegenstände", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für die Stapelgröße geeigneter Gegenstände." },
+        { "key": "DifficultyOffset", "label": "Schwierigkeitsgrad", "group": "Balance", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1, "description": "Grundlegender Schwierigkeitsfaktor der Welt." },
+        { "key": "OverrideOfficialDifficulty", "label": "Maximale Wildtier-Stufe", "group": "Balance", "valueType": "number", "defaultValue": "5.0", "minimum": 0, "maximum": 50, "description": "Überschreibt die offizielle Schwierigkeit und beeinflusst maximale Wildtier-Level." },
+        { "key": "XPMultiplier", "label": "Erfahrungsmultiplikator", "group": "Balance", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für erhaltene Erfahrung." },
+        { "key": "TamingSpeedMultiplier", "label": "Zähmgeschwindigkeit", "group": "Balance", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator für die Zähmgeschwindigkeit." },
+        { "key": "HarvestAmountMultiplier", "label": "Ressourcenausbeute", "group": "Balance", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für gesammelte Ressourcen." },
+        { "key": "ResourcesRespawnPeriodMultiplier", "label": "Ressourcen-Respawnzeit", "group": "Balance", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 100, "description": "Multiplikator für die Zeit bis Ressourcen erneut erscheinen." },
+        { "key": "DinoCountMultiplier", "label": "Wildtiermenge", "group": "Leistung", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 10, "description": "Multiplikator für die Anzahl wilder Kreaturen und damit auch für die Serverlast." },
+        { "key": "DayCycleSpeedScale", "label": "Tag-/Nachtzyklus", "group": "Zeit", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 100, "description": "Geschwindigkeit des vollständigen Tag-/Nachtzyklus." },
+        { "key": "DayTimeSpeedScale", "label": "Tagesdauer", "group": "Zeit", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 100, "description": "Geschwindigkeit des Tagesverlaufs." },
+        { "key": "NightTimeSpeedScale", "label": "Nachtdauer", "group": "Zeit", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 100, "description": "Geschwindigkeit des Nachtverlaufs." },
+        { "key": "PlayerCharacterFoodDrainMultiplier", "label": "Nahrungsverbrauch Spieler", "group": "Überleben", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für den Nahrungsverbrauch von Spielern." },
+        { "key": "PlayerCharacterWaterDrainMultiplier", "label": "Wasserverbrauch Spieler", "group": "Überleben", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für den Wasserverbrauch von Spielern." },
+        { "key": "PlayerCharacterStaminaDrainMultiplier", "label": "Ausdauerverbrauch Spieler", "group": "Überleben", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für den Ausdauerverbrauch von Spielern." },
+        { "key": "PlayerCharacterHealthRecoveryMultiplier", "label": "Lebensregeneration Spieler", "group": "Überleben", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für die Lebensregeneration von Spielern." },
+        { "key": "DinoCharacterFoodDrainMultiplier", "label": "Nahrungsverbrauch Kreaturen", "group": "Kreaturen", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für den Nahrungsverbrauch von Kreaturen." },
+        { "key": "DinoCharacterStaminaDrainMultiplier", "label": "Ausdauerverbrauch Kreaturen", "group": "Kreaturen", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für den Ausdauerverbrauch von Kreaturen." },
+        { "key": "DinoCharacterHealthRecoveryMultiplier", "label": "Lebensregeneration Kreaturen", "group": "Kreaturen", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für die Lebensregeneration von Kreaturen." }
+      ]
+    },
+    {
+      "path": "ShooterGame/Saved/Config/WindowsServer/Game.ini",
+      "label": "Zucht, Erfahrung und Spielregeln",
+      "format": "ini",
+      "section": "/Script/ShooterGame.ShooterGameMode",
+      "fields": [
+        { "key": "BabyMatureSpeedMultiplier", "label": "Baby-Wachstumsgeschwindigkeit", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für die Wachstumsgeschwindigkeit von Jungtieren." },
+        { "key": "BabyCuddleIntervalMultiplier", "label": "Prägungsintervall", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0.001, "maximum": 1000, "description": "Multiplikator für die Zeit zwischen Prägungsaktionen." },
+        { "key": "BabyImprintingStatScaleMultiplier", "label": "Prägungsbonus", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Stärke des Statusbonus durch vollständige Prägung." },
+        { "key": "BabyCuddleGracePeriodMultiplier", "label": "Kulanzzeit für Prägung", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für die Kulanzzeit verpasster Prägungsaktionen." },
+        { "key": "BabyCuddleLoseImprintQualitySpeedMultiplier", "label": "Prägungsverlust", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Geschwindigkeit, mit der Prägungsqualität nach verpassten Aktionen sinkt." },
+        { "key": "EggHatchSpeedMultiplier", "label": "Brutgeschwindigkeit", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für das Ausbrüten von Eiern." },
+        { "key": "MatingIntervalMultiplier", "label": "Paarungsintervall", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0.001, "maximum": 1000, "description": "Multiplikator für die Wartezeit zwischen Paarungen. Kleinere Werte verkürzen sie." },
+        { "key": "MatingSpeedMultiplier", "label": "Paarungsgeschwindigkeit", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für die Dauer des Paarungsvorgangs." },
+        { "key": "LayEggIntervalMultiplier", "label": "Eiablageintervall", "group": "Zucht", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für die Zeit zwischen unbefruchteten Eiern." },
+        { "key": "CropGrowthSpeedMultiplier", "label": "Pflanzenwachstum", "group": "Landwirtschaft", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator für das Wachstum von Nutzpflanzen." },
+        { "key": "CropDecaySpeedMultiplier", "label": "Pflanzenverfall", "group": "Landwirtschaft", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator für den Verfall von Pflanzen." },
+        { "key": "GlobalSpoilingTimeMultiplier", "label": "Verderbniszeit", "group": "Gegenstände", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für die Haltbarkeit verderblicher Gegenstände." },
+        { "key": "GlobalItemDecompositionTimeMultiplier", "label": "Lebensdauer fallengelassener Gegenstände", "group": "Gegenstände", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für die Zeit bis Bodenbeute verschwindet." },
+        { "key": "GlobalCorpseDecompositionTimeMultiplier", "label": "Leichen-Verfallszeit", "group": "Gegenstände", "valueType": "number", "defaultValue": "1.0", "minimum": 0.01, "maximum": 1000, "description": "Multiplikator für die Zeit bis Leichen verschwinden." },
+        { "key": "ResourceNoReplenishRadiusPlayers", "label": "Ressourcen-Sperrradius um Spieler", "group": "Ressourcen", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Radius um Spieler, in dem Ressourcen nicht erneut erscheinen." },
+        { "key": "ResourceNoReplenishRadiusStructures", "label": "Ressourcen-Sperrradius um Bauwerke", "group": "Ressourcen", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Radius um Bauwerke, in dem Ressourcen nicht erneut erscheinen." },
+        { "key": "KillXPMultiplier", "label": "Erfahrung durch Töten", "group": "Erfahrung", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator für Erfahrung durch getötete Gegner." },
+        { "key": "HarvestXPMultiplier", "label": "Erfahrung durch Sammeln", "group": "Erfahrung", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator für Erfahrung beim Sammeln." },
+        { "key": "CraftXPMultiplier", "label": "Erfahrung durch Herstellen", "group": "Erfahrung", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator für Erfahrung beim Herstellen." },
+        { "key": "GenericXPMultiplier", "label": "Allgemeine Erfahrung", "group": "Erfahrung", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator für allgemeine Erfahrungsquellen." },
+        { "key": "bAllowUnlimitedRespecs", "label": "Unbegrenzte Neuverteilung", "group": "Spieler", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt die unbegrenzte Neuverteilung von Statuspunkten." },
+        { "key": "bAllowFlyerSpeedLeveling", "label": "Fluggeschwindigkeit levelbar", "group": "Kreaturen", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt das Verteilen von Statuspunkten auf die Fluggeschwindigkeit gezähmter Flugtiere." },
+        { "key": "bAllowSpeedLeveling", "label": "Bewegungsgeschwindigkeit levelbar", "group": "Spieler", "valueType": "boolean", "defaultValue": "False", "description": "Erlaubt Statuspunkte auf Bewegungsgeschwindigkeit." },
+        { "key": "bDisableStructurePlacementCollision", "label": "Baukollision deaktivieren", "group": "Bauen", "valueType": "boolean", "defaultValue": "False", "description": "Lockert die Kollisionsprüfung beim Platzieren von Bauwerken." },
+        { "key": "bPvEDisableFriendlyFire", "label": "Freundbeschuss im PvE deaktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "True", "description": "Verhindert Schaden an verbündeten Spielern und Kreaturen im PvE." },
+        { "key": "bUseCorpseLocator", "label": "Leichenmarkierung", "group": "Spieler", "valueType": "boolean", "defaultValue": "True", "description": "Zeigt nach dem Tod eine Markierung für die eigene Leiche." },
+        { "key": "bAllowCustomRecipes", "label": "Eigene Rezepte erlauben", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "True", "description": "Erlaubt Spielern das Erstellen eigener Kochrezepte." },
+        { "key": "CustomRecipeEffectivenessMultiplier", "label": "Wirksamkeit eigener Rezepte", "group": "Spielregeln", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für die Wirkung eigener Rezepte." },
+        { "key": "CustomRecipeSkillMultiplier", "label": "Fertigkeit eigener Rezepte", "group": "Spielregeln", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Einfluss der Herstellungsfertigkeit auf eigene Rezepte." },
+        { "key": "HairGrowthSpeedMultiplier", "label": "Haarwachstum", "group": "Spieler", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 100, "description": "Multiplikator für das Haarwachstum von Charakteren." },
+
+        {"key": "PlayerBaseStatMultipliers[0]", "label": "Gesundheit", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Gesundheit."},
+
+        {"key": "PlayerBaseStatMultipliers[1]", "label": "Ausdauer", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Ausdauer."},
+
+        {"key": "PlayerBaseStatMultipliers[2]", "label": "Benommenheit", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Benommenheit."},
+
+        {"key": "PlayerBaseStatMultipliers[3]", "label": "Sauerstoff", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Sauerstoff."},
+
+        {"key": "PlayerBaseStatMultipliers[4]", "label": "Nahrung", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Nahrung."},
+
+        {"key": "PlayerBaseStatMultipliers[5]", "label": "Wasser", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Wasser."},
+
+        {"key": "PlayerBaseStatMultipliers[6]", "label": "Temperatur", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Temperatur."},
+
+        {"key": "PlayerBaseStatMultipliers[7]", "label": "Gewicht", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Gewicht."},
+
+        {"key": "PlayerBaseStatMultipliers[8]", "label": "Nahkampfschaden", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Nahkampfschaden."},
+
+        {"key": "PlayerBaseStatMultipliers[9]", "label": "Bewegungsgeschwindigkeit", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Bewegungsgeschwindigkeit."},
+
+        {"key": "PlayerBaseStatMultipliers[10]", "label": "Resistenz", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Temperaturresistenz."},
+
+        {"key": "PlayerBaseStatMultipliers[11]", "label": "Herstellungsfertigkeit", "group": "Spieler-Basiswerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Multiplikator des grundlegenden Spielerwerts Herstellungsfertigkeit."},
+
+        {"key": "PerLevelStatsMultiplier_Player[0]", "label": "Gesundheit", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Gesundheit je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[1]", "label": "Ausdauer", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Ausdauer je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[2]", "label": "Benommenheit", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Benommenheit je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[3]", "label": "Sauerstoff", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Sauerstoff je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[4]", "label": "Nahrung", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Nahrung je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[5]", "label": "Wasser", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Wasser je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[6]", "label": "Temperatur", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Temperatur je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[7]", "label": "Gewicht", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Gewicht je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[8]", "label": "Nahkampfschaden", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Nahkampfschaden je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[9]", "label": "Bewegungsgeschwindigkeit", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Bewegungsgeschwindigkeit je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[10]", "label": "Resistenz", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Temperaturresistenz je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_Player[11]", "label": "Herstellungsfertigkeit", "group": "Spieler-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewinn an Herstellungsfertigkeit je gesetztem Spieler-Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[0]", "label": "Gesundheit", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gesundheit wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[1]", "label": "Ausdauer", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Ausdauer wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[2]", "label": "Benommenheit", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Benommenheit wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[3]", "label": "Sauerstoff", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Sauerstoff wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[4]", "label": "Nahrung", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Nahrung wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[5]", "label": "Wasser", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Wasser wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[6]", "label": "Temperatur", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Temperatur wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[7]", "label": "Gewicht", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewicht wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[8]", "label": "Nahkampfschaden", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Nahkampfschaden wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[9]", "label": "Bewegungsgeschwindigkeit", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bewegungsgeschwindigkeit wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[10]", "label": "Resistenz", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Temperaturresistenz wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoWild[11]", "label": "Herstellungsfertigkeit", "group": "Wildtier-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Herstellungsfertigkeit wilder Kreaturen je Wildlevel."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[0]", "label": "Gesundheit", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "0.2", "minimum": 0, "maximum": 1000, "description": "Gesundheit gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[1]", "label": "Ausdauer", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Ausdauer gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[2]", "label": "Benommenheit", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Benommenheit gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[3]", "label": "Sauerstoff", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Sauerstoff gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[4]", "label": "Nahrung", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Nahrung gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[5]", "label": "Wasser", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Wasser gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[6]", "label": "Temperatur", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Temperatur gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[7]", "label": "Gewicht", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Gewicht gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[8]", "label": "Nahkampfschaden", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "0.17", "minimum": 0, "maximum": 1000, "description": "Nahkampfschaden gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[9]", "label": "Bewegungsgeschwindigkeit", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bewegungsgeschwindigkeit gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[10]", "label": "Resistenz", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Temperaturresistenz gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed[11]", "label": "Herstellungsfertigkeit", "group": "Gezähmte Kreaturen-Levelwerte", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Herstellungsfertigkeit gezähmter Kreaturen je vergebenem Statuspunkt."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[0]", "label": "Gesundheit", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "0.14", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Gesundheit beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[1]", "label": "Ausdauer", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Ausdauer beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[2]", "label": "Benommenheit", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Benommenheit beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[3]", "label": "Sauerstoff", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Sauerstoff beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[4]", "label": "Nahrung", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Nahrung beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[5]", "label": "Wasser", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Wasser beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[6]", "label": "Temperatur", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Temperatur beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[7]", "label": "Gewicht", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Gewicht beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[8]", "label": "Nahkampfschaden", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "0.14", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Nahkampfschaden beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[9]", "label": "Bewegungsgeschwindigkeit", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Bewegungsgeschwindigkeit beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[10]", "label": "Resistenz", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Temperaturresistenz beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Add[11]", "label": "Herstellungsfertigkeit", "group": "Zähmungs-Basisbonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Direkter Bonus auf Herstellungsfertigkeit beim Abschluss der Zähmung."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[0]", "label": "Gesundheit", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "0.44", "minimum": 0, "maximum": 1000, "description": "Bonus auf Gesundheit abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[1]", "label": "Ausdauer", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Ausdauer abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[2]", "label": "Benommenheit", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Benommenheit abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[3]", "label": "Sauerstoff", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Sauerstoff abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[4]", "label": "Nahrung", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Nahrung abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[5]", "label": "Wasser", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Wasser abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[6]", "label": "Temperatur", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Temperatur abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[7]", "label": "Gewicht", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Gewicht abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[8]", "label": "Nahkampfschaden", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "0.44", "minimum": 0, "maximum": 1000, "description": "Bonus auf Nahkampfschaden abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[9]", "label": "Bewegungsgeschwindigkeit", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Bewegungsgeschwindigkeit abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[10]", "label": "Resistenz", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Temperaturresistenz abhängig von der erreichten Zähmungseffektivität."},
+
+        {"key": "PerLevelStatsMultiplier_DinoTamed_Affinity[11]", "label": "Herstellungsfertigkeit", "group": "Zähmungseffektivitäts-Bonus", "valueType": "number", "defaultValue": "1.0", "minimum": 0, "maximum": 1000, "description": "Bonus auf Herstellungsfertigkeit abhängig von der erreichten Zähmungseffektivität."}
+      ]
+    }
+  ],
+  "persistentPaths": ["ShooterGame/Saved/SavedArks"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"], "staleSaveTransactionPatterns": [] }
+}

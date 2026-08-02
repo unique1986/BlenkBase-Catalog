@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 3,
+  "id": "satisfactory",
+  "displayName": "Satisfactory Dedicated Server",
+  "package": { "author": "blnk Base", "version": "1.1.0" },
+  "summary": "Automatisierungs- und Fabrikbau-Server mit Leistungs-, Speicher- und Netzwerkeinstellungen.",
+  "maturity": "stable",
+  "tags": ["factory", "coop"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"],
+  "artwork": { "storeAppId": 526870 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "none", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 1690800, "anonymous": true },
+  "process": {
+    "executable": "FactoryServer.exe",
+    "workingDirectory": ".",
+    "arguments": ["-log", "-unattended", "-Port={{port.game}}", "-ReliablePort={{port.reliable}}", "-RootGameSavePath={{instance.root}}/saves"],
+    "consoleLogFiles": ["FactoryGame/Saved/Logs/*.log"],
+    "stopCommand": "quit",
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7777 },
+    { "key": "api", "protocol": "tcp", "preferred": 7777 },
+    { "key": "reliable", "protocol": "tcp", "preferred": 8888 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "FactoryGame/Saved/Config/WindowsServer/Game.ini",
+      "label": "Spielersitzung",
+      "format": "ini",
+      "section": "/Script/Engine.GameSession",
+      "fields": [
+        { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "section": "/Script/Engine.GameSession", "valueType": "integer", "defaultValue": "4", "minimum": 1, "maximum": 127, "description": "Maximal gleichzeitig verbundene Spieler. Offiziell auf 4 optimiert; höhere Werte benötigen mehr Leistung. Standard: 4." }
+      ]
+    },
+    {
+      "path": "FactoryGame/Saved/Config/WindowsServer/Engine.ini",
+      "label": "Leistung und Netzwerk",
+      "format": "ini",
+      "section": "/Script/FactoryGame.FGSaveSession",
+      "fields": [
+        { "key": "mNumRotatingAutosaves", "label": "Rotierende Autosaves", "group": "Spielstand", "section": "/Script/FactoryGame.FGSaveSession", "valueType": "integer", "defaultValue": "3", "minimum": 1, "maximum": 100, "description": "Anzahl automatisch rotierender Spielstände. Standard: 3." },
+        { "key": "InitialConnectTimeout", "label": "Verbindungsaufbau-Timeout", "group": "Netzwerk", "section": "/Script/OnlineSubsystemUtils.IpNetDriver", "valueType": "number", "defaultValue": "30", "minimum": 10, "maximum": 300, "description": "Sekunden für den Aufbau einer neuen Verbindung. Standard: 30." },
+        { "key": "ConnectionTimeout", "label": "Verbindungs-Timeout", "group": "Netzwerk", "section": "/Script/OnlineSubsystemUtils.IpNetDriver", "valueType": "number", "defaultValue": "30", "minimum": 10, "maximum": 300, "description": "Sekunden ohne Daten bis eine bestehende Verbindung als getrennt gilt. Standard: 30." },
+        { "key": "NetServerMaxTickRate", "label": "Server-Tickrate", "group": "Leistung", "section": "/Script/OnlineSubsystemUtils.IpNetDriver", "valueType": "integer", "defaultValue": "30", "minimum": 10, "maximum": 120, "description": "Obergrenze der Server-Ticks pro Sekunde. Höher ist nicht automatisch besser. Standard: 30." },
+        { "key": "LanServerMaxTickRate", "label": "LAN-Tickrate", "group": "Leistung", "section": "/Script/OnlineSubsystemUtils.IpNetDriver", "valueType": "integer", "defaultValue": "30", "minimum": 10, "maximum": 120, "description": "Obergrenze der Server-Ticks im LAN. Standard: 30." },
+        { "key": "PortRangeBegin", "label": "Start des Reliable-Portbereichs", "group": "Netzwerk", "section": "/Script/ReliableMessaging.ReliableMessagingTCPFactory", "valueType": "integer", "portKey": "reliable", "minimum": 1, "maximum": 65535, "description": "Erster TCP-Port für Reliable Messaging. BlenkBase weist ihn automatisch zu." },
+        { "key": "PortRangeLength", "label": "Länge des Reliable-Portbereichs", "group": "Netzwerk", "section": "/Script/ReliableMessaging.ReliableMessagingTCPFactory", "valueType": "integer", "defaultValue": "1", "minimum": 1, "maximum": 512, "description": "Anzahl zulässiger Ports ab dem Startwert. Standard in BlenkBase: 1 für eine eindeutige Portzuweisung." }
+      ]
+    },
+    {
+      "path": "FactoryGame/Saved/Config/WindowsServer/GameUserSettings.ini",
+      "label": "Ereignisse",
+      "format": "ini",
+      "section": "/Script/FactoryGame.FGGameUserSettings",
+      "fields": [
+        { "key": "FG.DisableSeasonalEvents", "label": "Saisonale Ereignisse deaktivieren", "group": "Spielregeln", "section": "/Script/FactoryGame.FGGameUserSettings", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Deaktiviert saisonale Inhalte wie FICSMAS. Standard: Nein." }
+      ]
+    }
+  ],
+  "persistentPaths": ["saves", "FactoryGame/Saved/SaveGames", "FactoryGame/Saved/ServerSettings.15777"],
+  "health": { "processRequired": true, "portKeys": ["game", "api"] }
+}

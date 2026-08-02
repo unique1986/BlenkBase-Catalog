@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 3,
+  "id": "arma-3",
+  "displayName": "Arma 3 Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://community.bohemia.net/wiki/Arma_3:_Dedicated_Server" },
+  "summary": "Militär-Sandbox-Server mit Profil-, Netzwerk-, Zugriffs- und Missionsgrundkonfiguration.",
+  "maturity": "beta",
+  "tags": ["military", "sandbox", "simulation"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "mods", "player-query"],
+  "artwork": { "storeAppId": 107410 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 233780, "anonymous": false, "branch": "public" },
+  "process": {
+    "executable": "arma3server_x64.exe",
+    "workingDirectory": ".",
+    "arguments": ["-port={{port.game}}", "-config={{instance.root}}/config/server.cfg", "-cfg={{instance.root}}/config/basic.cfg", "-profiles={{instance.root}}/profiles", "-name=server", "-world=empty", "-noSound", "-autoInit"],
+    "consoleLogFiles": ["profiles/*.rpt", "profiles/*.log"],
+    "stopTimeoutSeconds": 60
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 2302 },
+    { "key": "steamQuery", "protocol": "udp", "preferred": 2303 },
+    { "key": "steam", "protocol": "udp", "preferred": 2304 },
+    { "key": "von", "protocol": "udp", "preferred": 2305 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "config/server.cfg",
+      "label": "Server und Zugang",
+      "format": "dayz-cfg",
+      "fields": [
+        { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Arma 3", "description": "Name im Serverbrowser. Standard: blnk - Base Arma 3." },
+        { "key": "password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+        { "key": "passwordAdmin", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-Arma3", "description": "Kennwort für die Serveradministration. Vor öffentlichem Betrieb ändern." },
+        { "key": "maxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "32", "minimum": 1, "maximum": 200, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 32." },
+        { "key": "verifySignatures", "label": "Signaturen prüfen", "group": "Sicherheit", "valueType": "integer", "defaultValue": "2", "choices": [{ "value": "2", "label": "Streng" }, { "value": "0", "label": "Aus (unsicher)" }], "description": "Prüft Client-Mods gegen Serversignaturen. Empfohlen und Standard: streng." },
+        { "key": "kickDuplicate", "label": "Doppelte IDs trennen", "group": "Sicherheit", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Trennt doppelte Spieler-Identitäten. Standard: Ja." },
+        { "key": "allowedFilePatching", "label": "File-Patching", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Headless Clients" }, { "value": "2", "label": "Alle Clients" }], "description": "Erlaubt lokale Dateipatches. Im öffentlichen Betrieb Standard: Nein." },
+        { "key": "BattlEye", "label": "BattlEye", "group": "Sicherheit", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Aktiviert BattlEye. Standard: Ja." },
+        { "key": "persistent", "label": "Mission persistent halten", "group": "Mission", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Lässt die Mission ohne Spieler weiterlaufen. Standard in BlenkBase: Ja." },
+        { "key": "autoSelectMission", "label": "Mission automatisch wählen", "group": "Mission", "valueType": "boolean", "defaultValue": "true", "description": "Startet bei genau einer konfigurierten Mission ohne Abstimmung. Standard: Ja." },
+        { "key": "disableVoN", "label": "Sprachchat deaktivieren", "group": "Kommunikation", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Deaktiviert den spielinternen Sprachchat. Standard: Nein." },
+        { "key": "vonCodecQuality", "label": "Sprachqualität", "group": "Kommunikation", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 30, "description": "Codec-Qualität des Sprachchats. Standard: 10." },
+        { "key": "disconnectTimeout", "label": "Verbindungs-Timeout", "group": "Netzwerk", "valueType": "integer", "defaultValue": "90", "minimum": 5, "maximum": 600, "description": "Sekunden bis eine unterbrochene Verbindung entfernt wird. Standard: 90." },
+        { "key": "steamProtocolMaxDataSize", "label": "Steam-Paketgröße", "group": "Netzwerk", "valueType": "integer", "defaultValue": "1024", "minimum": 512, "maximum": 8192, "description": "Maximale Paketgröße für Steam-Abfragen. Standard: 1024." },
+        { "key": "logFile", "label": "Serverlog", "group": "Protokollierung", "valueType": "string", "quoted": true, "defaultValue": "server_console.log", "description": "Dateiname des Serverprotokolls. Standard: server_console.log." }
+      ]
+    },
+    {
+      "path": "config/basic.cfg",
+      "label": "Netzwerkleistung",
+      "format": "dayz-cfg",
+      "fields": [
+        { "key": "MinBandwidth", "label": "Minimale Bandbreite", "group": "Netzwerk", "valueType": "integer", "defaultValue": "131072", "minimum": 0, "maximum": 2147483647, "description": "Garantierte Serverbandbreite in Bit/s. Standard: 131072." },
+        { "key": "MaxBandwidth", "label": "Maximale Bandbreite", "group": "Netzwerk", "valueType": "integer", "defaultValue": "100000000", "minimum": 0, "maximum": 2147483647, "description": "Obergrenze der Serverbandbreite in Bit/s. Standard in BlenkBase: 100 Mbit/s." },
+        { "key": "MaxMsgSend", "label": "Nachrichten pro Simulationsschritt", "group": "Netzwerk", "valueType": "integer", "defaultValue": "128", "minimum": 16, "maximum": 2048, "description": "Maximale Nachrichten pro Simulationszyklus. Standard: 128." },
+        { "key": "MaxSizeGuaranteed", "label": "Garantierte Paketgröße", "group": "Netzwerk", "valueType": "integer", "defaultValue": "512", "minimum": 64, "maximum": 1400, "description": "Maximale Größe garantierter Pakete. Standard: 512 Byte." },
+        { "key": "MaxSizeNonguaranteed", "label": "Ungarantierte Paketgröße", "group": "Netzwerk", "valueType": "integer", "defaultValue": "256", "minimum": 64, "maximum": 1400, "description": "Maximale Größe ungarantierter Pakete. Standard: 256 Byte." },
+        { "key": "MinErrorToSend", "label": "Positionsschwelle", "group": "Netzwerk", "valueType": "number", "defaultValue": "0.001", "minimum": 0.0001, "maximum": 1, "description": "Minimale Positionsabweichung vor einer Netzwerknachricht. Standard: 0,001." },
+        { "key": "MinErrorToSendNear", "label": "Positionsschwelle in Nähe", "group": "Netzwerk", "valueType": "number", "defaultValue": "0.01", "minimum": 0.0001, "maximum": 1, "description": "Schwelle für nahe Objekte. Standard: 0,01." }
+      ]
+    }
+  ],
+  "persistentPaths": ["config", "profiles", "mpmissions", "keys"],
+  "health": { "processRequired": true, "portKeys": ["game", "steamQuery"] }
+}

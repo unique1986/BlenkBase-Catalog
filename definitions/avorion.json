@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 3,
+  "id": "avorion",
+  "displayName": "Avorion Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://avorion.fandom.com/wiki/Setting_up_a_server" },
+  "summary": "Weltraum-Sandbox-Server mit eigener Galaxie, Steam-Netzwerk, RCON, Schwierigkeit und sicherem Speicherpfad innerhalb der Instanz.",
+  "maturity": "beta",
+  "tags": ["space", "sandbox", "simulation"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 445220 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 565060, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "bin/AvorionServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["--galaxy-name", "{{setting.GalaxyName}}", "--server-name", "{{setting.ServerName}}", "--datapath", "{{instance.root}}/galaxies", "--port", "{{port.game}}", "--query-port", "{{port.query}}", "--steam-query-port", "{{port.steamQuery}}", "--steam-master-port", "{{port.steamMaster}}", "--max-players", "{{setting.MaxPlayers}}", "--save-interval", "{{setting.SaveInterval}}", "--difficulty", "{{setting.Difficulty}}", "--multiplayer", "{{setting.Multiplayer}}", "--listed", "{{setting.Listed}}", "--vac-secure", "{{setting.VacSecure}}", "--same-start-sector", "{{setting.SameStartSector}}", "--pausable", "{{setting.Pausable}}", "--use-steam-networking", "{{setting.SteamNetworking}}", "--threads", "{{setting.Threads}}"],
+    "conditionalArguments": [
+      { "setting": "AdminSteamId", "omitValues": [""], "arguments": ["--admin", "{{setting.AdminSteamId}}"] },
+      { "setting": "RconPassword", "omitValues": [""], "arguments": ["--rcon-port", "{{port.rcon}}", "--rcon-password", "{{setting.RconPassword}}"] }
+    ],
+    "consoleLogFiles": ["galaxies/*/*.log", "galaxies/*/serverlog*.txt"],
+    "stopCommand": "/stop",
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 27000 },
+    { "key": "query", "protocol": "udp", "preferred": 27003 },
+    { "key": "steamQuery", "protocol": "udp", "preferred": 27020 },
+    { "key": "steamMaster", "protocol": "udp", "preferred": 27021 },
+    { "key": "rcon", "protocol": "tcp", "preferred": 27015 }
+  ],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json",
+    "label": "Galaxie und Serverstart",
+    "format": "json",
+    "fields": [
+      { "key": "GalaxyName", "label": "Galaxiename", "group": "Galaxie", "valueType": "string", "defaultValue": "blnk-galaxy", "description": "Technischer Ordnername der Galaxie. Nach dem ersten Start nicht mehr ändern, wenn dieselbe Welt weiterverwendet werden soll. Standard: blnk-galaxy." },
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Avorion", "description": "Name in der öffentlichen Serverliste. Standard: blnk - Base Avorion." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 100, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 10." },
+      { "key": "AdminSteamId", "label": "Admin-SteamID64", "group": "Sicherheit", "valueType": "string", "defaultValue": "", "description": "Optionale SteamID64 des ersten Administrators. Standard: leer." },
+      { "key": "RconPassword", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "secret": true, "defaultValue": "", "description": "Aktiviert bei gesetztem Kennwort die RCON-Schnittstelle. Standard: leer und damit deaktiviert." },
+      { "key": "Difficulty", "label": "Schwierigkeit", "group": "Spielregeln", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "-3", "label": "Leicht" }, { "value": "-2", "label": "Einfach" }, { "value": "-1", "label": "Veteran" }, { "value": "0", "label": "Normal" }, { "value": "1", "label": "Schwer" }, { "value": "2", "label": "Hardcore" }, { "value": "3", "label": "Wahnsinnig" }], "description": "Grundschwierigkeit der Galaxie. Standard: Normal." },
+      { "key": "SaveInterval", "label": "Speicherintervall", "group": "Spielstand", "valueType": "integer", "defaultValue": "300", "minimum": 30, "maximum": 3600, "description": "Sekunden zwischen automatischen Speicherungen. Standard: 300." },
+      { "key": "Multiplayer", "label": "Mehrspieler erlauben", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt anderen Spielern den Beitritt. Standard: Ja." },
+      { "key": "Listed", "label": "In Serverliste anzeigen", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Listet den Server öffentlich, wenn Steam-Netzwerk aktiv ist. Standard in blnk - Base: Ja." },
+      { "key": "VacSecure", "label": "VAC-Schutz", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert die Steam-VAC-Prüfung. Standard: Ja." },
+      { "key": "SameStartSector", "label": "Gemeinsamer Startsektor", "group": "Galaxie", "valueType": "boolean", "defaultValue": "true", "description": "Alle neuen Spieler beginnen im gleichen Sektor. Standard: Ja." },
+      { "key": "Pausable", "label": "Server pausierbar", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Erlaubt Administratoren das Pausieren bei nur einem Spieler. Standard: Nein." },
+      { "key": "SteamNetworking", "label": "Steam-Netzwerk", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "true", "description": "Ermöglicht Steam-Einladungen und öffentliche Listung. Standard: Ja." },
+      { "key": "Threads", "label": "Arbeitsthreads", "group": "Leistung", "valueType": "integer", "defaultValue": "4", "minimum": 1, "maximum": 64, "description": "Zahl der Server-Arbeitsthreads. Standard in blnk - Base: 4." }
+    ]
+  }],
+  "persistentPaths": ["galaxies", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

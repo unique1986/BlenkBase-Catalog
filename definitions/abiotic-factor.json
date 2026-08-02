@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 3,
+  "id": "abiotic-factor",
+  "displayName": "Abiotic Factor Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://github.com/DFJacob/AbioticFactorDedicatedServer/wiki" },
+  "summary": "Windows-Koop-Survivalserver mit Weltname, Slots, Server-/Admin-Kennwort und Steam-Query-Unterstützung.",
+  "maturity": "beta",
+  "tags": ["coop", "survival", "science-fiction"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 427410 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 2857200, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "AbioticFactorServer.exe",
+    "workingDirectory": ".",
+    "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["-log", "-newconsole", "-useperfthreads", "-NoAsyncLoadingThread", "-MaxServerPlayers={{setting.MaxPlayers}}", "-PORT={{port.game}}", "-QueryPort={{port.query}}", "-SteamServerName={{setting.ServerName}}", "-WorldSaveName={{setting.WorldName}}"],
+    "conditionalArguments": [
+      { "setting": "ServerPassword", "omitValues": [""], "arguments": ["-ServerPassword={{setting.ServerPassword}}"] },
+      { "setting": "AdminPassword", "omitValues": [""], "arguments": ["-AdminPassword={{setting.AdminPassword}}"] }
+    ],
+    "consoleLogFiles": ["AbioticFactor/Saved/Logs/*.log"],
+    "stopTimeoutSeconds": 90
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 7777 },
+    { "key": "query", "protocol": "udp", "preferred": 27015 }
+  ],
+  "configurationFiles": [{
+    "path": "blenkbase-startup.json",
+    "label": "Serverstart",
+    "format": "json",
+    "fields": [
+      { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Abiotic Factor", "description": "Name im Steam-Serverbrowser. Standard: blnk - Base Abiotic Factor." },
+      { "key": "WorldName", "label": "Weltname", "group": "Welt", "valueType": "string", "defaultValue": "Facility", "description": "Name des persistenten Welt-Spielstands. Nach dem ersten Start nicht ändern, wenn dieselbe Welt weiterlaufen soll. Standard: Facility." },
+      { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "6", "minimum": 1, "maximum": 24, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 6." },
+      { "key": "ServerPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "AdminPassword", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Abiotic", "description": "Kennwort für das administrative Menü. Vor öffentlichem Betrieb ändern." }
+    ]
+  }],
+  "persistentPaths": ["AbioticFactor/Saved", "blenkbase-startup.json"],
+  "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 3, "id": "empyrion", "displayName": "Empyrion - Galactic Survival Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://empyriononline.com/threads/dedicated-server-setup.470/" },
+  "summary": "Galaktischer Survival-Server mit Weltname, Szenario, Slots, EAC, Passwort und getrennten Spiel-/Telnet-Ports.",
+  "maturity": "beta", "tags": ["space", "survival", "sandbox"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 383120 }, "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 530870, "anonymous": true, "branch": "public" },
+  "process": { "executable": "DedicatedServer/EmpyrionDedicated.exe", "workingDirectory": "DedicatedServer", "arguments": ["-batchmode", "-nographics", "-dedicated", "{{instance.root}}/dedicated.yaml"], "consoleLogFiles": ["Logs/*.log", "DedicatedServer/Logs/*.log"], "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 30000 }, { "key": "telnet", "protocol": "tcp", "preferred": 30004 }],
+  "configurationFiles": [{ "path": "dedicated.yaml", "label": "Server und Spielwelt", "format": "yaml", "fields": [
+    { "key": "Srv_Name", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Empyrion", "description": "Name im Serverbrowser. Standard: blnk - Base Empyrion." },
+    { "key": "Srv_Port", "label": "Spielport", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "Basis-UDP-Port des Servers. Blenk Base weist ihn automatisch zu." },
+    { "key": "Srv_MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "16", "minimum": 1, "maximum": 128, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 16." },
+    { "key": "Srv_Password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+    { "key": "Srv_ReservePlayfields", "label": "Playfields reservieren", "group": "Leistung", "valueType": "integer", "defaultValue": "1", "minimum": 1, "maximum": 16, "description": "Vorab reservierte Playfield-Prozesse. Standard: 1." },
+    { "key": "Tel_Enabled", "label": "Telnet aktiv", "group": "Administration", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert die Telnet-Administration. Standard: Ja." },
+    { "key": "Tel_Port", "label": "Telnet-Port", "group": "Administration", "valueType": "integer", "portKey": "telnet", "minimum": 1, "maximum": 65535, "description": "TCP-Port der Telnet-Konsole. Blenk Base weist ihn automatisch zu." },
+    { "key": "Tel_Pwd", "label": "Telnet-Kennwort", "group": "Administration", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Empyrion", "description": "Kennwort der Telnet-Konsole. Vor öffentlichem Betrieb ändern." },
+    { "key": "GameName", "label": "Spielstandname", "group": "Welt", "valueType": "string", "defaultValue": "blnk-world", "description": "Ordnername des Spielstands. Standard: blnk-world." },
+    { "key": "GameOptions.EACActive", "label": "Easy Anti-Cheat", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Aktiviert Easy Anti-Cheat. Standard: Ja." }
+  ] }],
+  "persistentPaths": ["dedicated.yaml", "Saves", "Content/Scenarios", "Logs"], "health": { "processRequired": true, "portKeys": ["game"] }
+}

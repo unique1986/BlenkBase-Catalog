@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 3, "id": "icarus", "displayName": "Icarus Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://github.com/RocketWerkz/IcarusDedicatedServer/wiki" },
+  "summary": "Icarus-Koopserver mit benannter Instanz, Slots, Kennwort, Spiel-/Query-Port und persistentem Unreal-Datenpfad.",
+  "maturity": "beta", "tags": ["survival", "coop", "sandbox"], "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": { "storeAppId": 1149460 }, "adapters": { "installation": "steamcmd", "lifecycle": "generic-process", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "installer": { "kind": "steamcmd", "appId": 2089300, "anonymous": true, "branch": "public" },
+  "process": { "executable": "Icarus/Binaries/Win64/IcarusServer-Win64-Shipping.exe", "workingDirectory": ".", "startupSettingsFile": "blenkbase-startup.json", "arguments": ["-SteamServerName={{setting.ServerName}}", "-Port={{port.game}}", "-QueryPort={{port.query}}", "-UserDir={{instance.root}}/data", "-Log"], "consoleLogFiles": ["data/Icarus/Saved/Logs/*.log"], "stopTimeoutSeconds": 90 },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 17777 }, { "key": "query", "protocol": "udp", "preferred": 27015 }],
+  "configurationFiles": [{ "path": "blenkbase-startup.json", "label": "Serverstart", "format": "json", "fields": [
+    { "key": "ServerName", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Icarus", "description": "Name im Serverbrowser. Standard: blnk - Base Icarus." }
+  ] }, { "path": "data/Icarus/Saved/Config/WindowsServer/ServerSettings.ini", "label": "Server und Zugang", "format": "ini", "section": "/Script/Icarus.DedicatedServerSettings", "fields": [
+    { "key": "MaxPlayers", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "8", "minimum": 1, "maximum": 8, "description": "Maximal gleichzeitig verbundene Spieler. Standard und Maximum: 8." },
+    { "key": "JoinPassword", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+    { "key": "AdminPassword", "label": "Admin-Kennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-Icarus", "description": "Kennwort für administrative Befehle. Vor öffentlichem Betrieb ändern." },
+    { "key": "ResumeProspect", "label": "Prospekt fortsetzen", "group": "Welt", "valueType": "boolean", "defaultValue": "true", "description": "Setzt beim Neustart den letzten Prospekt fort. Standard: Ja." },
+    { "key": "LoadProspect", "label": "Prospektname", "group": "Welt", "valueType": "string", "defaultValue": "", "description": "Optionaler fest zu ladender Prospektname. Standard: leer." }
+  ] }],
+  "persistentPaths": ["data", "blenkbase-startup.json"], "health": { "processRequired": true, "portKeys": ["game", "query"] }
+}

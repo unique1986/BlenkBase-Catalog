@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 3,
+  "id": "dont-starve-together",
+  "displayName": "Don't Starve Together Dedicated Server",
+  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://forums.kleientertainment.com/forums/topic/64441-dedicated-server-quick-setup-guide-windows/" },
+  "summary": "Klei-Koopserver mit isoliertem Cluster, Oberwelt/Höhlen, Token-, PvP-, Slot- und Pausenkonfiguration.",
+  "maturity": "beta", "tags": ["survival", "coop", "sandbox"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "mods", "player-query"],
+  "artwork": { "storeAppId": 322330 },
+  "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "steam-workshop" },
+  "installer": { "kind": "steamcmd", "appId": 343050, "anonymous": true, "branch": "public" },
+  "process": {
+    "executable": "bin64/dontstarve_dedicated_server_nullrenderer_x64.exe", "workingDirectory": "bin64", "startupSettingsFile": "blenkbase-startup.json",
+    "arguments": ["-console", "-persistent_storage_root", "{{instance.root}}/data", "-conf_dir", "DoNotStarveTogether", "-cluster", "Cluster_1", "-shard", "{{setting.Shard}}"],
+    "consoleLogFiles": ["data/DoNotStarveTogether/Cluster_1/*/server_log.txt"], "stopCommand": "c_shutdown(true)", "stopTimeoutSeconds": 60
+  },
+  "ports": [{ "key": "game", "protocol": "udp", "preferred": 10999 }, { "key": "master", "protocol": "udp", "preferred": 10889 }, { "key": "auth", "protocol": "udp", "preferred": 8766 }],
+  "configurationFiles": [
+    { "path": "blenkbase-startup.json", "label": "Shard-Start", "format": "json", "fields": [{ "key": "Shard", "label": "Zu startender Shard", "group": "Start", "valueType": "string", "defaultValue": "Master", "choices": [{ "value": "Master", "label": "Oberwelt" }, { "value": "Caves", "label": "Höhlen" }], "description": "Startet den gewählten Teil des Clusters. Für Oberwelt und Höhlen werden zwei Instanzen benötigt. Standard: Oberwelt." }] },
+    { "path": "data/DoNotStarveTogether/Cluster_1/cluster.ini", "label": "Cluster und Zugang", "format": "ini", "section": "NETWORK", "fields": [
+      { "key": "cluster_name", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk - Base Don't Starve Together", "description": "Name in der Serverliste. Standard: blnk - Base Don't Starve Together." },
+      { "key": "cluster_description", "label": "Beschreibung", "group": "Allgemein", "valueType": "string", "defaultValue": "Verwaltet mit blnk - Base", "description": "Kurzbeschreibung in der Serverliste. Standard: Verwaltet mit blnk - Base." },
+      { "key": "cluster_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
+      { "key": "cluster_intention", "label": "Spielstil", "group": "Allgemein", "valueType": "string", "defaultValue": "cooperative", "choices": [{ "value": "cooperative", "label": "Kooperativ" }, { "value": "social", "label": "Sozial" }, { "value": "competitive", "label": "Kompetitiv" }, { "value": "madness", "label": "Wahnsinn" }], "description": "Kennzeichnet den Spielstil. Standard: Kooperativ." },
+      { "key": "max_players", "section": "GAMEPLAY", "label": "Maximale Spieler", "group": "Allgemein", "valueType": "integer", "defaultValue": "6", "minimum": 1, "maximum": 64, "description": "Maximal gleichzeitig verbundene Spieler. Standard: 6." },
+      { "key": "pvp", "section": "GAMEPLAY", "label": "PvP", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Erlaubt Schaden zwischen Spielern. Standard: Nein." },
+      { "key": "pause_when_empty", "section": "GAMEPLAY", "label": "Ohne Spieler pausieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "true", "description": "Pausiert die Welt ohne Spieler. Standard: Ja." },
+      { "key": "master_port", "section": "SHARD", "label": "Master-Port", "group": "Netzwerk", "valueType": "integer", "portKey": "master", "minimum": 1, "maximum": 65535, "description": "Interner Cluster-Port. Blenk Base weist ihn automatisch zu." },
+      { "key": "cluster_key", "section": "SHARD", "label": "Cluster-Schlüssel", "group": "Sicherheit", "valueType": "string", "secret": true, "defaultValue": "Bitte-Aendern-DST", "description": "Gemeinsamer Schlüssel aller Shards. Vor dem Betrieb ändern." }
+    ] }
+  ],
+  "persistentPaths": ["data", "blenkbase-startup.json"], "health": { "processRequired": true, "portKeys": ["game", "master"] }
+}

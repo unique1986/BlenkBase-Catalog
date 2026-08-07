@@ -2,22 +2,23 @@
   "schemaVersion": 3,
   "id": "counter-strike-2",
   "displayName": "Counter-Strike 2 Dedicated Server",
-  "package": { "author": "BLNK Labs", "version": "1.0.0", "homepage": "https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers" },
+  "package": { "author": "BLNK Labs", "version": "1.1.0", "homepage": "https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers" },
   "summary": "Source-2-Server mit Karte, Spielmodus, RCON, GOTV- und Serverbrowser-Einstellungen.",
   "maturity": "beta",
   "tags": ["shooter", "source2", "competitive"],
   "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
   "artwork": { "storeAppId": 730 },
-  "adapters": { "installation": "steamcmd", "lifecycle": "stdin-command", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "adapters": { "installation": "steamcmd", "lifecycle": "rcon-source", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
   "installer": { "kind": "steamcmd", "appId": 730, "anonymous": true, "branch": "public" },
   "process": {
     "executable": "game/bin/win64/cs2.exe",
     "workingDirectory": ".",
     "startupSettingsFile": "game/csgo/cfg/blenkbase-startup.json",
-    "arguments": ["-dedicated", "-console", "-usercon", "-port", "{{port.game}}", "+game_type", "{{setting.GameType}}", "+game_mode", "{{setting.GameMode}}", "+map", "{{setting.StartMap}}", "+exec", "server.cfg"],
+    "arguments": ["-dedicated", "-console", "-usercon", "-port", "{{port.game}}", "+game_type", "{{setting.GameType}}", "+game_mode", "{{setting.GameMode}}", "+mapgroup", "{{setting.MapGroup}}", "+map", "{{setting.StartMap}}", "+exec", "server.cfg"],
+    "conditionalArguments": [{ "setting": "Gslt", "omitValues": [""], "arguments": ["+sv_setsteamaccount", "{{setting.Gslt}}", "-net_port_try", "1"] }],
     "consoleLogFiles": ["game/csgo/logs/*.log"],
-    "stopCommand": "quit",
-    "stopTimeoutSeconds": 30
+    "stopTimeoutSeconds": 30,
+    "rconStopCommand": "quit"
   },
   "ports": [
     { "key": "game", "protocol": "udp", "preferred": 27015 },
@@ -30,8 +31,10 @@
       "format": "json",
       "fields": [
         { "key": "StartMap", "label": "Startkarte", "group": "Start", "valueType": "string", "defaultValue": "de_dust2", "choices": [{ "value": "de_dust2", "label": "Dust II" }, { "value": "de_mirage", "label": "Mirage" }, { "value": "de_inferno", "label": "Inferno" }, { "value": "de_nuke", "label": "Nuke" }, { "value": "de_ancient", "label": "Ancient" }, { "value": "de_anubis", "label": "Anubis" }, { "value": "de_vertigo", "label": "Vertigo" }], "description": "Beim Prozessstart geladene Valve-Karte. Standard: Dust II." },
+        { "key": "MapGroup", "label": "Kartengruppe", "group": "Start", "valueType": "string", "defaultValue": "mg_active", "choices": [{ "value": "mg_active", "label": "Aktive Wettkampfkarten" }, { "value": "mg_allclassic", "label": "Alle klassischen Karten" }, { "value": "mg_armsrace", "label": "Arms Race" }, { "value": "mg_demolition", "label": "Demolition" }], "description": "Bestimmt Kartenrotation und Abstimmungen. Standard: aktive Wettkampfkarten." },
         { "key": "GameType", "label": "Spieltyp", "group": "Start", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Klassisch" }, { "value": "1", "label": "Gun Game" }, { "value": "3", "label": "Training" }], "description": "Numerischer Source-2-Spieltyp. Standard: klassisch." },
-        { "key": "GameMode", "label": "Spielmodus", "group": "Start", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "0", "label": "Casual" }, { "value": "1", "label": "Competitive" }, { "value": "2", "label": "Wingman" }], "description": "Modus innerhalb des gewählten Spieltyps. Standard: Competitive." }
+        { "key": "GameMode", "label": "Spielmodus", "group": "Start", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "0", "label": "Casual" }, { "value": "1", "label": "Competitive" }, { "value": "2", "label": "Wingman" }], "description": "Modus innerhalb des gewählten Spieltyps. Standard: Competitive." },
+        { "key": "Gslt", "label": "Game Server Login Token (GSLT)", "group": "Steam & öffentlich", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionaler, instanzgebundener Steam-GSLT für öffentliche Verbindungen und Serverlisting. Ohne Token kann der Server lokal starten, ist extern aber möglicherweise nicht nutzbar." }
       ]
     },
     {
@@ -41,7 +44,7 @@
       "fields": [
         { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Counter-Strike 2", "description": "Name im Serverbrowser. Standard: blnk - Base Counter-Strike 2." },
         { "key": "sv_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
-        { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "Bitte-Aendern-CS2", "description": "Kennwort für die Fernadministration. Vor öffentlichem Betrieb ändern." },
+        { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Über den separaten RCON-Bereich einrichten. Damit funktionieren Fernkonsole und regulärer Stopp. Standard: leer." },
         { "key": "sv_lan", "label": "Nur LAN", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Ja beschränkt den Server auf das lokale Netz. Standard: Nein." },
         { "key": "sv_cheats", "label": "Cheats", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert Cheat-CVars. Standard: Nein." },
         { "key": "sv_hibernate_when_empty", "label": "Leerlaufmodus", "group": "Leistung", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Senkt den Ressourcenverbrauch ohne Spieler. Standard: Ja." },

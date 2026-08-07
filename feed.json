@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Offizieller BlenkBase-Katalog",
-  "generatedAtUtc": "2026-08-07T16:19:19.214Z",
+  "generatedAtUtc": "2026-08-07T17:02:14.989Z",
   "definitions": [
     {
       "id": "abiotic-factor",
@@ -123,11 +123,11 @@
     {
       "id": "counter-strike-2",
       "displayName": "Counter-Strike 2 Dedicated Server",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "maturity": "beta",
       "definitionUrl": "definitions/counter-strike-2.json",
-      "sha256": "7bd0c43a829f196c7c33ebf633740b48cfa418214cdd6a5cf5c7c68df69ca649",
-      "notes": "Source-2-Server mit Karte, Spielmodus, RCON, GOTV- und Serverbrowser-Einstellungen."
+      "sha256": "09cd23a8eb86b4183e043e26d0569f5df3e4f707ed936897bc245f5b7f78fa86",
+      "notes": "Source-2-Server mit Karten, Spielmodi, RCON, Bots, Rundenregeln, GOTV und Serverbrowser-Einstellungen."
     },
     {
       "id": "craftopia",

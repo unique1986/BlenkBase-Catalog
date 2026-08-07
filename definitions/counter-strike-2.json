@@ -2,20 +2,56 @@
   "schemaVersion": 3,
   "id": "counter-strike-2",
   "displayName": "Counter-Strike 2 Dedicated Server",
-  "package": { "author": "BLNK Labs", "version": "1.1.0", "homepage": "https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers" },
-  "summary": "Source-2-Server mit Karte, Spielmodus, RCON, GOTV- und Serverbrowser-Einstellungen.",
+  "package": {
+    "author": "BLNK Labs",
+    "version": "1.2.0",
+    "homepage": "https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers"
+  },
+  "summary": "Source-2-Server mit Karten, Spielmodi, RCON, Bots, Rundenregeln, GOTV und Serverbrowser-Einstellungen.",
   "maturity": "beta",
   "tags": ["shooter", "source2", "competitive"],
   "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
   "artwork": { "storeAppId": 730 },
-  "adapters": { "installation": "steamcmd", "lifecycle": "rcon-source", "configuration": "catalog-files", "health": "process-and-ports", "population": "steam-a2s", "backup": "persistent-paths", "mods": "none" },
+  "adapters": {
+    "installation": "steamcmd",
+    "lifecycle": "rcon-source",
+    "configuration": "catalog-files",
+    "health": "process-and-ports",
+    "population": "steam-a2s",
+    "backup": "persistent-paths",
+    "mods": "none"
+  },
   "installer": { "kind": "steamcmd", "appId": 730, "anonymous": true, "branch": "public" },
   "process": {
     "executable": "game/bin/win64/cs2.exe",
     "workingDirectory": ".",
     "startupSettingsFile": "game/csgo/cfg/blenkbase-startup.json",
-    "arguments": ["-dedicated", "-console", "-usercon", "-port", "{{port.game}}", "+game_type", "{{setting.GameType}}", "+game_mode", "{{setting.GameMode}}", "+mapgroup", "{{setting.MapGroup}}", "+map", "{{setting.StartMap}}", "+exec", "server.cfg"],
-    "conditionalArguments": [{ "setting": "Gslt", "omitValues": [""], "arguments": ["+sv_setsteamaccount", "{{setting.Gslt}}", "-net_port_try", "1"] }],
+    "arguments": [
+      "-dedicated",
+      "-console",
+      "-usercon",
+      "-port",
+      "{{port.game}}",
+      "-maxplayers_override",
+      "{{setting.MaxPlayers}}",
+      "+game_type",
+      "{{setting.GameType}}",
+      "+game_mode",
+      "{{setting.GameMode}}",
+      "+mapgroup",
+      "{{setting.MapGroup}}",
+      "+map",
+      "{{setting.StartMap}}",
+      "+exec",
+      "server.cfg"
+    ],
+    "conditionalArguments": [
+      {
+        "setting": "Gslt",
+        "omitValues": [""],
+        "arguments": ["+sv_setsteamaccount", "{{setting.Gslt}}", "-net_port_try", "1"]
+      }
+    ],
     "consoleLogFiles": ["game/csgo/logs/*.log"],
     "stopTimeoutSeconds": 30,
     "rconStopCommand": "quit"
@@ -27,14 +63,87 @@
   "configurationFiles": [
     {
       "path": "game/csgo/cfg/blenkbase-startup.json",
-      "label": "Karte und Spielmodus",
+      "label": "Start, Karte und Spielmodus",
       "format": "json",
       "fields": [
-        { "key": "StartMap", "label": "Startkarte", "group": "Start", "valueType": "string", "defaultValue": "de_dust2", "choices": [{ "value": "de_dust2", "label": "Dust II" }, { "value": "de_mirage", "label": "Mirage" }, { "value": "de_inferno", "label": "Inferno" }, { "value": "de_nuke", "label": "Nuke" }, { "value": "de_ancient", "label": "Ancient" }, { "value": "de_anubis", "label": "Anubis" }, { "value": "de_vertigo", "label": "Vertigo" }], "description": "Beim Prozessstart geladene Valve-Karte. Standard: Dust II." },
-        { "key": "MapGroup", "label": "Kartengruppe", "group": "Start", "valueType": "string", "defaultValue": "mg_active", "choices": [{ "value": "mg_active", "label": "Aktive Wettkampfkarten" }, { "value": "mg_allclassic", "label": "Alle klassischen Karten" }, { "value": "mg_armsrace", "label": "Arms Race" }, { "value": "mg_demolition", "label": "Demolition" }], "description": "Bestimmt Kartenrotation und Abstimmungen. Standard: aktive Wettkampfkarten." },
-        { "key": "GameType", "label": "Spieltyp", "group": "Start", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Klassisch" }, { "value": "1", "label": "Gun Game" }, { "value": "3", "label": "Training" }], "description": "Numerischer Source-2-Spieltyp. Standard: klassisch." },
-        { "key": "GameMode", "label": "Spielmodus", "group": "Start", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "0", "label": "Casual" }, { "value": "1", "label": "Competitive" }, { "value": "2", "label": "Wingman" }], "description": "Modus innerhalb des gewählten Spieltyps. Standard: Competitive." },
-        { "key": "Gslt", "label": "Game Server Login Token (GSLT)", "group": "Steam & öffentlich", "valueType": "string", "secret": true, "defaultValue": "", "description": "Optionaler, instanzgebundener Steam-GSLT für öffentliche Verbindungen und Serverlisting. Ohne Token kann der Server lokal starten, ist extern aber möglicherweise nicht nutzbar." }
+        {
+          "key": "StartMap",
+          "label": "Startkarte",
+          "group": "Start",
+          "valueType": "string",
+          "defaultValue": "de_dust2",
+          "choices": [
+            { "value": "de_dust2", "label": "Dust II" },
+            { "value": "de_mirage", "label": "Mirage" },
+            { "value": "de_inferno", "label": "Inferno" },
+            { "value": "de_nuke", "label": "Nuke" },
+            { "value": "de_ancient", "label": "Ancient" },
+            { "value": "de_anubis", "label": "Anubis" },
+            { "value": "de_vertigo", "label": "Vertigo" },
+            { "value": "ar_shoots", "label": "Shoots (Arms Race)" },
+            { "value": "de_lake", "label": "Lake (Demolition)" }
+          ],
+          "description": "Beim Prozessstart geladene Valve-Karte. Standard: Dust II."
+        },
+        {
+          "key": "MapGroup",
+          "label": "Kartengruppe",
+          "group": "Start",
+          "valueType": "string",
+          "defaultValue": "mg_active",
+          "choices": [
+            { "value": "mg_active", "label": "Aktive Wettkampfkarten" },
+            { "value": "mg_allclassic", "label": "Alle klassischen Karten" },
+            { "value": "mg_armsrace", "label": "Arms Race" },
+            { "value": "mg_demolition", "label": "Demolition" }
+          ],
+          "description": "Bestimmt Kartenrotation und Abstimmungen. Standard: aktive Wettkampfkarten."
+        },
+        {
+          "key": "GameType",
+          "label": "Spieltyp",
+          "group": "Start",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [
+            { "value": "0", "label": "Klassisch" },
+            { "value": "1", "label": "Gun Game" },
+            { "value": "3", "label": "Training" }
+          ],
+          "description": "Numerischer Source-2-Spieltyp. Standard: klassisch."
+        },
+        {
+          "key": "GameMode",
+          "label": "Spielmodus",
+          "group": "Start",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [
+            { "value": "0", "label": "Casual / Arms Race" },
+            { "value": "1", "label": "Competitive / Demolition" },
+            { "value": "2", "label": "Wingman / Deathmatch" }
+          ],
+          "description": "Modus innerhalb des gewählten Spieltyps. Bei klassischem Spieltyp ist 1 Competitive. Standard: 1."
+        },
+        {
+          "key": "MaxPlayers",
+          "label": "Maximale Spieler",
+          "group": "Start",
+          "valueType": "integer",
+          "defaultValue": "10",
+          "minimum": 1,
+          "maximum": 64,
+          "description": "Harte Obergrenze für menschliche Spieler und Bots. Wird beim Start mit -maxplayers_override übergeben. Standard: 10."
+        },
+        {
+          "key": "Gslt",
+          "label": "Game Server Login Token (GSLT)",
+          "group": "Steam & öffentlich",
+          "valueType": "string",
+          "secret": true,
+          "defaultValue": "",
+          "description": "Optionaler, instanzgebundener Steam-GSLT für öffentliche Verbindungen und das Serverlisting. Ohne Token kann der Server lokal starten, ist extern aber möglicherweise nicht nutzbar."
+        }
       ]
     },
     {
@@ -42,14 +151,500 @@
       "label": "Servereinstellungen",
       "format": "source-cfg",
       "fields": [
-        { "key": "hostname", "label": "Servername", "group": "Allgemein", "valueType": "string", "quoted": true, "defaultValue": "blnk - Base Counter-Strike 2", "description": "Name im Serverbrowser. Standard: blnk - Base Counter-Strike 2." },
-        { "key": "sv_password", "label": "Serverkennwort", "group": "Sicherheit", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Optionales Kennwort zum Beitreten. Standard: leer." },
-        { "key": "rcon_password", "label": "RCON-Kennwort", "group": "RCON", "valueType": "string", "quoted": true, "secret": true, "defaultValue": "", "description": "Über den separaten RCON-Bereich einrichten. Damit funktionieren Fernkonsole und regulärer Stopp. Standard: leer." },
-        { "key": "sv_lan", "label": "Nur LAN", "group": "Netzwerk", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Ja beschränkt den Server auf das lokale Netz. Standard: Nein." },
-        { "key": "sv_cheats", "label": "Cheats", "group": "Sicherheit", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert Cheat-CVars. Standard: Nein." },
-        { "key": "sv_hibernate_when_empty", "label": "Leerlaufmodus", "group": "Leistung", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Senkt den Ressourcenverbrauch ohne Spieler. Standard: Ja." },
-        { "key": "sv_logfile", "label": "Logdateien", "group": "Protokollierung", "valueType": "integer", "defaultValue": "1", "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }], "description": "Schreibt Serverereignisse in Logdateien. Standard: Ja." },
-        { "key": "tv_enable", "label": "GOTV", "group": "Zuschauer", "valueType": "integer", "defaultValue": "0", "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }], "description": "Aktiviert den integrierten Zuschauer-/Relaydienst. Standard: Nein." }
+        {
+          "key": "hostname",
+          "label": "Servername",
+          "group": "Allgemein",
+          "valueType": "string",
+          "quoted": true,
+          "defaultValue": "blnk - Base Counter-Strike 2",
+          "description": "Name im Serverbrowser. Standard: blnk - Base Counter-Strike 2."
+        },
+        {
+          "key": "sv_password",
+          "label": "Serverkennwort",
+          "group": "Zugang & Admin",
+          "valueType": "string",
+          "quoted": true,
+          "secret": true,
+          "defaultValue": "",
+          "description": "Optionales Kennwort zum Beitreten. Standard: leer."
+        },
+        {
+          "key": "rcon_password",
+          "label": "RCON-/Admin-Kennwort",
+          "group": "Zugang & Admin",
+          "valueType": "string",
+          "quoted": true,
+          "secret": true,
+          "defaultValue": "",
+          "description": "Administrativer Fernzugang für Konsole und sicheren Serverstopp. Vanilla-CS2 verwaltet Admins über RCON, nicht über einzelne SteamIDs. Standard: leer."
+        },
+        {
+          "key": "sv_lan",
+          "label": "Nur LAN",
+          "group": "Netzwerk & Sicherheit",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Ja beschränkt den Server auf das lokale Netz. Standard: Nein."
+        },
+        {
+          "key": "sv_cheats",
+          "label": "Cheats erlauben",
+          "group": "Netzwerk & Sicherheit",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Aktiviert geschützte Cheat-CVars. Für öffentliche Server nicht empfohlen. Standard: Nein."
+        },
+        {
+          "key": "sv_pure",
+          "label": "Clientdateien prüfen",
+          "group": "Netzwerk & Sicherheit",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }, { "value": "2", "label": "Streng" }],
+          "description": "Prüft, ob Clients unveränderte Spieldateien verwenden. Standard: Ja."
+        },
+        {
+          "key": "sv_hibernate_when_empty",
+          "label": "Leerlaufmodus",
+          "group": "Leistung",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Senkt den Ressourcenverbrauch ohne Spieler. Standard: Ja."
+        },
+        {
+          "key": "bot_quota",
+          "label": "Anzahl Bots",
+          "group": "Bots",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "minimum": 0,
+          "maximum": 64,
+          "description": "Gewünschte Botanzahl beziehungsweise Zielbelegung abhängig vom Bot-Modus. 0 deaktiviert Bots. Standard: 0."
+        },
+        {
+          "key": "bot_quota_mode",
+          "label": "Bot-Belegungsmodus",
+          "group": "Bots",
+          "valueType": "string",
+          "defaultValue": "fill",
+          "choices": [{ "value": "normal", "label": "Feste Botanzahl" }, { "value": "fill", "label": "Bis zur Zielbelegung auffüllen" }, { "value": "match", "label": "Bots passend zu Spielern" }],
+          "description": "Bestimmt, wie bot_quota ausgewertet wird. Standard: auffüllen."
+        },
+        {
+          "key": "bot_difficulty",
+          "label": "Bot-Schwierigkeit",
+          "group": "Bots",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "0", "label": "Leicht" }, { "value": "1", "label": "Normal" }, { "value": "2", "label": "Schwer" }, { "value": "3", "label": "Experte" }],
+          "description": "Grundschwierigkeit der Bots. Standard: Normal."
+        },
+        {
+          "key": "bot_chatter",
+          "label": "Bot-Funkverkehr",
+          "group": "Bots",
+          "valueType": "string",
+          "defaultValue": "normal",
+          "choices": [{ "value": "off", "label": "Aus" }, { "value": "radio", "label": "Nur Funk" }, { "value": "minimal", "label": "Minimal" }, { "value": "normal", "label": "Normal" }],
+          "description": "Umfang der Bot-Sprachausgaben. Standard: Normal."
+        },
+        {
+          "key": "bot_join_after_player",
+          "label": "Bots erst nach Spielerbeitritt",
+          "group": "Bots",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Bots erscheinen erst, wenn mindestens ein Mensch verbunden ist. Standard: Ja."
+        },
+        {
+          "key": "bot_join_team",
+          "label": "Bot-Team",
+          "group": "Bots",
+          "valueType": "string",
+          "defaultValue": "any",
+          "choices": [{ "value": "any", "label": "Automatisch" }, { "value": "t", "label": "Terroristen" }, { "value": "ct", "label": "Counter-Terroristen" }],
+          "description": "Bevorzugtes Team für neue Bots. Standard: automatisch."
+        },
+        {
+          "key": "bot_defer_to_human_goals",
+          "label": "Missionsziele Menschen überlassen",
+          "group": "Bots",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Bots überlassen Bomben- und Rettungsziele bevorzugt Menschen. Standard: Nein."
+        },
+        {
+          "key": "bot_defer_to_human_items",
+          "label": "Missionsgegenstände Menschen überlassen",
+          "group": "Bots",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Bots überlassen wichtige Gegenstände bevorzugt Menschen. Standard: Ja."
+        },
+        {
+          "key": "bot_dont_shoot",
+          "label": "Bots schießen nicht",
+          "group": "Bots",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Deaktiviert das Schießen der Bots zu Trainingszwecken. Standard: Nein."
+        },
+        {
+          "key": "bot_autodifficulty_threshold_low",
+          "label": "Adaptive Schwierigkeit: untere Schwelle",
+          "group": "Bots",
+          "valueType": "number",
+          "defaultValue": "-2.0",
+          "minimum": -20,
+          "maximum": 20,
+          "description": "Beitrag unter dem menschlichen Durchschnitt, ab dem Bots schwerer werden. Standard: -2,0."
+        },
+        {
+          "key": "bot_autodifficulty_threshold_high",
+          "label": "Adaptive Schwierigkeit: obere Schwelle",
+          "group": "Bots",
+          "valueType": "number",
+          "defaultValue": "0.0",
+          "minimum": -20,
+          "maximum": 20,
+          "description": "Beitrag über dem menschlichen Durchschnitt, ab dem Bots leichter werden. Standard: 0,0."
+        },
+        {
+          "key": "mp_autoteambalance",
+          "label": "Teams automatisch ausgleichen",
+          "group": "Teams",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Gleicht ungleich große Teams automatisch aus. Standard: Ja."
+        },
+        {
+          "key": "mp_limitteams",
+          "label": "Maximaler Teamunterschied",
+          "group": "Teams",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Maximal erlaubter Größenunterschied zwischen Teams. 0 deaktiviert das Limit. Standard: 1."
+        },
+        {
+          "key": "mp_humanteam",
+          "label": "Erlaubtes Team für Menschen",
+          "group": "Teams",
+          "valueType": "string",
+          "defaultValue": "any",
+          "choices": [{ "value": "any", "label": "Beide Teams" }, { "value": "t", "label": "Nur Terroristen" }, { "value": "ct", "label": "Nur Counter-Terroristen" }],
+          "description": "Beschränkt menschliche Spieler auf ein Team. Standard: beide Teams."
+        },
+        {
+          "key": "mp_friendlyfire",
+          "label": "Teambeschuss",
+          "group": "Teams",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Erlaubt Schaden an Teammitgliedern. Standard für Competitive: Ja."
+        },
+        {
+          "key": "mp_solid_teammates",
+          "label": "Teammitglieder blockieren",
+          "group": "Teams",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }, { "value": "2", "label": "Nur Gegner" }],
+          "description": "Steuert Kollisionen zwischen Spielern. Standard: Teammitglieder blockieren."
+        },
+        {
+          "key": "mp_teammates_are_enemies",
+          "label": "Jeder gegen jeden",
+          "group": "Teams",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Behandelt auch Teammitglieder als Gegner. Standard: Nein."
+        },
+        {
+          "key": "mp_maxrounds",
+          "label": "Maximale Runden",
+          "group": "Runden & Zeit",
+          "valueType": "integer",
+          "defaultValue": "24",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Beendet das Match nach dieser Rundenzahl. 0 deaktiviert das Rundenlimit. Standard: 24."
+        },
+        {
+          "key": "mp_timelimit",
+          "label": "Kartenzeitlimit (Minuten)",
+          "group": "Runden & Zeit",
+          "valueType": "number",
+          "defaultValue": "0",
+          "minimum": 0,
+          "maximum": 180,
+          "description": "Wechselt die Karte nach dieser Zeit. 0 deaktiviert das Zeitlimit. Standard: 0."
+        },
+        {
+          "key": "mp_roundtime",
+          "label": "Rundenzeit (Minuten)",
+          "group": "Runden & Zeit",
+          "valueType": "number",
+          "defaultValue": "1.92",
+          "minimum": 0.1,
+          "maximum": 60,
+          "description": "Allgemeine Dauer einer Runde. Standard für Competitive: 1,92 Minuten."
+        },
+        {
+          "key": "mp_roundtime_defuse",
+          "label": "Rundenzeit für Bombenkarten (Minuten)",
+          "group": "Runden & Zeit",
+          "valueType": "number",
+          "defaultValue": "1.92",
+          "minimum": 0.1,
+          "maximum": 60,
+          "description": "Rundendauer auf Entschärfungskarten. Standard: 1,92 Minuten."
+        },
+        {
+          "key": "mp_freezetime",
+          "label": "Einfrierzeit vor Rundenstart (Sekunden)",
+          "group": "Runden & Zeit",
+          "valueType": "integer",
+          "defaultValue": "15",
+          "minimum": 0,
+          "maximum": 60,
+          "description": "Zeit zum Kaufen und Planen vor Rundenbeginn. Standard: 15 Sekunden."
+        },
+        {
+          "key": "mp_buytime",
+          "label": "Kaufzeit (Sekunden)",
+          "group": "Runden & Zeit",
+          "valueType": "integer",
+          "defaultValue": "20",
+          "minimum": 0,
+          "maximum": 600,
+          "description": "Zeitraum nach Rundenstart, in dem gekauft werden darf. Standard: 20 Sekunden."
+        },
+        {
+          "key": "mp_c4timer",
+          "label": "Bombentimer (Sekunden)",
+          "group": "Runden & Zeit",
+          "valueType": "integer",
+          "defaultValue": "40",
+          "minimum": 10,
+          "maximum": 90,
+          "description": "Zeit von der Platzierung bis zur Explosion. Standard: 40 Sekunden."
+        },
+        {
+          "key": "mp_halftime",
+          "label": "Halbzeit mit Seitenwechsel",
+          "group": "Runden & Zeit",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Wechselt die Seiten nach der Hälfte der Runden. Standard: Ja."
+        },
+        {
+          "key": "mp_overtime_enable",
+          "label": "Verlängerung bei Gleichstand",
+          "group": "Runden & Zeit",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Startet bei Gleichstand eine Verlängerung. Standard: Nein."
+        },
+        {
+          "key": "mp_warmuptime",
+          "label": "Aufwärmzeit (Sekunden)",
+          "group": "Runden & Zeit",
+          "valueType": "integer",
+          "defaultValue": "60",
+          "minimum": 0,
+          "maximum": 3600,
+          "description": "Dauer der Aufwärmphase vor dem Match. Standard: 60 Sekunden."
+        },
+        {
+          "key": "mp_startmoney",
+          "label": "Startgeld",
+          "group": "Wirtschaft",
+          "valueType": "integer",
+          "defaultValue": "800",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Geld eines Spielers zu Matchbeginn. Standard: 800."
+        },
+        {
+          "key": "mp_maxmoney",
+          "label": "Maximales Geld",
+          "group": "Wirtschaft",
+          "valueType": "integer",
+          "defaultValue": "16000",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Maximaler Kontostand eines Spielers. Standard: 16000."
+        },
+        {
+          "key": "mp_afterroundmoney",
+          "label": "Zusätzliches Geld nach jeder Runde",
+          "group": "Wirtschaft",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Zusätzlicher pauschaler Betrag nach jeder Runde. Standard: 0."
+        },
+        {
+          "key": "mp_playercashawards",
+          "label": "Persönliche Geldbelohnungen",
+          "group": "Wirtschaft",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Aktiviert persönliche Belohnungen für Aktionen. Standard: Ja."
+        },
+        {
+          "key": "mp_teamcashawards",
+          "label": "Team-Geldbelohnungen",
+          "group": "Wirtschaft",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Aktiviert Geldbelohnungen für gewonnene beziehungsweise verlorene Runden. Standard: Ja."
+        },
+        {
+          "key": "mp_forcecamera",
+          "label": "Zuschauerkamera nach dem Tod",
+          "group": "Zuschauer",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "0", "label": "Alle beobachten" }, { "value": "1", "label": "Nur eigenes Team" }, { "value": "2", "label": "Nur eigene Position" }],
+          "description": "Beschränkt, wen tote Spieler beobachten dürfen. Standard: nur eigenes Team."
+        },
+        {
+          "key": "tv_enable",
+          "label": "GOTV aktivieren",
+          "group": "Zuschauer",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Aktiviert den integrierten Zuschauer- und Relaydienst. Standard: Nein."
+        },
+        {
+          "key": "sv_voiceenable",
+          "label": "Sprachchat",
+          "group": "Kommunikation",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Aktiviert den Sprachchat auf dem Server. Standard: Ja."
+        },
+        {
+          "key": "sv_alltalk",
+          "label": "Sprachchat zwischen allen Teams",
+          "group": "Kommunikation",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Alle lebenden Spieler können teamübergreifend miteinander sprechen. Standard: Nein."
+        },
+        {
+          "key": "sv_deadtalk",
+          "label": "Tote Spieler sprechen miteinander",
+          "group": "Kommunikation",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Erlaubt Sprachkommunikation zwischen toten Spielern. Standard: Nein."
+        },
+        {
+          "key": "sv_full_alltalk",
+          "label": "Vollständiger globaler Sprachchat",
+          "group": "Kommunikation",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Lebende und tote Spieler können unabhängig von Teams miteinander sprechen. Standard: Nein."
+        },
+        {
+          "key": "sv_talk_enemy_dead",
+          "label": "Tote Gegner hören",
+          "group": "Kommunikation",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Erlaubt Kommunikation mit toten Gegnern. Standard: Nein."
+        },
+        {
+          "key": "sv_talk_enemy_living",
+          "label": "Lebende Gegner hören",
+          "group": "Kommunikation",
+          "valueType": "integer",
+          "defaultValue": "0",
+          "choices": [{ "value": "0", "label": "Nein" }, { "value": "1", "label": "Ja" }],
+          "description": "Erlaubt Kommunikation mit lebenden Gegnern. Standard: Nein."
+        },
+        {
+          "key": "mp_death_drop_gun",
+          "label": "Waffe beim Tod fallenlassen",
+          "group": "Spielregeln",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "0", "label": "Keine" }, { "value": "1", "label": "Beste Waffe" }, { "value": "2", "label": "Aktuelle oder beste Waffe" }],
+          "description": "Legt fest, welche Schusswaffe beim Tod fallen gelassen wird. Standard: beste Waffe."
+        },
+        {
+          "key": "mp_death_drop_grenade",
+          "label": "Granate beim Tod fallenlassen",
+          "group": "Spielregeln",
+          "valueType": "integer",
+          "defaultValue": "2",
+          "choices": [{ "value": "0", "label": "Keine" }, { "value": "1", "label": "Beste Granate" }, { "value": "2", "label": "Aktuelle oder beste Granate" }],
+          "description": "Legt fest, welche Granate beim Tod fallen gelassen wird. Standard: aktuelle oder beste."
+        },
+        {
+          "key": "mp_death_drop_defuser",
+          "label": "Defuse-Kit beim Tod fallenlassen",
+          "group": "Spielregeln",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Lässt das Defuse-Kit beim Tod fallen. Standard: Ja."
+        },
+        {
+          "key": "sv_logfile",
+          "label": "Logdateien",
+          "group": "Protokollierung",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Schreibt Serverereignisse in Logdateien. Standard: Ja."
+        },
+        {
+          "key": "sv_logbans",
+          "label": "Sperren protokollieren",
+          "group": "Protokollierung",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Protokolliert Spieler- und IP-Sperren. Standard: Ja."
+        },
+        {
+          "key": "sv_logecho",
+          "label": "Logs in Konsole ausgeben",
+          "group": "Protokollierung",
+          "valueType": "integer",
+          "defaultValue": "1",
+          "choices": [{ "value": "1", "label": "Ja" }, { "value": "0", "label": "Nein" }],
+          "description": "Spiegelt Logmeldungen in die Serverkonsole. Standard: Ja."
+        }
       ]
     }
   ],

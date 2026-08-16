@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Offizieller BlenkBase-Katalog",
-  "generatedAtUtc": "2026-08-07T17:02:14.989Z",
+  "generatedAtUtc": "2026-08-16T15:14:55.486Z",
   "definitions": [
     {
       "id": "abiotic-factor",
@@ -281,6 +281,15 @@
       "definitionUrl": "definitions/longvinter.json",
       "sha256": "d620901c6954bfc4c899b366cdd5ec11ce266c3db2582be5fc9c6a32f5faaead",
       "notes": "Longvinter-Inselserver mit Steam-Sichtbarkeit, PvP, Kennwort, MOTD und Zeltregeln."
+    },
+    {
+      "id": "minecraft-bedrock",
+      "displayName": "Minecraft: Bedrock Edition",
+      "version": "1.0.0",
+      "maturity": "stable",
+      "definitionUrl": "definitions/minecraft-bedrock.json",
+      "sha256": "14e112e60a48889c09c7e2e91a384af66bddee662bf88d336624112643d85560",
+      "notes": "Offizieller Minecraft Bedrock Dedicated Server für Windows mit Crossplay, deutscher Konfiguration und automatischen Updates."
     },
     {
       "id": "minecraft-java",

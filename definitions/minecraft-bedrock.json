@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 3,
+  "id": "minecraft-bedrock",
+  "displayName": "Minecraft: Bedrock Edition",
+  "package": {
+    "author": "blnk Base",
+    "version": "1.0.0",
+    "homepage": "https://www.minecraft.net/en-us/download/server/bedrock",
+    "license": "Minecraft EULA"
+  },
+  "summary": "Offizieller Minecraft Bedrock Dedicated Server für Windows mit Crossplay, deutscher Konfiguration und automatischen Updates.",
+  "maturity": "stable",
+  "tags": ["sandbox", "crossplay", "windows", "official"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup", "player-query"],
+  "artwork": {
+    "iconUrl": "/artwork/minecraft-bedrock.svg",
+    "headerUrl": "/artwork/minecraft-bedrock.svg"
+  },
+  "adapters": {
+    "installation": "minecraft-bedrock",
+    "lifecycle": "stdin-command",
+    "configuration": "catalog-files",
+    "health": "process-and-ports",
+    "population": "minecraft-bedrock-status",
+    "backup": "persistent-paths",
+    "mods": "none"
+  },
+  "installer": { "kind": "minecraft-bedrock" },
+  "process": {
+    "executable": "bedrock_server.exe",
+    "workingDirectory": ".",
+    "arguments": [],
+    "consoleLogFiles": ["ContentLog__*.txt"],
+    "stopCommand": "stop",
+    "stopTimeoutSeconds": 45
+  },
+  "ports": [
+    { "key": "game", "protocol": "udp", "preferred": 19132 },
+    { "key": "game-v6", "protocol": "udp", "preferred": 19133, "offsetFrom": "game", "offset": 1 }
+  ],
+  "configurationFiles": [
+    {
+      "path": "server.properties",
+      "label": "Bedrock-Servereinstellungen",
+      "format": "properties",
+      "fields": [
+        { "key": "server-name", "label": "Servername", "group": "Allgemein", "valueType": "string", "defaultValue": "blnk Base Bedrock Server", "description": "Name, der in der Bedrock-Serverliste erscheint. Standard: blnk Base Bedrock Server." },
+        { "key": "server-port", "label": "Spiel-Port (IPv4)", "group": "Netzwerk", "valueType": "integer", "portKey": "game", "minimum": 1, "maximum": 65535, "description": "UDP-Port für IPv4-Spielverbindungen. Standard: 19132." },
+        { "key": "server-portv6", "label": "Spiel-Port (IPv6)", "group": "Netzwerk", "valueType": "integer", "portKey": "game-v6", "minimum": 1, "maximum": 65535, "description": "UDP-Port für IPv6-Spielverbindungen. Standard: 19133." },
+        { "key": "max-players", "label": "Maximale Spieler", "group": "Spieler", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 1000, "description": "Maximale Anzahl gleichzeitig verbundener Spieler. Standard: 10." },
+        { "key": "gamemode", "label": "Standard-Spielmodus", "group": "Welt", "valueType": "string", "defaultValue": "survival", "choices": [{ "value": "survival", "label": "Überleben" }, { "value": "creative", "label": "Kreativ" }, { "value": "adventure", "label": "Abenteuer" }], "description": "Spielmodus für neue Spieler. Standard: Überleben." },
+        { "key": "force-gamemode", "label": "Spielmodus erzwingen", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Setzt Spieler bei jedem Beitritt auf den eingestellten Standard-Spielmodus. Standard: Nein." },
+        { "key": "difficulty", "label": "Schwierigkeit", "group": "Welt", "valueType": "string", "defaultValue": "easy", "choices": [{ "value": "peaceful", "label": "Friedlich" }, { "value": "easy", "label": "Leicht" }, { "value": "normal", "label": "Normal" }, { "value": "hard", "label": "Schwer" }], "description": "Schwierigkeitsgrad der Welt. Standard: Leicht." },
+        { "key": "allow-cheats", "label": "Cheats erlauben", "group": "Administration", "valueType": "boolean", "defaultValue": "false", "description": "Aktiviert Befehle und deaktiviert Erfolge in dieser Welt. Standard: Nein." },
+        { "key": "online-mode", "label": "Microsoft-Konten prüfen", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "true", "description": "Authentifiziert Spieler über Xbox/Microsoft. Standard und Empfehlung: Ja." },
+        { "key": "allow-list", "label": "Zulassungsliste verwenden", "group": "Zugriff", "valueType": "boolean", "defaultValue": "false", "description": "Nur Spieler aus allowlist.json dürfen beitreten. Standard: Nein." },
+        { "key": "default-player-permission-level", "label": "Standard-Berechtigung", "group": "Zugriff", "valueType": "string", "defaultValue": "member", "choices": [{ "value": "visitor", "label": "Besucher" }, { "value": "member", "label": "Mitglied" }, { "value": "operator", "label": "Operator" }], "description": "Berechtigungsstufe neuer Spieler. Standard: Mitglied." },
+        { "key": "player-idle-timeout", "label": "AFK-Zeitlimit (Minuten)", "group": "Spieler", "valueType": "integer", "defaultValue": "30", "minimum": 0, "maximum": 1440, "description": "Trennt inaktive Spieler nach dieser Zeit. 0 deaktiviert das Limit. Standard: 30." },
+        { "key": "level-name", "label": "Weltname", "group": "Welt", "valueType": "string", "defaultValue": "Bedrock level", "description": "Name und Ordner der geladenen Welt unter worlds. Standard: Bedrock level. Nur bei gestopptem Server ändern." },
+        { "key": "level-seed", "label": "Welt-Seed", "group": "Welt", "valueType": "string", "defaultValue": "", "description": "Optionaler Seed für eine neu erzeugte Welt. Leer erzeugt einen zufälligen Seed. Standard: leer." },
+        { "key": "level-type", "label": "Welttyp", "group": "Welt", "valueType": "string", "defaultValue": "DEFAULT", "choices": [{ "value": "DEFAULT", "label": "Standard" }, { "value": "FLAT", "label": "Flach" }, { "value": "LEGACY", "label": "Legacy" }], "description": "Generator für eine neu erstellte Welt. Standard: Standard." },
+        { "key": "view-distance", "label": "Sichtweite (Chunks)", "group": "Leistung", "valueType": "integer", "defaultValue": "32", "minimum": 5, "maximum": 96, "description": "Maximale serverseitige Sichtweite. Höhere Werte benötigen mehr RAM und CPU. Standard: 32." },
+        { "key": "tick-distance", "label": "Simulationsweite (Chunks)", "group": "Leistung", "valueType": "integer", "defaultValue": "4", "minimum": 4, "maximum": 12, "description": "Entfernung, in der die Welt aktiv simuliert wird. Standard: 4." },
+        { "key": "max-threads", "label": "Maximale Server-Threads", "group": "Leistung", "valueType": "integer", "defaultValue": "8", "minimum": 0, "maximum": 256, "description": "Maximal verwendete Threads. 0 lässt den Server automatisch entscheiden. Standard: 8." },
+        { "key": "content-log-file-enabled", "label": "Inhaltsprotokoll schreiben", "group": "Protokollierung", "valueType": "boolean", "defaultValue": "false", "description": "Schreibt Fehler von Add-ons in eine ContentLog-Datei. Standard: Nein." },
+        { "key": "texturepack-required", "label": "Ressourcenpakete erzwingen", "group": "Ressourcenpakete", "valueType": "boolean", "defaultValue": "false", "description": "Spieler müssen die Ressourcenpakete der Welt akzeptieren. Standard: Nein." },
+        { "key": "compression-threshold", "label": "Kompressionsgrenze (Bytes)", "group": "Netzwerk", "valueType": "integer", "defaultValue": "1", "minimum": 0, "maximum": 65535, "description": "Pakete ab dieser Größe werden komprimiert. 0 komprimiert alles. Standard: 1." },
+        { "key": "compression-algorithm", "label": "Kompressionsverfahren", "group": "Netzwerk", "valueType": "string", "defaultValue": "zlib", "choices": [{ "value": "zlib", "label": "Zlib" }, { "value": "snappy", "label": "Snappy" }], "description": "Netzwerkkompression des Servers. Standard: Zlib." },
+        { "key": "enable-lan-visibility", "label": "LAN-Ankündigung", "group": "Netzwerk", "valueType": "boolean", "defaultValue": "false", "description": "Veröffentlicht den Server im lokalen Netzwerk. In blnk Base standardmäßig Nein, damit mehrere Instanzen nicht zusätzlich die Standardports 19132/19133 belegen." },
+        { "key": "server-authoritative-movement", "label": "Serverseitige Bewegungsprüfung", "group": "Sicherheit", "valueType": "string", "defaultValue": "server-auth", "choices": [{ "value": "client-auth", "label": "Client entscheidet" }, { "value": "server-auth", "label": "Server entscheidet" }, { "value": "server-auth-with-rewind", "label": "Server mit Rückspulung" }], "description": "Legt fest, wie Spielerbewegungen geprüft werden. Standard: Server entscheidet." },
+        { "key": "player-movement-score-threshold", "label": "Bewegungsfehler-Grenzwert", "group": "Sicherheit", "valueType": "integer", "defaultValue": "20", "minimum": 1, "maximum": 10000, "description": "Anzahl auffälliger Bewegungen vor einer Korrektur. Standard: 20." },
+        { "key": "player-movement-distance-threshold", "label": "Bewegungsabweichung", "group": "Sicherheit", "valueType": "number", "defaultValue": "0.3", "minimum": 0, "maximum": 100, "description": "Tolerierte Positionsabweichung zwischen Client und Server. Standard: 0,3." },
+        { "key": "player-movement-duration-threshold-in-ms", "label": "Bewegungs-Zeitfenster (ms)", "group": "Sicherheit", "valueType": "integer", "defaultValue": "500", "minimum": 0, "maximum": 60000, "description": "Zeitfenster der Bewegungsprüfung in Millisekunden. Standard: 500." },
+        { "key": "correct-player-movement", "label": "Fehlerhafte Bewegung korrigieren", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "false", "description": "Versetzt Spieler bei ungültiger Bewegung auf die Serverposition zurück. Standard: Nein." },
+        { "key": "server-authoritative-block-breaking", "label": "Blockabbau serverseitig prüfen", "group": "Sicherheit", "valueType": "boolean", "defaultValue": "false", "description": "Lässt den Server den Blockabbau autoritativ prüfen. Standard: Nein." },
+        { "key": "chat-restriction", "label": "Chat-Einschränkung", "group": "Kommunikation", "valueType": "string", "defaultValue": "None", "choices": [{ "value": "None", "label": "Keine" }, { "value": "Dropped", "label": "Nachrichten verwerfen" }, { "value": "Disabled", "label": "Chat deaktiviert" }], "description": "Schränkt den Chat auf dem Server ein. Standard: Keine." },
+        { "key": "disable-player-interaction", "label": "Spielerinteraktion deaktivieren", "group": "Spielregeln", "valueType": "boolean", "defaultValue": "false", "description": "Verhindert direkte Interaktionen zwischen Spielern. Standard: Nein." },
+        { "key": "client-side-chunk-generation", "label": "Clientseitige Chunk-Erzeugung", "group": "Leistung", "valueType": "boolean", "defaultValue": "true", "description": "Erlaubt unterstützte Chunk-Arbeit auf dem Client. Standard: Ja." },
+        { "key": "block-network-ids-are-hashes", "label": "Block-Netzwerk-IDs als Hash", "group": "Kompatibilität", "valueType": "boolean", "defaultValue": "true", "description": "Verwendet Hashwerte für Block-Netzwerk-IDs. Standard: Ja." },
+        { "key": "disable-persona", "label": "Persona-Skins deaktivieren", "group": "Spieler", "valueType": "boolean", "defaultValue": "false", "description": "Verhindert die Nutzung von Persona-Charakteren. Standard: Nein." },
+        { "key": "disable-custom-skins", "label": "Eigene Skins deaktivieren", "group": "Spieler", "valueType": "boolean", "defaultValue": "false", "description": "Verhindert benutzerdefinierte Skins. Standard: Nein." },
+        { "key": "server-build-radius-ratio", "label": "Server-Bauradius-Faktor", "group": "Leistung", "valueType": "string", "defaultValue": "Disabled", "description": "Optionaler Anteil der Sichtweite, den der Server vollständig erzeugt, oder Disabled. Standard: Disabled." },
+        { "key": "allow-outbound-script-debugging", "label": "Ausgehendes Script-Debugging", "group": "Entwicklung", "valueType": "boolean", "defaultValue": "false", "description": "Erlaubt ausgehende Debug-Verbindungen für Add-on-Skripte. Nur in Testumgebungen aktivieren. Standard: Nein." },
+        { "key": "allow-inbound-script-debugging", "label": "Eingehendes Script-Debugging", "group": "Entwicklung", "valueType": "boolean", "defaultValue": "false", "description": "Öffnet eingehendes Script-Debugging. Nur in geschützten Testumgebungen aktivieren. Standard: Nein." },
+        { "key": "script-debugger-auto-attach", "label": "Script-Debugger automatisch verbinden", "group": "Entwicklung", "valueType": "string", "defaultValue": "disabled", "choices": [{ "value": "disabled", "label": "Deaktiviert" }, { "value": "connect", "label": "Verbinden" }, { "value": "listen", "label": "Lauschen" }], "description": "Automatischer Debugger-Modus für Add-on-Skripte. Standard: Deaktiviert." },
+        { "key": "script-watchdog-enable", "label": "Script-Watchdog", "group": "Entwicklung", "valueType": "boolean", "defaultValue": "true", "description": "Überwacht Add-on-Skripte auf Hänger und Speicherprobleme. Standard: Ja." },
+        { "key": "script-watchdog-enable-exception-handling", "label": "Script-Fehler behandeln", "group": "Entwicklung", "valueType": "boolean", "defaultValue": "true", "description": "Behandelt Watchdog-Ausnahmen kontrolliert. Standard: Ja." },
+        { "key": "script-watchdog-enable-shutdown", "label": "Server bei Script-Hänger beenden", "group": "Entwicklung", "valueType": "boolean", "defaultValue": "true", "description": "Beendet den Server bei einem schweren Script-Hänger. Standard: Ja." },
+        { "key": "script-watchdog-hang-exception", "label": "Script-Hänger-Grenze (ms)", "group": "Entwicklung", "valueType": "integer", "defaultValue": "10000", "minimum": 1, "maximum": 600000, "description": "Zeit bis ein Script als hängend gilt. Standard: 10000 ms." },
+        { "key": "script-watchdog-spike-warning", "label": "Script-Spike-Warnung (ms)", "group": "Entwicklung", "valueType": "integer", "defaultValue": "100", "minimum": 1, "maximum": 600000, "description": "Laufzeit eines Scripts, ab der eine Warnung geschrieben wird. Standard: 100 ms." },
+        { "key": "script-watchdog-slow-warning", "label": "Langsames Script (ms)", "group": "Entwicklung", "valueType": "integer", "defaultValue": "10", "minimum": 1, "maximum": 600000, "description": "Durchschnittliche Script-Laufzeit für eine Warnung. Standard: 10 ms." },
+        { "key": "script-watchdog-memory-warning", "label": "Script-Speicherwarnung (MB)", "group": "Entwicklung", "valueType": "integer", "defaultValue": "100", "minimum": 1, "maximum": 65536, "description": "Speichernutzung eines Scripts für eine Warnung. Standard: 100 MB." },
+        { "key": "script-watchdog-memory-limit", "label": "Script-Speicherlimit (MB)", "group": "Entwicklung", "valueType": "integer", "defaultValue": "250", "minimum": 1, "maximum": 65536, "description": "Maximale Speichernutzung eines Scripts. Standard: 250 MB." }
+      ]
+    }
+  ],
+  "persistentPaths": [
+    "worlds",
+    "server.properties",
+    "allowlist.json",
+    "permissions.json",
+    "valid_known_packs.json",
+    "behavior_packs",
+    "resource_packs",
+    "development_behavior_packs",
+    "development_resource_packs",
+    "development_skin_packs"
+  ],
+  "health": { "processRequired": true, "portKeys": ["game"] }
+}

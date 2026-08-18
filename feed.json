@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Offizieller BlenkBase-Katalog",
-  "generatedAtUtc": "2026-08-18T10:58:54.354Z",
+  "generatedAtUtc": "2026-08-18T12:16:14.584Z",
   "definitions": [
     {
       "id": "abiotic-factor",
@@ -537,10 +537,10 @@
     {
       "id": "wortwelten",
       "displayName": "Wortwelten",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "maturity": "experimental",
       "definitionUrl": "definitions/wortwelten.json",
-      "sha256": "8ab38d92286ce1f906dfab89700e00b1e2b21a9bed95bc838fccd73c5959bff6",
+      "sha256": "9791c1afb1a87f03c50cd22a7382c82cb96998c5bb74d9616d3e1f6ff04c7567",
       "notes": "Stadt, Land, Fluss für Browser, Android und Apple-PWA mit serverautoritärem Online-Multiplayer."
     }
   ]

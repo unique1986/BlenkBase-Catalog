@@ -4,7 +4,7 @@
   "displayName": "Wortwelten",
   "package": {
     "author": "Blenk",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "Proprietary"
   },
   "summary": "Stadt, Land, Fluss für Browser, Android und Apple-PWA mit serverautoritärem Online-Multiplayer.",
@@ -23,7 +23,7 @@
   },
   "installer": {
     "kind": "github-release",
-    "repository": "Liitschy/Wortwelten-Releases",
+    "repository": "unique1986/Wortwelten-Releases",
     "assetPattern": "^Wortwelten-server-windows-x64-.*\\.zip$"
   },
   "process": {

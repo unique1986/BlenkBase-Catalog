@@ -11,7 +11,10 @@
   "maturity": "experimental",
   "tags": ["party", "multiplayer", "web"],
   "capabilities": ["install", "update", "start", "stop", "backup"],
-  "artwork": {},
+  "artwork": {
+    "iconUrl": "/artwork/wortwelten-icon.svg",
+    "headerUrl": "/artwork/wortwelten.png"
+  },
   "adapters": {
     "installation": "github-release",
     "lifecycle": "generic-process",

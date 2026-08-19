@@ -4,7 +4,7 @@
   "displayName": "Wortwelten",
   "package": {
     "author": "Blenk",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "license": "Proprietary"
   },
   "summary": "Stadt, Land, Fluss für Browser, Android und Apple-PWA mit serverautoritärem Online-Multiplayer.",

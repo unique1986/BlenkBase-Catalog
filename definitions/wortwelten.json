@@ -4,7 +4,7 @@
   "displayName": "Wortex",
   "package": {
     "author": "Blenk",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "Proprietary"
   },
   "summary": "Stadt, Land, Fluss für Browser, Android und Apple-PWA mit serverautoritärem Online-Multiplayer.",

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 3,
   "id": "wortwelten",
-  "displayName": "Wortwelten",
+  "displayName": "Wortex",
   "package": {
     "author": "Blenk",
-    "version": "0.5.5",
+    "version": "0.5.6",
     "license": "Proprietary"
   },
   "summary": "Stadt, Land, Fluss für Browser, Android und Apple-PWA mit serverautoritärem Online-Multiplayer.",
@@ -92,7 +92,7 @@
           "group": "KI-Antwortprüfung",
           "valueType": "string",
           "defaultValue": "qwen3.5:4b",
-          "description": "Bevorzugtes lokales Modell. Ist es nicht installiert, wählt Wortwelten automatisch ein vorhandenes qwen3.5-Modell."
+          "description": "Bevorzugtes lokales Modell. Ist es nicht installiert, wählt Wortex automatisch ein vorhandenes qwen3.5-Modell."
         },
         {
           "key": "FIREBASE_SERVICE_ACCOUNT_JSON_B64",

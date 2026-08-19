@@ -4,13 +4,13 @@
   "displayName": "Wortwelten",
   "package": {
     "author": "Blenk",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "license": "Proprietary"
   },
   "summary": "Stadt, Land, Fluss für Browser, Android und Apple-PWA mit serverautoritärem Online-Multiplayer.",
   "maturity": "experimental",
   "tags": ["party", "multiplayer", "web"],
-  "capabilities": ["install", "update", "start", "stop", "backup"],
+  "capabilities": ["install", "update", "start", "stop", "configure", "backup"],
   "artwork": {
     "iconUrl": "/artwork/wortwelten-icon.svg",
     "headerUrl": "/artwork/wortwelten.png"
@@ -51,7 +51,44 @@
   "ports": [
     { "key": "game", "protocol": "tcp", "preferred": 8787 }
   ],
-  "configurationFiles": [],
+  "configurationFiles": [
+    {
+      "path": "server/blenkbase/wrangler.jsonc",
+      "label": "Antwortprüfung und Push",
+      "format": "json",
+      "fields": [
+        {
+          "key": "OPENAI_API_KEY",
+          "jsonPath": "vars.OPENAI_API_KEY",
+          "label": "OpenAI API-Schlüssel",
+          "group": "KI-Antwortprüfung",
+          "valueType": "string",
+          "secret": true,
+          "defaultValue": "",
+          "description": "Optionaler serverseitiger Schlüssel. Niemals in die Android-App eintragen."
+        },
+        {
+          "key": "OPENAI_MODEL",
+          "jsonPath": "vars.OPENAI_MODEL",
+          "label": "OpenAI-Modell",
+          "group": "KI-Antwortprüfung",
+          "valueType": "string",
+          "defaultValue": "gpt-5.6-luna",
+          "description": "Modell für die optionale serverseitige Prüfung unbekannter Antworten."
+        },
+        {
+          "key": "FIREBASE_SERVICE_ACCOUNT_JSON_B64",
+          "jsonPath": "vars.FIREBASE_SERVICE_ACCOUNT_JSON_B64",
+          "label": "Firebase-Dienstkonto (Base64)",
+          "group": "Native Push-Benachrichtigungen",
+          "valueType": "string",
+          "secret": true,
+          "defaultValue": "",
+          "description": "Base64-kodierte Firebase-Service-Account-JSON. Bleibt ausschließlich auf dem Anwendungsserver."
+        }
+      ]
+    }
+  ],
   "persistentPaths": ["data"],
   "health": {
     "processRequired": true,

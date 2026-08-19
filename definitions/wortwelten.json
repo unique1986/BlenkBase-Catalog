@@ -4,7 +4,7 @@
   "displayName": "Wortwelten",
   "package": {
     "author": "Blenk",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "license": "Proprietary"
   },
   "summary": "Stadt, Land, Fluss für Browser, Android und Apple-PWA mit serverautoritärem Online-Multiplayer.",
@@ -58,23 +58,41 @@
       "format": "json",
       "fields": [
         {
-          "key": "OPENAI_API_KEY",
-          "jsonPath": "vars.OPENAI_API_KEY",
-          "label": "OpenAI API-Schlüssel",
+          "key": "OLLAMA_ENABLED",
+          "jsonPath": "vars.OLLAMA_ENABLED",
+          "label": "Ollama-Antwortprüfung",
+          "group": "KI-Antwortprüfung",
+          "valueType": "boolean",
+          "defaultValue": "true",
+          "description": "Verwendet Ollama Cloud und die lokale BlenkBase-Ollama-Instanz für unbekannte Antworten."
+        },
+        {
+          "key": "OLLAMA_CLOUD_API_KEY",
+          "jsonPath": "vars.OLLAMA_CLOUD_API_KEY",
+          "label": "Ollama-Cloud-API-Key",
           "group": "KI-Antwortprüfung",
           "valueType": "string",
           "secret": true,
           "defaultValue": "",
-          "description": "Optionaler serverseitiger Schlüssel. Niemals in die Android-App eintragen."
+          "description": "Vorhandener Ollama-Cloud-Key. Bleibt ausschließlich auf dem Anwendungsserver."
         },
         {
-          "key": "OPENAI_MODEL",
-          "jsonPath": "vars.OPENAI_MODEL",
-          "label": "OpenAI-Modell",
+          "key": "OLLAMA_CLOUD_MODEL",
+          "jsonPath": "vars.OLLAMA_CLOUD_MODEL",
+          "label": "Ollama-Cloud-Modell",
           "group": "KI-Antwortprüfung",
           "valueType": "string",
-          "defaultValue": "gpt-5.6-luna",
-          "description": "Modell für die optionale serverseitige Prüfung unbekannter Antworten."
+          "defaultValue": "gpt-oss:20b",
+          "description": "Kostenloses Cloud-Modell für die schnelle Hauptprüfung."
+        },
+        {
+          "key": "OLLAMA_LOCAL_MODEL",
+          "jsonPath": "vars.OLLAMA_LOCAL_MODEL",
+          "label": "Lokales Ollama-Modell",
+          "group": "KI-Antwortprüfung",
+          "valueType": "string",
+          "defaultValue": "qwen3.5:4b",
+          "description": "Bevorzugtes lokales Modell. Ist es nicht installiert, wählt Wortwelten automatisch ein vorhandenes qwen3.5-Modell."
         },
         {
           "key": "FIREBASE_SERVICE_ACCOUNT_JSON_B64",
